@@ -1,0 +1,86 @@
+/* Sidebar background */
+.layout-menu {
+  background-color: #3B5FCC;
+}
+
+/* Menu links */
+.menu-link {
+  color: #ffffff;
+  border-radius: 8px;
+  margin: 4px 8px;
+}
+
+/* Icons */
+.menu-icon {
+  color: #ffffff;
+}
+
+/* Hover */
+.menu-link:hover {
+  background-color: #4A6FE3;
+}
+
+/* Active menu (IMPORTANT) */
+.menu-link.active {
+  background-color: #F2B632;
+  color: #1E2A5A;
+  font-weight: 600;
+}
+
+.menu-link.active .menu-icon {
+  color: #1E2A5A;
+}
+/* Sidebar background */
+.layout-menu {
+  background-color: #3B5FCC !important;
+}
+
+/* App name */
+.app-brand-text {
+  color: #ffffff;
+}
+
+/* Menu links */
+.menu-link {
+  color: #ffffff !important;
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+/* Icons */
+.menu-icon {
+  color: #ffffff !important;
+}
+
+/* Hover */
+.menu-link:hover {
+  background-color: #4A6FE3;
+}
+
+/* Active */
+.menu-link.active {
+  background-color: #F2B632;
+  color: #1E2A5A !important;
+  font-weight: 600;
+}
+
+.menu-link.active .menu-icon {
+  color: #1E2A5A !important;
+}
+/* TOP NAVBAR (Muted) */
+.layout-navbar {
+  background-color: #F3F6FF !important; /* soft blue-gray */
+  border-bottom: 1px solid #E0E6F5;
+}
+
+/* Navbar text & icons */
+.layout-navbar .nav-link,
+.layout-navbar i {
+  color: #1E2A5A !important;
+}
+
+/* Profile image */
+.layout-navbar img {
+  border: 2px solid #F2B632;
+}
