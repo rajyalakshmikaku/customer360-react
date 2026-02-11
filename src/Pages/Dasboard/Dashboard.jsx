@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDashboardCounts } from "../../redux/dashboardSlice";
 import "./Dashboard.css";
+import { fetchComplaintsCounts } from "../../redux/complaintListSlice";
 
 function Dashboard() {
   const dispatch = useDispatch();

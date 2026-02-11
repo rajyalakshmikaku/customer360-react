@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ComplaintsTable = ({ category, status }) => {
+const ComplaintsTable = ({ category, status ,wardInfo,UserInfo}) => {
   const [ward, setWard] = useState("");
   const [user, setUser] = useState("");
 
@@ -23,12 +23,12 @@ const ComplaintsTable = ({ category, status }) => {
   return (
 
 
-    <div class="layout-container">
-      <div class="layout-page">
+    <div className="layout-container">
+      <div className="layout-page">
         
-        <div class="row mb-4">
-          <div class="col-12">
-            <div class="card-body d-flex align-items-end flex-wrap gap-3">
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="card-body d-flex align-items-end flex-wrap gap-3">
               <div className="me-3">
                 <label className="form-label fw-semibold text-teal">Status</label>
                 <input style={{ minWidth: '230px' }}
@@ -48,8 +48,12 @@ const ComplaintsTable = ({ category, status }) => {
                   onChange={(e) => setWard(e.target.value)}
                 >
                   <option value="">Select option</option>
-                  <option value="10">10</option>
-                  <option value="104">104</option>
+                  {wardInfo &&
+                    wardInfo.map((item, index) => (
+                      <option key={index} value={item.name}>
+                        {item.name}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -63,7 +67,12 @@ const ComplaintsTable = ({ category, status }) => {
                   onChange={(e) => setUser(e.target.value)}
                 >
                   <option value="">Select option</option>
-                  <option value="admin">admin@mail.com</option>
+                   {UserInfo &&
+                    UserInfo.map((item, index) => (
+                      <option key={index} value={item.userid}>
+                        {item.email}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div className="d-flex gap-2">

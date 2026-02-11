@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Outlet, Link, useNavigate,NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Outlet, Link, useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/LoginSlice";
 import "./MainLayout.css"
@@ -8,8 +8,12 @@ const MainLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const userName = sessionStorage.getItem("LoggedName");
-  const userType = sessionStorage.getItem("LoggedUserType");
+  const name = sessionStorage.getItem("LoggedName");
+  const type = sessionStorage.getItem("LoggedUserType");
+  const ward = sessionStorage.getItem("LoggedWardId");
+
+
+
 
 
   useEffect(() => {
@@ -24,83 +28,112 @@ const MainLayout = () => {
     navigate("/");
   };
 
+  const getDisplayUserType = (type) => {
+    debugger
+    switch (type) {
+      case "A":
+        return "Admin";
+      case "C":
+        return "Customer";
+      case "U":
+        return "User";
+      default:
+        return "Unknown";
+    }
+  };
+  const displayUserType = getDisplayUserType(type);
+
+
   return (
     <div className="layout-wrapper layout-content-navbar">
       <div className="layout-container">
 
         {/* Sidebar */}
         <aside
-  id="layout-menu"
-  className="layout-menu menu-vertical menu bg-menu-theme"
->
-  <div className="app-brand demo d-flex align-items-center px-3">
-    <img src="/SixStepLogo.jpg" alt="Logo" width="40" height="40" />
-    <NavLink to="/dashboard" className="app-brand-link ms-2">
-      
-      <span className="app-brand-text fw-bolder">
-        Customer 360
-      </span>
-    </NavLink>
-  </div>
+          id="layout-menu"
+          className="layout-menu menu-vertical menu bg-menu-theme"
+        >
+          <div className="app-brand demo d-flex align-items-center px-3">
+            <img src="/SixStepLogo.jpg" alt="Logo" width="40" height="40" />
+            <NavLink to="/dashboard" className="app-brand-link ms-2">
+              <span className="app-brand-text fw-bolder">
+                Customer 360
+              </span>
+            </NavLink>
+          </div>
 
-  <ul className="menu-inner py-1">
+          {/* 👇 MOVE USER INFO BELOW BRAND */}
+          <div className="px-3 pb-3">
+            <div className="text-white fw-semibold">
+              Hi, {name || ""}
+            </div>
+            {type !== "A" && (
+              <div className="text-white small">
+                WARD No {ward || "Not Assigned"}
+              </div>
+            )}
+          </div>
 
-    {/* DASHBOARD */}
-    <li className="menu-item">
-      <NavLink
-        to="/dashboard"
-        className={({ isActive }) =>
-          `menu-link ${isActive ? "active" : ""}`
-        }
-      >
-        <i className="menu-icon bx bx-list-check"></i>
-        <div>Dashboard</div>
-      </NavLink>
-    </li>
 
-    {/* ADMIN MENU */}
-    {userType === "Admin" && (
-      <>
-        <li className="menu-item">
-          <NavLink
-            to="/coplaintsList"
-            className={({ isActive }) =>
-              `menu-link ${isActive ? "active" : ""}`
-            }
-          >
-            <i className="menu-icon bx bx-list-check"></i>
-            <div>Complaints List</div>
-          </NavLink>
-        </li>
 
-        <li className="menu-item">
-          <NavLink
-            to="/users-list"
-            className={({ isActive }) =>
-              `menu-link ${isActive ? "active" : ""}`
-            }
-          >
-            <i className="menu-icon bx bx-list-check"></i>
-            <div>Users List</div>
-          </NavLink>
-        </li>
+          <ul className="menu-inner py-1">
 
-        <li className="menu-item">
-          <NavLink
-            to="/status-list"
-            className={({ isActive }) =>
-              `menu-link ${isActive ? "active" : ""}`
-            }
-          >
-            <i className="menu-icon bx bx-list-check"></i>
-            <div>Status List</div>
-          </NavLink>
-        </li>
-      </>
-    )}
+            {/* DASHBOARD */}
+            <li className="menu-item">
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  `menu-link ${isActive ? "active" : ""}`
+                }
+              >
+                <i className="menu-icon bx bx-list-check"></i>
+                <div>Dashboard</div>
+              </NavLink>
+            </li>
 
-  </ul>
-</aside>
+            {/* ADMIN MENU */}
+            {type === "A" && (
+              <>
+                <li className="menu-item">
+                  <NavLink
+                    to="/coplaintsList"
+                    className={({ isActive }) =>
+                      `menu-link ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <i className="menu-icon bx bx-list-check"></i>
+                    <div>Complaints List</div>
+                  </NavLink>
+                </li>
+
+                <li className="menu-item">
+                  <NavLink
+                    to="/users-list"
+                    className={({ isActive }) =>
+                      `menu-link ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <i className="menu-icon bx bx-list-check"></i>
+                    <div>Users List</div>
+                  </NavLink>
+                </li>
+
+                <li className="menu-item">
+                  <NavLink
+                    to="/status-list"
+                    className={({ isActive }) =>
+                      `menu-link ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <i className="menu-icon bx bx-list-check"></i>
+                    <div>Status List</div>
+                  </NavLink>
+                </li>
+              </>
+            )}
+
+          </ul>
+        </aside>
 
 
         {/* Main page */}
@@ -116,10 +149,10 @@ const MainLayout = () => {
                   type="button"
                 >
                   <img
-                              src="/assets/img/User_Logo.png"
-                              alt="User"
-                              className="w-px-40 h-auto rounded-circle"
-                            />
+                    src="/assets/img/User_Logo.png"
+                    alt="User"
+                    className="w-px-40 h-auto rounded-circle"
+                  />
                 </button>
 
                 <ul className="dropdown-menu dropdown-menu-end">
@@ -139,10 +172,10 @@ const MainLayout = () => {
                         </div>
                         <div className="flex-grow-1">
                           <span className="fw-semibold d-block">
-                            {userName || "Unknown"}
+                            {name || "Unknown"}
                           </span>
                           <small className="text-muted">
-                            {userType}
+                            {displayUserType}
                           </small>
                         </div>
                       </div>
