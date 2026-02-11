@@ -6,6 +6,11 @@ import Dashboard from "./Pages/Dasboard/Dashboard";
 import MainLayout from "./Layout/MainLayout";
 import CoplaintsList from "./Pages/Complaints/ComplaintsList";
 
+import UsersList from "./Pages/Users/UsersList";
+
+import StatusList from "./Pages/Status/Status-list";
+
+
 function App() {
   return (
     <Routes>
@@ -16,6 +21,8 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
          <Route path="/coplaintsList" element={<CoplaintsList />} />
+        <Route path="/users-list" element={<UsersList />} />
+         <Route path="/status-list" element={<StatusList />} />
       </Route>
     </Routes>
   );
