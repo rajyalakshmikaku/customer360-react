@@ -46,7 +46,7 @@
 .complaints-menu__total {
   font-size: 15px;
   font-weight: 600;
-  color: #4A6FE3; /* visible by default */
+  color: orange; /* visible by default */
 }
 
 
