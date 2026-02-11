@@ -91,51 +91,51 @@ const UsersList = () => {
             <input type="text" placeholder="Search" />
           </div>
           <br/>
+         <div className="table-responsive">
+  <table className="table table-hover align-middle">
+    <thead className="table-dark">
+      <tr>
+        <th>NAME</th>
+        <th>SURNAME</th>
+        <th>EMAIL</th>
+        <th>ADDRESS</th>
+        <th>MOBILE</th>
+        <th>STATUS</th>
+        <th>ACTION</th>
+      </tr>
+    </thead>
 
-          <div className="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>NAME</th>
-                  <th>SURNAME</th>
-                  <th>EMAIL</th>
-                  <th>ADDRESS</th>
-                  <th>MOBILE</th>
-                  <th>STATUS</th>
-                  <th>ACTION</th>
-                </tr>
-              </thead>
-             <tbody>
-  <tr>
-    <td>Nancy</td>
-    <td>A</td>
-    <td>nancy12@gmail.com</td>
-    <td>Hyderabad</td>
-    <td>9876543210</td>
-    <td>Active</td>
-   <td className="action-col">
-  <i className="fa fa-edit edit-icon" title="Edit"></i>
-  <i className="fa fa-trash delete-icon" title="Delete"></i>
-</td>
-  </tr>
+    <tbody>
+      <tr>
+        <td>Nancy</td>
+        <td>A</td>
+        <td>nancy12@gmail.com</td>
+        <td>Hyderabad</td>
+        <td>9876543210</td>
+        <td>Active</td>
+        <td className="action-col">
+          <i className="fa fa-edit edit-icon" title="Edit"></i>
+          <i className="fa fa-trash delete-icon" title="Delete"></i>
+        </td>
+      </tr>
 
-  <tr>
-    <td>Demon</td>
-    <td>B</td>
-    <td>Demon33@mail.com</td>
-    <td>Bangalore</td>
-    <td>9123456780</td>
-    <td>Active</td>
- <td className="action-col">
-  <i className="fa fa-edit edit-icon" title="Edit"></i>
-  <i className="fa fa-trash delete-icon" title="Delete"></i>
-</td>
+      <tr>
+        <td>Demon</td>
+        <td>B</td>
+        <td>demon33@mail.com</td>
+        <td>Bangalore</td>
+        <td>9123456780</td>
+        <td>Active</td>
+        <td className="action-col">
+          <i className="fa fa-edit edit-icon" title="Edit"></i>
+          <i className="fa fa-trash delete-icon" title="Delete"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-  </tr>
-</tbody>
-
-            </table>
-          </div>
+          
         </div>
       )}
     </div>
