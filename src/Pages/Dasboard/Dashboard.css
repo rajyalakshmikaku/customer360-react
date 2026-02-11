@@ -1,91 +1,168 @@
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+/* Page background */
+body {
+  background: #f4f7fb;
 }
 
-.dashboard {
-  height: 100vh;
-  background: #f4f6f8;
+/* Width helpers */
+.w-250 {
+  width: 250px;
 }
 
-/* Navbar */
-.navbar {
-  height: 60px;
-  background: #1f2937;
-  color: #fff;
+.w-300 {
+  width: 300px;
+}
+
+/* Card row layout */
+.card-row {
+  display: flex;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  margin-left: 10px;
+}
+
+/* Summary card */
+.summary-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px 10px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-top: 6px solid transparent;
+  min-height: 90px;
+}
+
+/* Summary title */
+.summary-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+}
+
+/* Summary value */
+.summary-value {
+  margin-top: 6px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* Icon circle */
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  background: #008080;
+  color: yellow;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-}
-
-.user-info {
+  justify-content: center;
   font-size: 14px;
+  border: 2px solid yellow;
+  margin: 0 auto 6px;
 }
 
-/* Layout */
-.dashboard-body {
-  display: flex;
-  height: calc(100vh - 60px);
+/* Border colors */
+.border-green {
+  border-top-color: #4CAF50;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  background: #111827;
-  color: #fff;
-  padding-top: 20px;
+.border-blue {
+  border-top-color: #2196F3;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
+.border-orange {
+  border-top-color: #FF9800;
 }
 
-.sidebar li {
-  padding: 12px 20px;
-  cursor: pointer;
-  font-size: 14px;
+.border-red {
+  border-top-color: red;
 }
 
-.sidebar li:hover,
-.sidebar li.active {
-  background: #374151;
-}
-
-/* Content */
-.content {
+/* Stat card (if used later) */
+.stat-card {
   flex: 1;
-  padding: 20px;
-}
-
-.content h3 {
-  margin-bottom: 20px;
-}
-
-/* Cards */
-.card-container {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.card {
+  min-width: 250px;
   background: #fff;
-  padding: 20px;
-  width: 220px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 18px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  position: relative;
 }
 
-.card h4 {
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #6b7280;
+/* Top colored bar for stat cards */
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  border-radius: 18px 18px 0 0;
 }
 
-.card p {
-  font-size: 22px;
+.stat-card.green::before {
+  background: #4CAF50;
+}
+
+.stat-card.blue::before {
+  background: #2196F3;
+}
+
+.stat-card.orange::before {
+  background: #FF9800;
+}
+
+.stat-card.red::before {
+  background: red;
+}
+
+/* Titles */
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.count {
+  font-size: 26px;
   font-weight: bold;
-  color: #111827;
+}
+
+/* Dashboard layout */
+.dashboard-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Hover card */
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 25px 15px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .summary-card {
+    margin-bottom: 15px;
+  }
 }
