@@ -92,8 +92,8 @@ const UsersList = () => {
           </div>
           <br/>
          <div className="table-responsive">
-  <table className="table table-hover align-middle">
-    <thead className="table-dark">
+           <table className="table table-hover align-middle">
+           <thead className="table-dark">
       <tr>
         <th>NAME</th>
         <th>SURNAME</th>
