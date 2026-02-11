@@ -20,7 +20,6 @@ const ComplaintsTable = ({ category, status }) => {
   };
 
 
-
   return (
 
 
