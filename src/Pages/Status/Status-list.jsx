@@ -1,41 +1,93 @@
 import { useState } from "react";
-import StatusTable from "./StatusTable";
-import StatusMenu from "./StatusMenu";
 
 const StatusList = () => {
-  const [showList, setShowList] = useState(false);
-  const [category, setCategory] = useState("");
-  const [status, setStatus] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
-  const handleView = (category, status) => {
-    setCategory(category);
-    setStatus(status);
-    setShowList(true);
+  const handleSearch = () => {
+    console.log({
+      fromDate,
+      toDate,
+    });
   };
 
+  const handleClear = () => {
+  setFromDate("");
+  setToDate("");
+ };
+
   return (
-    <div className="d-flex">
-      {!showList && <StatusMenu onView={handleView} />}
+    <div className="layout-container">
+      <div className="layout-page">
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="card-body d-flex align-items-end flex-wrap gap-3">
 
-      {showList && (
-        <div className="container-xxl flex-grow-1 container-p-y">
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5 className="mb-0">
-              {category} – {status}
-            </h5>
+             
 
-            <button
-              className="btn btn-outline-danger btn-sm"
-              onClick={() => setShowList(false)}
-            >
-              <i className="bx bx-x"></i>
-            </button>
+              {/* FROM DATE */}
+              <div className="me-3">
+                <label className="form-label fw-semibold">From Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                />
+              </div>
+
+              {/* TO DATE */}
+              <div className="me-3">
+                <label className="form-label fw-semibold">To Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                />
+              </div>
+
+              {/* BUTTONS */}
+              <div className="d-flex gap-2">
+                <button className="btn btn-success" onClick={handleSearch}>
+                  Search
+                </button>
+                <button className="btn btn-warning" onClick={handleClear}>
+                  Clear
+                </button>
+              </div>
+
+            </div>
           </div>
-
-          {/* ✅ CORRECT COMPONENT */}
-          <StatusTable category={category} status={status} />
         </div>
-      )}
+
+        {/* TABLE */}
+        <div className="table-responsive">
+          <table className="table table-hover align-middle">
+            <thead className="table-dark">
+              <tr>
+                <th>Activity</th>
+                <th>ID</th>
+                <th>Ward</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Created By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><i className="fa fa-eye text-primary"></i></td>
+                <td>101</td>
+                <td>5</td>
+                <td>Water Leakage</td>
+                <td>Pending</td>
+                <td>admin@mail.com</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
     </div>
   );
 };
