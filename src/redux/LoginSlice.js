@@ -54,11 +54,11 @@ const loginSlice = createSlice({
         debugger
         state.loading = false;
         state.user = action.payload;
-        const displayUserType = getDisplayUserType(action.payload.data.usertype);
+        //const displayUserType = getDisplayUserType(action.payload.data.usertype);
 
         sessionStorage.setItem('LoggeduserId', action.payload.data.userid);
-        sessionStorage.setItem('LoggedUserType', displayUserType);
-        sessionStorage.setItem('LoggedWardId', action.payload.data.wardid);
+        sessionStorage.setItem('LoggedUserType', action.payload.data.usertype);
+        sessionStorage.setItem('LoggedWardId', action.payload.data.warD_NO);
         sessionStorage.setItem('LoggedName', action.payload.data.name);
         sessionStorage.setItem('LoggedUsername', action.payload.data.username);
   
