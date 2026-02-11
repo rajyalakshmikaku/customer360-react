@@ -91,7 +91,8 @@ thead {
 
 th, td {
   padding: 10px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px;  
+  color: #566a7f;     
   font-size: 14px;
 }
 
@@ -148,4 +149,21 @@ tbody tr:hover {
   border: 1px solid #233446;
 }
 
+.action-col {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.edit-icon {
+  color:blue;   /* teal */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.delete-icon {
+  color: #ff0000;   /* red */
+  font-size: 16px;
+  cursor: pointer;
+}
 

@@ -105,9 +105,35 @@ const UsersList = () => {
                   <th>ACTION</th>
                 </tr>
               </thead>
-              <tbody>
-                {/* UI only */}
-              </tbody>
+             <tbody>
+  <tr>
+    <td>Nancy</td>
+    <td>A</td>
+    <td>nancy12@gmail.com</td>
+    <td>Hyderabad</td>
+    <td>9876543210</td>
+    <td>Active</td>
+   <td className="action-col">
+  <i className="fa fa-edit edit-icon" title="Edit"></i>
+  <i className="fa fa-trash delete-icon" title="Delete"></i>
+</td>
+  </tr>
+
+  <tr>
+    <td>Demon</td>
+    <td>B</td>
+    <td>Demon33@mail.com</td>
+    <td>Bangalore</td>
+    <td>9123456780</td>
+    <td>Active</td>
+ <td className="action-col">
+  <i className="fa fa-edit edit-icon" title="Edit"></i>
+  <i className="fa fa-trash delete-icon" title="Delete"></i>
+</td>
+
+  </tr>
+</tbody>
+
             </table>
           </div>
         </div>
