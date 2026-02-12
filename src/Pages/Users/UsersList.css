@@ -17,6 +17,30 @@
 }
 
 
+/* users screen table header full width fix */
+.users-page table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.users-page thead th {
+  background-color: #007f7f;
+  color: #fff;
+}
+
+/* kill the side gap created by parent padding */
+.users-page .table-responsive {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* keep body spacing nice */
+.users-page tbody td {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+
 /* ===== ACTIONS ===== */
 
 .form-actions {
@@ -39,10 +63,10 @@
 }
 
 .btn.add {
-  background: #007bff;
+  background:  #007f7f;
   color: #fff;
   width: 110px;  
-  padding: 6px 10px;
+  padding: 8px 10px;
   font-size: 15px;
 }
 
@@ -146,7 +170,7 @@ tbody tr:hover {
   width: 100%;
   padding: 10px 15px;
   border-radius: 5px;
-  border: 1px solid #233446;
+  border: 1px solid  #007f7f;
 }
 
 .action-col {
@@ -156,7 +180,7 @@ tbody tr:hover {
 }
 
 .edit-icon {
-  color:blue;   /* teal */
+  color: #007f7f;   /* teal */
   font-size: 16px;
   cursor: pointer;
 }
@@ -166,4 +190,6 @@ tbody tr:hover {
   font-size: 16px;
   cursor: pointer;
 }
+
+
 
