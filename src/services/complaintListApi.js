@@ -40,3 +40,36 @@ export const getUserInfo = async () => {
   return response.data;
 };
 
+
+export const getComplaintsList = async ({
+  pageIndex,
+  pageSize,
+  search,
+  type,
+  status,
+  role,
+  wardId,
+  userId
+}) => {
+  debugger
+  const response = await AxiosInstance.post(
+    "/api/Complaints/GetComplaintslist",
+    null,
+    {
+      params: {
+        pageIndex,
+        pageSize,
+        search,
+        Type: type,
+        Status: status,
+        Role: role,
+        wardId,
+        userId
+      }
+    }
+  );
+
+  return response.data;
+};
+
+

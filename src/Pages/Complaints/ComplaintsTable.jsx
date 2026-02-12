@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ComplaintsTable = ({ category, status ,wardInfo,UserInfo}) => {
+const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo ,WardType}) => {
   const [ward, setWard] = useState("");
   const [user, setUser] = useState("");
 
@@ -25,7 +25,7 @@ const ComplaintsTable = ({ category, status ,wardInfo,UserInfo}) => {
 
     <div className="layout-container">
       <div className="layout-page">
-        
+
         <div className="row mb-4">
           <div className="col-12">
             <div className="card-body d-flex align-items-end flex-wrap gap-3">
@@ -67,7 +67,7 @@ const ComplaintsTable = ({ category, status ,wardInfo,UserInfo}) => {
                   onChange={(e) => setUser(e.target.value)}
                 >
                   <option value="">Select option</option>
-                   {UserInfo &&
+                  {UserInfo &&
                     UserInfo.map((item, index) => (
                       <option key={index} value={item.userid}>
                         {item.email}
@@ -102,45 +102,41 @@ const ComplaintsTable = ({ category, status ,wardInfo,UserInfo}) => {
                 <th>Activity</th>
                 <th>ID</th>
                 <th>Ward</th>
-                <th>Name</th>
+                <th>Type</th>
+                <th>Details</th>
                 <th>Status</th>
                 <th>Created By</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr>
-                <td>
-                  <i className="fa fa-eye text-primary"></i>
-                </td>
-                <td>101</td>
-                <td>5</td>
-                <td>Water Leakage</td>
-                <td>{status}</td>
-                <td>admin@mail.com</td>
-              </tr>
-              <tr>
-                <td>
-                  <i className="fa fa-eye text-primary"></i>
-                </td>
-                <td>101</td>
-                <td>5</td>
-                <td>Water Leakage</td>
-                <td>{status}</td>
-                <td>admin@mail.com</td>
-              </tr>
-              <tr>
-                <td>
-                  <i className="fa fa-eye text-primary"></i>
-                </td>
-                <td>101</td>
-                <td>5</td>
-                <td>Water Leakage</td>
-                <td>{status}</td>
-                <td>admin@mail.com</td>
-              </tr>
-
+              {ComplaintsListInfo && ComplaintsListInfo.length > 0 ? (
+                ComplaintsListInfo.map((item, index) => (
+                  <tr key={item.ID || index}>
+                    <td>
+                      <i
+                        className="fa fa-eye text-primary"
+                        style={{ cursor: "pointer" }}
+                        // onClick={() => handleView(item)}
+                      ></i>
+                    </td>
+                    <td>{item.ID}</td>
+                    <td>{item.WARD_NO}</td>
+                    <td>{item.CRIME_TYPE}</td>
+                    <td>{item.CRIME_DETAILS}</td>
+                    <td>{item.STATUS}</td>
+                    <td>{item.EMAIL}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center">
+                    No Complaints Found
+                  </td>
+                </tr>
+              )}
             </tbody>
+
           </table>
         </div>
       </div>

@@ -2,15 +2,16 @@ import { useState,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ComplaintsMenu from "./ComplaintsMenu";
 import ComplaintsTable from "./ComplaintsTable";
-import { fetchComplaintsCounts,fetchwardInfo ,fetchUserInfo} from "../../redux/complaintListSlice";
+import { fetchComplaintsCounts,fetchwardInfo ,fetchUserInfo,fetchComplaintsListInfo} from "../../redux/complaintListSlice";
 
 const ComplaintsList = () => {
   const [showList, setShowList] = useState(false);
   const [category, setCategory] = useState("");
   const [status, setStatus] = useState("");
   const dispatch = useDispatch();
-  const { counts, loading, wardInfo,UserInfo} = useSelector((state) => state.complaints);
-  console.log('UserInfo',UserInfo);
+  const { counts, loading, wardInfo,UserInfo,ComplaintsListInfo,WardType} = useSelector((state) => state.complaints);
+  //console.log('ComplaintsListInfo',ComplaintsListInfo);
+  const userType = sessionStorage.getItem("LoggedUserType");
   // THIS gets called from menu
   const handleView = (category, status) => {
     setCategory(category);
@@ -18,6 +19,16 @@ const ComplaintsList = () => {
     setShowList(true);
     dispatch(fetchwardInfo(category));
     dispatch(fetchUserInfo());
+    dispatch(fetchComplaintsListInfo({
+      pageIndex: 1,
+      pageSize: 10,
+      search: "",
+      type: category,
+      status: status,
+      role: userType,
+      wardId: "",
+      userId: ""
+    }))
 
   };
 
@@ -48,7 +59,7 @@ const ComplaintsList = () => {
             </button>
           </div>
 
-          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo}/>
+          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType}/>
         </div>
       )}
     </div>
