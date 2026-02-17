@@ -28,9 +28,9 @@ const dashboardSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchDashboardCounts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.counts = action.payload?.data?.[0]; // first record
-      })
+  state.loading = false;
+  state.counts = action.payload?.data || [];
+})
       .addCase(fetchDashboardCounts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
