@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ComplaintsTable = ({ category, status }) => {
+const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo ,WardType}) => {
   const [ward, setWard] = useState("");
   const [user, setUser] = useState("");
 
@@ -23,20 +23,20 @@ const ComplaintsTable = ({ category, status }) => {
   return (
 
 
-    <div class="layout-container">
-      <div class="layout-page">
-        
-        <div class="row mb-4">
-          <div class="col-12">
-            <div class="card-body d-flex align-items-end flex-wrap gap-3">
-              <div className="me-3">
+    <div className="layout-container">
+      <div className="layout-page">
+
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="card-body d-flex align-items-end flex-wrap gap-3">
+              {/* <div className="me-3">
                 <label className="form-label fw-semibold text-teal">Status</label>
                 <input style={{ minWidth: '230px' }}
                   className="form-control"
                   value={status}
                   readOnly
                 />
-              </div>
+              </div> */}
 
               {/* WARD */}
               <div className="me-3">
@@ -48,8 +48,12 @@ const ComplaintsTable = ({ category, status }) => {
                   onChange={(e) => setWard(e.target.value)}
                 >
                   <option value="">Select option</option>
-                  <option value="10">10</option>
-                  <option value="104">104</option>
+                  {wardInfo &&
+                    wardInfo.map((item, index) => (
+                      <option key={index} value={item.name}>
+                        {item.name}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -63,7 +67,12 @@ const ComplaintsTable = ({ category, status }) => {
                   onChange={(e) => setUser(e.target.value)}
                 >
                   <option value="">Select option</option>
-                  <option value="admin">admin@mail.com</option>
+                  {UserInfo &&
+                    UserInfo.map((item, index) => (
+                      <option key={index} value={item.userid}>
+                        {item.email}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div className="d-flex gap-2">
@@ -87,51 +96,48 @@ const ComplaintsTable = ({ category, status }) => {
         </div>
         <div className="table-responsive">
 
-          <table className="table table-hover align-middle">
+          <table className="table table-hover table-bordered align-middle">
+
             <thead className="table-dark">
               <tr>
                 <th>Activity</th>
                 <th>ID</th>
                 <th>Ward</th>
-                <th>Name</th>
+                <th>Type</th>
+                <th>Details</th>
                 <th>Status</th>
                 <th>Created By</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr>
-                <td>
-                  <i className="fa fa-eye text-primary"></i>
-                </td>
-                <td>101</td>
-                <td>5</td>
-                <td>Water Leakage</td>
-                <td>{status}</td>
-                <td>admin@mail.com</td>
-              </tr>
-              <tr>
-                <td>
-                  <i className="fa fa-eye text-primary"></i>
-                </td>
-                <td>101</td>
-                <td>5</td>
-                <td>Water Leakage</td>
-                <td>{status}</td>
-                <td>admin@mail.com</td>
-              </tr>
-              <tr>
-                <td>
-                  <i className="fa fa-eye text-primary"></i>
-                </td>
-                <td>101</td>
-                <td>5</td>
-                <td>Water Leakage</td>
-                <td>{status}</td>
-                <td>admin@mail.com</td>
-              </tr>
-
+              {ComplaintsListInfo && ComplaintsListInfo.length > 0 ? (
+                ComplaintsListInfo.map((item, index) => (
+                  <tr key={item.ID || index}>
+                    <td>
+                      <i
+                        className="fa fa-eye text-primary"
+                        style={{ cursor: "pointer" }}
+                        // onClick={() => handleView(item)}
+                      ></i>
+                    </td>
+                    <td>{item.ID}</td>
+                    <td>{item.WARD_NO}</td>
+                    <td>{item.CRIME_TYPE}</td>
+                    <td>{item.CRIME_DETAILS}</td>
+                    <td>{item.STATUS}</td>
+                    <td>{item.EMAIL}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center">
+                    No Complaints Found
+                  </td>
+                </tr>
+              )}
             </tbody>
+
           </table>
         </div>
       </div>

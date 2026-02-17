@@ -1,6 +1,6 @@
 /* Sidebar background */
 .layout-menu {
-  background-color: #3B5FCC;
+  background-color: teal;
 }
 
 /* Menu links */
@@ -17,7 +17,7 @@
 
 /* Hover */
 .menu-link:hover {
-  background-color: #4A6FE3;
+  background-color: teal;
 }
 
 /* Active menu (IMPORTANT) */
@@ -32,7 +32,7 @@
 }
 /* Sidebar background */
 .layout-menu {
-  background-color: #3B5FCC !important;
+  background-color: teal !important;
 }
 
 /* App name */
