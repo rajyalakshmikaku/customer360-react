@@ -23,7 +23,7 @@ function Dashboard() {
 };
 
   const handleinterimsClick = () => {
-  navigate(`/details/${WardNo}/InterimsDetails`);
+  navigate(`/details/${WardNo}/Interims`);
   };
   const getValue = (name) => {
     const item = counts?.find((d) => d.name === name);
