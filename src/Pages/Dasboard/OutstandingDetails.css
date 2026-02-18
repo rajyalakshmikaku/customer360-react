@@ -45,12 +45,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f4f5f7;
+    background: white;
     border-radius: 20px;
     padding: 30px 40px;
     margin-bottom: 25px;
     position: relative;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(164, 151, 151, 1);
+    border: 2px solid orange;  
 }
 
 /* LEFT BLUE BORDER */
@@ -94,7 +95,7 @@
 .card-title {
     font-size: 20px;
     font-weight: 600;
-    color: #2f4a8a;
+    color: teal;
 }
 
 /* RIGHT SIDE (AMOUNT) */
@@ -110,17 +111,19 @@
 .amount {
     font-size: 28px;
     font-weight: bold;
-    color: #2f4a8a;
+    color: teal;
 }
 /* new */
 .card {
-  background: #f4f5f7;
+  background: white;
   padding: 30px;
   border-radius: 18px;
   margin-bottom: 30px;
   position: relative;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(164, 151, 151, 1);
+  border: 2px solid orange;  
 }
+
 
 /* Header */
 .card-header {
@@ -134,7 +137,7 @@
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-  color: #2f4a8a;
+  color: teal;
 }
 
 /* Icon */
@@ -142,13 +145,13 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: #3f5fbf;
+  background: teal;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-size: 18px;
-  border: 4px solid #f3e600;
+  border: 4px solid orange;
 }
 
 /* Overview Row */
@@ -169,7 +172,7 @@
   margin-top: 6px;
   font-size: 26px;
   font-weight: bold;
-  color: #2f4a8a;
+  color: teal;
 }
 
 /* Right side alignment */
@@ -194,7 +197,7 @@
   margin: 5px 0 0;
   font-size: 24px;
   font-weight: bold;
-  color: #2f4a8a;
+  color: teal;
 }
 .page-header {
   margin-bottom: 20px;
@@ -221,5 +224,5 @@
 }
 
 .back-btn:hover {
-  color: #2f4a8a;
+  color: teal;
 }
