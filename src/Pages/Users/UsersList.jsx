@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./UsersList.css";
 import { fetchUserListInfo } from "../../redux/UserListSlice";
+import Pagination from "../../Components/Pagination";
 
 const UsersList = () => {
   const dispatch = useDispatch();
@@ -164,57 +165,12 @@ const UsersList = () => {
           </div>
 
           {/* ✅ Pagination */}
-<div className="pagination-wrapper">
-  <button
-    className="pg-btn"
-    disabled={pageIndex === 1}
-    onClick={() => setPageIndex(1)}
-  >
-    First
-  </button>
-
-  <button
-    className="pg-btn"
-    disabled={pageIndex === 1}
-    onClick={() => setPageIndex(pageIndex - 1)}
-  >
-    Previous
-  </button>
-
-  {/* Page Numbers */}
-  {Array.from({ length: totalPages }, (_, i) => i + 1)
-    .slice(
-      Math.max(0, pageIndex - 2),
-      Math.min(totalPages, pageIndex + 1)
-    )
-    .map((page) => (
-      <button
-        key={page}
-        className={`pg-btn ${pageIndex === page ? "active" : ""}`}
-        onClick={() => setPageIndex(page)}
-      >
-        {page}
-      </button>
-    ))}
-
-  {totalPages > 3 && pageIndex < totalPages - 1 && <span className="pg-dots">...</span>}
-
-  <button
-    className="pg-btn"
-    disabled={pageIndex === totalPages}
-    onClick={() => setPageIndex(pageIndex + 1)}
-  >
-    Next
-  </button>
-
-  <button
-    className="pg-btn"
-    disabled={pageIndex === totalPages}
-    onClick={() => setPageIndex(totalPages)}
-  >
-    Last
-  </button>
-</div>
+        <Pagination
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+        totalCount={totalCount}
+        onPageChange={(page) => setPageIndex(page)}
+      />
 
         </div>
       )}
