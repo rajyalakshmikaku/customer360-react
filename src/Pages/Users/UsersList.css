@@ -155,11 +155,11 @@ tbody tr:hover {
 .form-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+  gap: 10px;
 }
 
 .form-grid label {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   margin-bottom: 4px;
   display: block;
@@ -193,3 +193,45 @@ tbody tr:hover {
 
 
 
+.pagination-wrapper {
+  display: flex;
+  gap: 4px;
+  justify-content: left;
+  margin-top: 20px;
+}
+
+.pg-btn {
+  padding: 4px 8px;     /* ⬅️ chinna buttons */
+  border: 1px solid #00a3a3;
+  background: #fff;
+  color: #0b2b4b;
+  border-radius: 4px;   /* ⬅️ chinna radius */
+  cursor: pointer;
+  font-size: 10px;     /* ⬅️ small text */
+  min-width: 25px;     /* ⬅️ same width buttons */
+  height: 25px;        /* ⬅️ compact height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pg-btn:hover:not(:disabled) {
+  background: #00a3a3;
+  color: #fff;
+}
+
+.pg-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pg-btn.active {
+  background: #00a3a3;
+  color: #fff;
+  font-weight: bold;
+}
+
+.pg-dots {
+  padding: 3px 6px;
+  color: #555;
+}
