@@ -3,14 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import ComplaintsMenu from "./ComplaintsMenu";
 import ComplaintsTable from "./ComplaintsTable";
 import { fetchComplaintsCounts,fetchwardInfo ,fetchUserInfo,fetchComplaintsListInfo} from "../../redux/complaintListSlice";
+import Pagination from "../../Components/Pagination";
+
 
 const ComplaintsList = () => {
   const [showList, setShowList] = useState(false);
   const [category, setCategory] = useState("");
   const [status, setStatus] = useState("");
+
+  const [pageIndex, setPageIndex] = useState(1);
+  const pageSize = 10;
+
+
   const dispatch = useDispatch();
-  const { counts, loading, wardInfo,UserInfo,ComplaintsListInfo,WardType} = useSelector((state) => state.complaints);
-  //console.log('ComplaintsListInfo',ComplaintsListInfo);
+  const { counts, loading, wardInfo,UserInfo,ComplaintsListInfo,WardType,totalCount,onSearch} = useSelector((state) => state.complaints);
+  console.log('ComplaintsListInfo',ComplaintsListInfo);
   const userType = sessionStorage.getItem("LoggedUserType");
   // THIS gets called from menu
   const handleView = (category, status) => {
@@ -31,6 +38,40 @@ const ComplaintsList = () => {
     }))
 
   };
+
+  const handleSearch = (ward, user) => {
+  setPageIndex(1);
+
+  dispatch(fetchComplaintsListInfo({
+    pageIndex: 1,
+    pageSize: pageSize,
+    search: "",
+    type: category,
+    status: status,
+    role: userType,
+    wardId: ward || "",
+    userId: user || ""
+  }));
+};
+
+
+  const handlePageChange = (page) => {
+  if (page < 1) return;
+
+  setPageIndex(page);
+
+  dispatch(fetchComplaintsListInfo({
+    pageIndex: page,
+    pageSize: pageSize,
+    search: "",
+    type: category,
+    status: status,
+    role: userType,
+    wardId: "",
+    userId: ""
+  }));
+};
+
 
   
   const wardNo = 0;
@@ -58,8 +99,12 @@ const ComplaintsList = () => {
               <i className="bx bx-x"></i>
             </button>
           </div>
+          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch}/>
 
-          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType}/>
+          <div className="pagination-fixed">
+             <Pagination pageIndex={pageIndex} pageSize={pageSize} totalCount={totalCount} onPageChange={handlePageChange}/>
+          </div>
+          
         </div>
       )}
     </div>

@@ -28,7 +28,7 @@ export const getWardInfo = async (type) => {
     }
   );
 
-  console.log("response", response);
+  //console.log("response", response);
   return response.data;
 };
 

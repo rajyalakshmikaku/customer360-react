@@ -1,23 +1,45 @@
 import { useState } from "react";
+import ViewModal from "./ViewModal";
 
-const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo ,WardType}) => {
+
+
+const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch }) => {
   const [ward, setWard] = useState("");
   const [user, setUser] = useState("");
 
   const handleSearch = () => {
-    console.log({
-      category,
-      status,
-      ward,
-      user
-    });
-    // call API here
+    onSearch(ward, user);
   };
+
 
   const handleClear = () => {
     setWard("");
     setUser("");
+    onSearch("", "");
   };
+  const [showModal, setShowModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItemImages, setSelectedItemImages] = useState([]);
+  const [type, setType] = useState("");
+
+  const handleView = (item) => {
+    setSelectedItem(item);
+    setType(WardType);
+    setSelectedItemImages(item.Images || []); // adjust if needed
+    setShowModal(true);
+  };
+  const formatDotNetDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+  const formatTimeSpan = (timeString) => {
+    if (!timeString) return "";
+    return timeString.substring(0, 5); // HH:mm
+  };
+
+
 
 
   return (
@@ -101,7 +123,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
             <thead className="table-dark">
               <tr>
                 <th>Activity</th>
-                <th>ID</th>
+                <th hidden>ID</th>
                 <th>Ward</th>
                 <th>Type</th>
                 <th>Details</th>
@@ -118,13 +140,53 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                       <i
                         className="fa fa-eye text-primary"
                         style={{ cursor: "pointer" }}
-                        // onClick={() => handleView(item)}
+                        onClick={() => handleView(item)}
                       ></i>
+
                     </td>
-                    <td>{item.ID}</td>
+
                     <td>{item.WARD_NO}</td>
-                    <td>{item.CRIME_TYPE}</td>
-                    <td>{item.CRIME_DETAILS}</td>
+
+                    {WardType === "HOTSPOT" && (
+                      <>
+                        <td>{item.CRIME_TYPE}</td>
+                        <td>{item.CRIME_DETAILS}</td>
+                      </>
+                    )}
+
+                    {WardType === "ROADCLOSURE" && (
+                      <>
+                        <td>{item.ROAD_NAME}</td>
+                        <td>{item.ROADCLOUSER_DETAILS}</td>
+                      </>
+                    )}
+
+                    {WardType === "MEETING" && (
+                      <>
+                        <td>{item.SUBJECT}</td>
+                        <td>{item.MEETING_DETAILS}</td>
+                      </>
+                    )}
+
+                    {WardType === "MISSINGPERSON" && (
+                      <>
+                        <td>{item.FULL_NAME}</td>
+                        <td>{item.MISSINGPERSON_DETAILS}</td>
+                      </>
+                    )}
+
+                    {WardType === "HEALTH" && (
+                      <td>{item.HEALTHCARE_DETAILS}</td>
+                    )}
+
+                    {WardType === "WORKSHOP" && (
+                      <td>{item.WORKSHOP_DETAILS}</td>
+                    )}
+
+                    {WardType === "WARNING" && (
+                      <td>{item.WARNING_DETAILS}</td>
+                    )}
+
                     <td>{item.STATUS}</td>
                     <td>{item.EMAIL}</td>
                   </tr>
@@ -132,13 +194,16 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
               ) : (
                 <tr>
                   <td colSpan="6" className="text-center">
-                    No Complaints Found
+                    No Users Found
                   </td>
                 </tr>
               )}
             </tbody>
 
+
           </table>
+          <ViewModal show={showModal} onClose={() => setShowModal(false)} WardType={category} selectedItem={selectedItem} selectedItemImages={selectedItemImages} formatDotNetDate={formatDotNetDate} formatTimeSpan={formatTimeSpan} />
+
         </div>
       </div>
 
