@@ -1,19 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDashboardCounts } from "../../redux/dashboardSlice";
 import "./Dashboard.css";
-import { fetchComplaintsCounts } from "../../redux/complaintListSlice";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const { counts, loading } = useSelector((state) => state.dashboard);
 
+  // const wardNo="123";
+  const WardNo = "104";
 
-  const wardNo = "123";
+  useEffect(() => {
+    dispatch(fetchDashboardCounts(WardNo));
+    // setDashboardData(res.data); // IMPORTANT
 
-useEffect(() => {
-  dispatch(fetchDashboardCounts(wardNo));
-}, [dispatch, wardNo]);
+  }, [dispatch, WardNo]);
+ const handleOutstandingClick = () => {
+  navigate(`/details/${WardNo}/Outstanding`);
+};
+
+  const handleinterimsClick = () => {
+  navigate(`/details/${WardNo}/InterimsDetails`);
+  };
+  const getValue = (name) => {
+    const item = counts?.find((d) => d.name === name);
+    return item ? Number(item.value).toLocaleString() : 0;
+  };
+
   if (loading) return <p>Loading dashboard...</p>;
 
   return (
@@ -24,25 +40,30 @@ useEffect(() => {
           {/* ROW 1 */}
           <div className="row card-row mb-1">
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-green">
+              <div className="summary-card border-green"
+                onClick={handleOutstandingClick}
+                style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-money" />
                 </div>
                 <div className="summary-title">Outstanding Debt</div>
                 <div className="summary-value">
-                  {counts?.outstandingDebt ?? 0}
+                  {getValue("Outstanding Amount")}
+
                 </div>
               </div>
             </div>
 
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-blue">
+              <div className="summary-card border-blue" onClick={handleinterimsClick}
+                style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-file-text" />
                 </div>
                 <div className="summary-title">Interims</div>
                 <div className="summary-value">
-                  {counts?.interims ?? 0}
+                  {getValue("Interims")}
+
                 </div>
               </div>
             </div>
@@ -54,7 +75,8 @@ useEffect(() => {
                 </div>
                 <div className="summary-title">Incidents</div>
                 <div className="summary-value">
-                  {counts?.incidents ?? 0}
+                  {getValue("IMS")}
+
                 </div>
               </div>
             </div>
@@ -66,7 +88,7 @@ useEffect(() => {
                 </div>
                 <div className="summary-title">Meters</div>
                 <div className="summary-value">
-                  {counts?.meters ?? 0}
+                  {getValue("Water and Electricity Meters")}
                 </div>
               </div>
             </div>
@@ -81,7 +103,7 @@ useEffect(() => {
                 </div>
                 <div className="summary-title">Properties</div>
                 <div className="summary-value">
-                  {counts?.properties ?? 0}
+                  {getValue("Total Properties")}
                 </div>
               </div>
             </div>
@@ -93,7 +115,7 @@ useEffect(() => {
                 </div>
                 <div className="summary-title">Customers</div>
                 <div className="summary-value">
-                  {counts?.customers ?? 0}
+                  {getValue("Total Customers")}
                 </div>
               </div>
             </div>
@@ -105,7 +127,41 @@ useEffect(() => {
                 </div>
                 <div className="summary-title">Not Read</div>
                 <div className="summary-value">
-                  {counts?.notRead ?? 0}
+                  {getValue("Not Read Meters")}
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-3 col-md-4 col-sm-6">
+              <div className="summary-card border-orange">
+                <div className="icon-circle">
+                  <i className="fa fa-exclamation-triangle" />
+                </div>
+                <div className="summary-title">Customer 360</div>
+                <div className="summary-value">
+                  View Insights
+                </div>
+              </div>
+            </div>
+
+            <div className="col-lg-3 col-md-4 col-sm-6">
+              <div className="summary-card border-orange">
+                <div className="icon-circle">
+                  <i className="fa fa-exclamation-triangle" />
+                </div>
+                <div className="summary-title">Collections</div>
+                <div className="summary-value">
+                  Payments
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-3 col-md-4 col-sm-6">
+              <div className="summary-card border-orange">
+                <div className="icon-circle">
+                  <i className="fa fa-exclamation-triangle" />
+                </div>
+                <div className="summary-title">Indigent</div>
+                <div className="summary-value">
+                  {getValue("Indigent")}
                 </div>
               </div>
             </div>

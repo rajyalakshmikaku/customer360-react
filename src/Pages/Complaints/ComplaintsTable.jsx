@@ -29,14 +29,14 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
         <div className="row mb-4">
           <div className="col-12">
             <div className="card-body d-flex align-items-end flex-wrap gap-3">
-              <div className="me-3">
+              {/* <div className="me-3">
                 <label className="form-label fw-semibold text-teal">Status</label>
                 <input style={{ minWidth: '230px' }}
                   className="form-control"
                   value={status}
                   readOnly
                 />
-              </div>
+              </div> */}
 
               {/* WARD */}
               <div className="me-3">
@@ -96,7 +96,8 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
         </div>
         <div className="table-responsive">
 
-          <table className="table table-hover align-middle">
+          <table className="table table-hover table-bordered align-middle">
+
             <thead className="table-dark">
               <tr>
                 <th>Activity</th>
