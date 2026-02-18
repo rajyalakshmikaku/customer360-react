@@ -5,56 +5,65 @@ const Pagination = ({ pageIndex, pageSize, totalCount, onPageChange }) => {
 
   if (totalPages <= 1) return null;
 
-  const getPages = () => {
+  const getVisiblePages = () => {
+    const start = Math.max(1, pageIndex - 1);
+    const end = Math.min(totalPages, pageIndex + 1);
+
     const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = start; i <= end; i++) {
       pages.push(i);
     }
     return pages;
   };
 
   return (
-    <div className="d-flex justify-content-center py-3">
-      <nav>
-        <ul className="pagination pagination-sm mb-0">
+    <div className="pagination-wrapper">
+      <button
+        className="pg-btn"
+        disabled={pageIndex === 1}
+        onClick={() => onPageChange(1)}
+      >
+        First
+      </button>
 
-          {/* Previous */}
-          <li className={`page-item ${pageIndex === 1 ? "disabled" : ""}`}>
-            <button
-              className="page-link"
-              onClick={() => onPageChange(pageIndex - 1)}
-            >
-              <i className="bx bx-chevrons-left"></i>
-            </button>
-          </li>
+      <button
+        className="pg-btn"
+        disabled={pageIndex === 1}
+        onClick={() => onPageChange(pageIndex - 1)}
+      >
+        Previous
+      </button>
 
-          {/* Pages */}
-          {getPages().map((page) => (
-            <li
-              key={page}
-              className={`page-item ${page === pageIndex ? "active" : ""}`}
-            >
-              <button
-                className="page-link"
-                onClick={() => onPageChange(page)}
-              >
-                {page}
-              </button>
-            </li>
-          ))}
+      {/* Page Numbers */}
+      {getVisiblePages().map((page) => (
+        <button
+          key={page}
+          className={`pg-btn ${pageIndex === page ? "active" : ""}`}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </button>
+      ))}
 
-          {/* Next */}
-          <li className={`page-item ${pageIndex === totalPages ? "disabled" : ""}`}>
-            <button
-              className="page-link"
-              onClick={() => onPageChange(pageIndex + 1)}
-            >
-              <i className="bx bx-chevrons-right"></i>
-            </button>
-          </li>
+      {totalPages > 3 && pageIndex < totalPages - 1 && (
+        <span className="pg-dots">...</span>
+      )}
 
-        </ul>
-      </nav>
+      <button
+        className="pg-btn"
+        disabled={pageIndex === totalPages}
+        onClick={() => onPageChange(pageIndex + 1)}
+      >
+        Next
+      </button>
+
+      <button
+        className="pg-btn"
+        disabled={pageIndex === totalPages}
+        onClick={() => onPageChange(totalPages)}
+      >
+        Last
+      </button>
     </div>
   );
 };
