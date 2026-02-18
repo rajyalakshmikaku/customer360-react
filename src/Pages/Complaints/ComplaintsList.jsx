@@ -12,7 +12,7 @@ const ComplaintsList = () => {
   const [status, setStatus] = useState("");
 
   const [pageIndex, setPageIndex] = useState(1);
-  const pageSize = 3;
+  const pageSize = 10;
 
 
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const ComplaintsList = () => {
     dispatch(fetchUserInfo());
     dispatch(fetchComplaintsListInfo({
       pageIndex: 1,
-      pageSize: 3,
+      pageSize: 10,
       search: "",
       type: category,
       status: status,
