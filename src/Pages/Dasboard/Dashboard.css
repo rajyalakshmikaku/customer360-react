@@ -51,7 +51,7 @@ body {
 .icon-circle {
   width: 40px;
   height: 40px;
-  background: #008080;
+  background: teal;
   color: yellow;
   border-radius: 50%;
   display: flex;
