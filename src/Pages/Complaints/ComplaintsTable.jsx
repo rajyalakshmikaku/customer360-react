@@ -193,8 +193,8 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center text-danger">
-                    No result found
+                  <td colSpan="6" className="text-center">
+                    No Users Found
                   </td>
                 </tr>
               )}

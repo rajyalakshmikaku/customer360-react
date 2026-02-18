@@ -1,23 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./UsersList.css";
+import { fetchUserListInfo } from "../../redux/UserListSlice";
 
 const UsersList = () => {
+  const dispatch = useDispatch();
+  const { UserListInfo = [], loading, totalCount = 0 } = useSelector((state) => state.User || {});
+
   const [showForm, setShowForm] = useState(false);
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState("USERID");
+
+  useEffect(() => {
+    dispatch(fetchUserListInfo({ pageIndex, pageSize, search, sorting }));
+  }, [dispatch, pageIndex, pageSize, search, sorting]);
+
+  const totalPages = Math.ceil(totalCount / pageSize) || 1;
 
   return (
     <div className="users-page">
 
-      {/* ================= HEADER ================= */}
-     {!showForm && (
-  <div className="page-header">
-    <h3>Users Details</h3>
-    <button className="btn add" onClick={() => setShowForm(true)}>
-      + Add User
-    </button>
-  </div>
-)}
+      {!showForm && (
+        <div className="page-header">
+          <h3>Users Details</h3>
+          <button className="btn add" onClick={() => setShowForm(true)}>
+            + Add User
+          </button>
+        </div>
+      )}
 
-      {/* ================= ADD USER PAGE ================= */}
+       {/* ================= ADD USER PAGE ================= */}
       {showForm && (
         <div className="add-user-section">
 
@@ -74,68 +88,134 @@ const UsersList = () => {
         </div>
       )}
 
-      {/* ================= USER LIST PAGE ================= */}
+
       {!showForm && (
         <div className="users-list-section">
 
           <div className="table-top">
             <div>
-              Records per page
-              <select>
-                <option>10</option>
-                <option>25</option>
-                <option>50</option>
+              Records per page{" "}
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setPageIndex(1); // 👈 page size change ayithe first page ki vellali
+                }}
+              >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
               </select>
             </div>
 
-            <input type="text" placeholder="Search" />
+            <input
+              type="text"
+              placeholder="Search"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPageIndex(1);
+              }}
+            />
           </div>
-          <br/>
-         <div className="table-responsive">
-           <table className="table table-hover align-middle">
-           <thead className="table-dark">
-      <tr>
-        <th>NAME</th>
-        <th>SURNAME</th>
-        <th>EMAIL</th>
-        <th>ADDRESS</th>
-        <th>MOBILE</th>
-        <th>STATUS</th>
-        <th>ACTION</th>
-      </tr>
-    </thead>
 
-    <tbody>
-      <tr>
-        <td>Nancy</td>
-        <td>A</td>
-        <td>nancy12@gmail.com</td>
-        <td>Hyderabad</td>
-        <td>9876543210</td>
-        <td>Active</td>
-        <td className="action-col">
-          <i className="fa fa-edit edit-icon" title="Edit"></i>
-          <i className="fa fa-trash delete-icon" title="Delete"></i>
-        </td>
-      </tr>
+          {/* {loading && <p>Loading...</p>} */}
 
-      <tr>
-        <td>Demon</td>
-        <td>B</td>
-        <td>demon33@mail.com</td>
-        <td>Bangalore</td>
-        <td>9123456780</td>
-        <td>Active</td>
-        <td className="action-col">
-          <i className="fa fa-edit edit-icon" title="Edit"></i>
-          <i className="fa fa-trash delete-icon" title="Delete"></i>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <div className="table-responsive">
+            <table className="table table-hover align-middle">
+              <thead className="table-dark">
+                <tr>
+                  <th>NAME</th>
+                  <th>SURNAME</th>
+                  <th>EMAIL</th>
+                  <th>ADDRESS</th>
+                  <th>MOBILE</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {UserListInfo.length > 0 ? (
+                  UserListInfo.map((item, index) => (
+                    <tr key={item.USERID || index}>
+                      <td>{item.NAME}</td>
+                      <td>{item.SURNAME}</td>
+                      <td>{item.EMAIL}</td>
+                      <td>{item.ADDRESS}</td>
+                      <td>{item.CELLNUMBER}</td>
+                      <td>{item.ACTIVESTATUS}</td>
+                      <td className="action-col">
+                        <i className="fa fa-edit edit-icon" title="Edit"></i>
+                        <i className="fa fa-trash delete-icon" title="Delete"></i>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="text-center">
+                      No Users Found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* ✅ Pagination */}
+<div className="pagination-wrapper">
+  <button
+    className="pg-btn"
+    disabled={pageIndex === 1}
+    onClick={() => setPageIndex(1)}
+  >
+    First
+  </button>
+
+  <button
+    className="pg-btn"
+    disabled={pageIndex === 1}
+    onClick={() => setPageIndex(pageIndex - 1)}
+  >
+    Previous
+  </button>
+
+  {/* Page Numbers */}
+  {Array.from({ length: totalPages }, (_, i) => i + 1)
+    .slice(
+      Math.max(0, pageIndex - 2),
+      Math.min(totalPages, pageIndex + 1)
+    )
+    .map((page) => (
+      <button
+        key={page}
+        className={`pg-btn ${pageIndex === page ? "active" : ""}`}
+        onClick={() => setPageIndex(page)}
+      >
+        {page}
+      </button>
+    ))}
+
+  {totalPages > 3 && pageIndex < totalPages - 1 && <span className="pg-dots">...</span>}
+
+  <button
+    className="pg-btn"
+    disabled={pageIndex === totalPages}
+    onClick={() => setPageIndex(pageIndex + 1)}
+  >
+    Next
+  </button>
+
+  <button
+    className="pg-btn"
+    disabled={pageIndex === totalPages}
+    onClick={() => setPageIndex(totalPages)}
+  >
+    Last
+  </button>
 </div>
 
-          
         </div>
       )}
     </div>
