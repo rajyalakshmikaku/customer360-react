@@ -90,7 +90,7 @@ if (loading) {
                 <li>
                   <a
                     className="complaints-menu__link"
-                    onClick={() => onView(item.Name, "InActive")}
+                    onClick={() => onView(item.Name, "In-Active")}
                   >
                     In-Active
                     <span className="complaints-menu__count inactive">

@@ -84,3 +84,8 @@
 .layout-navbar img {
   border: 2px solid #F2B632;
 }
+.pagination-fixed {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
