@@ -3,7 +3,7 @@ import ViewModal from "./ViewModal";
 
 
 
-const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch,onStatusChange  }) => {
+const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch,onStatusChange,approveSuccess}) => {
   const [ward, setWard] = useState("");
   const [user, setUser] = useState("");
   const [modalMode, setModalMode] = useState("");
@@ -226,7 +226,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
 
 
           </table>
-          <ViewModal show={showModal} onClose={() => setShowModal(false)} WardType={category} mode={modalMode} selectedItem={selectedItem} selectedItemImages={selectedItemImages} formatDotNetDate={formatDotNetDate} formatTimeSpan={formatTimeSpan} onStatusChange={onStatusChange}/>
+          <ViewModal show={showModal} onClose={() => setShowModal(false)} WardType={category} mode={modalMode} selectedItem={selectedItem} selectedItemImages={selectedItemImages} formatDotNetDate={formatDotNetDate} formatTimeSpan={formatTimeSpan} onStatusChange={onStatusChange} approveSuccess={approveSuccess} />
 
         </div>
       </div>

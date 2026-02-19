@@ -132,7 +132,7 @@ useEffect(() => {
               <i className="bx bx-x"></i>
             </button>
           </div>
-          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch}  onStatusChange={handleStatusChange}/>
+          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch}  onStatusChange={handleStatusChange} approveSuccess={ApproveInfo?.success}/>
 
           <Pagination pageIndex={pageIndex} pageSize={pageSize} totalCount={totalCount} onPageChange={handlePageChange}/>
           

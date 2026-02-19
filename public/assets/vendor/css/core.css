@@ -315,6 +315,7 @@ tr,
 td,
 th {
   border-color: inherit;
+  color: black;
   border-style: solid;
   border-width: 0;
 }
@@ -2364,7 +2365,7 @@ textarea.form-control-lg {
   font-size: 0.9375rem;
   font-weight: 400;
   line-height: 1.53;
-  color: #697a8d;
+  color: black;
   background-color: #fff;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%2867, 89, 113, 0.6%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
@@ -7609,6 +7610,7 @@ button:focus {
 .form-label,
 .col-form-label {
   font-size: 0.75rem;
+  color: black;
   text-transform: uppercase;
   letter-spacing: inherit;
 }
@@ -7641,6 +7643,7 @@ button:focus {
 
 .form-select {
   background-clip: padding-box;
+  border-color: teal;
 }
 
 .form-range::-webkit-slider-thumb {
@@ -15245,6 +15248,7 @@ html:not(.layout-menu-fixed) .menu-inner-shadow {
 
 .content-wrapper {
   display: flex;
+  background-color: white;
   align-items: stretch;
   flex: 1 1 auto;
   flex-direction: column;
