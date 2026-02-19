@@ -2,22 +2,26 @@ import { useState,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ComplaintsMenu from "./ComplaintsMenu";
 import ComplaintsTable from "./ComplaintsTable";
-import { fetchComplaintsCounts,fetchwardInfo ,fetchUserInfo,fetchComplaintsListInfo} from "../../redux/complaintListSlice";
+import { fetchComplaintsCounts,fetchwardInfo ,fetchUserInfo,fetchComplaintsListInfo,fetchApproveComplaintsInfo } from "../../redux/complaintListSlice";
 import Pagination from "../../Components/Pagination";
+import alertify from "alertifyjs";
 
 
 const ComplaintsList = () => {
   const [showList, setShowList] = useState(false);
   const [category, setCategory] = useState("");
   const [status, setStatus] = useState("");
+  const [loadingType, setLoadingType] = useState(null);
+
 
   const [pageIndex, setPageIndex] = useState(1);
   const pageSize = 10;
 
 
   const dispatch = useDispatch();
-  const { counts, loading, wardInfo,UserInfo,ComplaintsListInfo,WardType,totalCount,onSearch} = useSelector((state) => state.complaints);
-  console.log('ComplaintsListInfo',ComplaintsListInfo);
+  const { counts, loading, wardInfo,UserInfo,ComplaintsListInfo,WardType,totalCount,onSearch,ApproveInfo} = useSelector((state) => state.complaints);
+  
+  //console.log('ApproveInfo',ApproveInfo);
   const userType = sessionStorage.getItem("LoggedUserType");
   // THIS gets called from menu
   const handleView = (category, status) => {
@@ -72,12 +76,41 @@ const ComplaintsList = () => {
   }));
 };
 
+useEffect(() => {
+  if (ApproveInfo?.success) {
+    alertify.alert("Message", ApproveInfo.message);
 
-  
+    dispatch(fetchComplaintsListInfo({
+      pageIndex,
+      pageSize,
+      search: "",
+      type: category,
+      status: status,
+      role: userType,
+      wardId: "",
+      userId: ""
+    }));
+  }
+}, [ApproveInfo]);
+
+
+
   const wardNo = 0;
   useEffect(() => {
     dispatch(fetchComplaintsCounts(wardNo));
   }, [dispatch, wardNo]);
+
+  const handleStatusChange = (userId, status, screen, comments = "") => {
+    return dispatch(
+        fetchApproveComplaintsInfo({
+            UserId: userId,
+            Status: status,
+            Screen: screen,
+            Comments: comments
+        })
+    ).unwrap(); 
+};
+
 
   return (
     <div className="d-flex">
@@ -99,11 +132,9 @@ const ComplaintsList = () => {
               <i className="bx bx-x"></i>
             </button>
           </div>
-          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch}/>
+          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch}  onStatusChange={handleStatusChange} approveSuccess={ApproveInfo?.success}/>
 
-          <div className="pagination-fixed">
-             <Pagination pageIndex={pageIndex} pageSize={pageSize} totalCount={totalCount} onPageChange={handlePageChange}/>
-          </div>
+          <Pagination pageIndex={pageIndex} pageSize={pageSize} totalCount={totalCount} onPageChange={handlePageChange}/>
           
         </div>
       )}

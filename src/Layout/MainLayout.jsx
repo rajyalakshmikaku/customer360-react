@@ -3,6 +3,8 @@ import { Outlet, Link, useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/LoginSlice";
 import "./MainLayout.css"
+import alertify from 'alertifyjs';
+import "alertifyjs/build/css/alertify.css";
 
 const MainLayout = () => {
   const navigate = useNavigate();

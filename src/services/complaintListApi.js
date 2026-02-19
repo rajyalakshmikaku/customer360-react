@@ -41,35 +41,28 @@ export const getUserInfo = async () => {
 };
 
 
-export const getComplaintsList = async ({
-  pageIndex,
-  pageSize,
-  search,
-  type,
-  status,
-  role,
-  wardId,
-  userId
-}) => {
+export const getComplaintsList = async ({pageIndex,pageSize,search,type,status,role,wardId,userId}) => {
   debugger
   const response = await AxiosInstance.post(
     "/api/Complaints/GetComplaintslist",
     null,
     {
-      params: {
-        pageIndex,
-        pageSize,
-        search,
-        Type: type,
-        Status: status,
-        Role: role,
-        wardId,
-        userId
-      }
+      params: {pageIndex,pageSize,search,Type: type,Status: status,Role: role,wardId,userId}
     }
   );
 
   return response.data;
 };
+export const PostApproveComplaint = async ({UserId,Status,Comments,Screen}) => {
+  debugger
+  const response = await AxiosInstance.post(
+    "/api/Complaints/PostApproveComplaint",
+    null,
+    {
+      params: {UserId,Status,Comments,Screen}
+    }
+  );
 
+  return response.data;
+};
 
