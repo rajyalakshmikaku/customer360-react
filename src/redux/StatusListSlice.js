@@ -1,13 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { GetStatuslist } from '../services/StatusListApi';
+import { GetStatuslist } from "../services/StatusListApi";
 
 export const fetchStatusListInfo = createAsyncThunk(
-  "Status/fetchStatusListInfo",
+  "status/fetchStatusListInfo",
   async (payload, thunkAPI) => {
     try {
-      const res = await GetStatuslist(payload);
-      // console.log("THUNK RESULT:", res);
-      return res;
+      return await GetStatuslist(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data || "Something went wrong"
@@ -16,35 +14,34 @@ export const fetchStatusListInfo = createAsyncThunk(
   }
 );
 
-
 const StatusSlice = createSlice({
-  name: "Status",
+  name: "status",
   initialState: {
-    success: false,
-    StatusListInfo: [],
-    totalCount: 0,
+    AccountsListInfo: null,
+    totalCount : null,
     loading: false,
     error: null
   },
   reducers: {},
   extraReducers: (builder) => {
-   builder
-         .addCase(fetchStatusListInfo.pending, (state) => {
-           state.loading = true;
-         })
-         .addCase(fetchStatusListInfo.fulfilled, (state, action) => {
-          debugger
-           state.loading = false;
-           const response = action.payload;
-           state.success = response?.success;
-           state.StatusListInfo = response?.data;
-           state.totalCount = response?.totalCount;
-         })
-         .addCase(fetchStatusListInfo.rejected, (state, action) => {
-           state.loading = false;
-           state.error = action.payload;
-         });
-
+   
+    builder
+      .addCase(fetchStatusListInfo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchStatusListInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        const response = action.payload;
+        state.success = response?.success;
+        state.AccountsListInfo = response?.list;
+        state.totalCount = response?.totalCount;
+        state.WardType = response?.type;
+      })
+      .addCase(fetchStatusListInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+      
 
   }
 });
