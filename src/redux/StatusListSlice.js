@@ -6,7 +6,7 @@ export const fetchStatusListInfo = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const res = await GetStatuslist(payload);
-      console.log("THUNK RESULT:", res);
+      // console.log("THUNK RESULT:", res);
       return res;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -28,33 +28,22 @@ const StatusSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchStatusListInfo.fulfilled, (state, action) => {
-  console.log("SLICE RECEIVED:", action.payload);
-
-  state.loading = false;
-
-  const res = action.payload;
-
-  state.success = res?.success ?? true;
-
-  // ✅ handle any casing + direct array
-  state.StatusListInfo =
-    res?.list ||
-    res?.List ||
-    res?.data ||
-    res?.Data ||
-    res?.items ||
-    res?.Items ||
-    (Array.isArray(res) ? res : []);
-
-  state.totalCount =
-    res?.totalCount ||
-    res?.TotalCount ||
-    res?.count ||
-    res?.Count ||
-    state.StatusListInfo.length;
-});
+   builder
+         .addCase(fetchStatusListInfo.pending, (state) => {
+           state.loading = true;
+         })
+         .addCase(fetchStatusListInfo.fulfilled, (state, action) => {
+          debugger
+           state.loading = false;
+           const response = action.payload;
+           state.success = response?.success;
+           state.StatusListInfo = response?.data;
+           state.totalCount = response?.totalCount;
+         })
+         .addCase(fetchStatusListInfo.rejected, (state, action) => {
+           state.loading = false;
+           state.error = action.payload;
+         });
 
 
   }

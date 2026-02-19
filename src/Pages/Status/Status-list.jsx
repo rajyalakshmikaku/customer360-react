@@ -6,9 +6,9 @@ import StatusViewModal from "./StatusViewModal";
 
 const StatusList = () => {
   const dispatch = useDispatch();
-
-  const { StatusListInfo = [], loading, totalCount = 0 } =
-    useSelector((state) => state.StatusList || {});
+     const {loading,totalCount,StatusListInfo} = useSelector((state) => state.Status);
+     console.log("StatusListInfo",StatusListInfo);
+     console.log("totalCount",totalCount);
 
   // DATE FILTER
   const [fromDate, setFromDate] = useState("");
