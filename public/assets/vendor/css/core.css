@@ -10063,10 +10063,14 @@ button.list-group-item-gray.active {
   background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
 }
 
-.bg-secondary {
+/* .bg-secondary {
   --bs-bg-opacity: 1;
   background-color: rgba(var(--bs-secondary-rgb), var(--bs-bg-opacity)) !important;
+} */
+.bg-secondary {
+  background-color: rgb(31, 107, 207) !important;
 }
+
 
 .bg-success {
   --bs-bg-opacity: 1;

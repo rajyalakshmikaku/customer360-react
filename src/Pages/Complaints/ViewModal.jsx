@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import ReactDOM from "react-dom";
 
@@ -12,7 +12,7 @@ const ViewModal = ({
     formatDotNetDate,
     formatTimeSpan,
     onStatusChange,
-    approveSuccess   
+    approveSuccess
 }) => {
 
     const [rejectComment, setRejectComment] = useState("");
@@ -22,12 +22,30 @@ const ViewModal = ({
     const [loading, setLoading] = useState(false);
     const { approveLoading } = useSelector((state) => state.complaints);
 
-   useEffect(() => {
-  if (approveSuccess) {
-    setShowRejectModal(false);  // close reject popup
-    setRejectComment("");       // clear textarea
-  }
-}, [approveSuccess]);
+    const getStatusBadgeClass = (status) => {
+        switch (status) {
+            case "Pending":
+                return "badge bg-warning text-dark";
+            case "Active":
+                return "badge bg-primary";
+            case "Completed":
+                return "badge bg-success";
+            case "In-Active":
+                return "badge bg-secondary";
+            case "Rejected":
+                return "badge bg-danger";
+            default:
+                return "badge bg-light text-dark";
+        }
+    };
+
+    useEffect(() => {
+        if (approveSuccess) {
+            setShowRejectModal(false);  // close reject popup
+            setRejectComment("");       // clear textarea
+        }
+
+    }, [approveSuccess]);
 
 
 
@@ -337,8 +355,30 @@ const ViewModal = ({
                                     {/* STATUS */}
                                     <tr>
                                         <td><b>Status</b></td>
-                                        <td>: {selectedItem?.STATUS}</td>
+                                        <td>
+                                            : <span className={getStatusBadgeClass(selectedItem?.STATUS)}>
+                                                {selectedItem?.STATUS}
+                                            </span>
+                                        </td>
                                     </tr>
+                                    <tr>
+                                        <td><b>Created Name</b></td>
+                                        <td>: {selectedItem.NAME} {selectedItem.SURNAME}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Created Email</b></td>
+                                        <td>: {selectedItem.EMAIL}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><b>Created Date</b></td>
+                                        <td>: {selectedItem.CREATED_DATE}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>No of Days</b></td>
+                                        <td>: {selectedItem.DAYS_TIME}</td>
+                                    </tr>
+
 
                                     {selectedItem?.STATUS === "In-Active" && (
                                         <>

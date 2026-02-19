@@ -3,11 +3,11 @@ import ViewModal from "./ViewModal";
 
 
 
-const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch,onStatusChange,approveSuccess}) => {
+const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch, onStatusChange, approveSuccess }) => {
   const [ward, setWard] = useState("");
   const [user, setUser] = useState("");
   const [modalMode, setModalMode] = useState("");
-  console.log('Ward',WardType);
+  console.log('Ward', WardType);
   const handleSearch = () => {
     onSearch(ward, user);
   };
@@ -24,7 +24,11 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
   const [type, setType] = useState("");
 
   const handleView = (item, mode) => {
-    setSelectedItem(item);
+    const daysTime = getDaysAndTime(item.CREATED_DATE);
+    setSelectedItem({
+    ...item,
+    DAYS_TIME: daysTime,   
+  });
     setType(WardType);
     setModalMode(mode);
     setSelectedItemImages(item.Images || []); // adjust if needed
@@ -39,6 +43,25 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
   const formatTimeSpan = (timeString) => {
     if (!timeString) return "";
     return timeString.substring(0, 5); // HH:mm
+  };
+
+  const getDaysAndTime = (createdDate) => {
+    if (!createdDate) return "-";
+
+    const created = new Date(createdDate);
+    const now = new Date();
+
+    let diffMs = now - created; // difference in milliseconds
+
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    diffMs -= days * 1000 * 60 * 60 * 24;
+
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    diffMs -= hours * 1000 * 60 * 60;
+
+    const minutes = Math.floor(diffMs / (1000 * 60));
+
+    return `${days}D ${hours}h ${minutes}m`;
   };
 
 
@@ -125,7 +148,8 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
             <thead className="table-dark">
               <tr>
                 <th>Activity</th>
-                <th>ID</th>
+                <th hidden>ID</th>
+                <th>Ref No.</th>
                 <th>Ward</th>
                 {[
                   "HOTSPOT",
@@ -133,17 +157,17 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                   "MEETING",
                   "MISSINGPERSON",
                   // "HEALTH",
-                   //"WARNING",
+                  //"WARNING",
                   //"WORKSHOP",
-                  
-                  
+
+
                 ].includes(WardType) && (
                     <th>Type</th>
                   )}
-           
+
                 <th>Details</th>
-                <th>Status</th>
-                <th>Created By</th>
+                <th>Created Date</th>
+                <th>No.of Days</th>
               </tr>
             </thead>
 
@@ -151,7 +175,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
               {ComplaintsListInfo && ComplaintsListInfo.length > 0 ? (
                 ComplaintsListInfo.map((item, index) => (
                   <tr key={item.ID || index}>
-                   
+
                     <td>
                       <i
                         className="fa fa-eye text-primary me-2"
@@ -165,10 +189,11 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                           onClick={() => handleView(item, "edit")}
                         ></i>
                       )}
-                 
+
                     </td>
 
-                    <td>{item.ID}</td>
+                    <td hidden>{item.ID}</td>
+                    <td>{item.REFNUMBER}</td>
                     <td>{item.WARD_NO}</td>
 
                     {WardType === "HOTSPOT" && (
@@ -211,8 +236,18 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                       <td>{item.WARNING_DETAILS}</td>
                     )}
 
-                    <td>{item.STATUS}</td>
-                    <td>{item.EMAIL}</td>
+                    <td>{new Date(item.CREATED_DATE).toLocaleDateString()}</td>
+                    {/* <td>{item.EMAIL}</td> */}
+                    <td>
+                      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                        {/* <span>{new Date(item.CREATED_DATE).toLocaleString()}</span> */}
+                        <span className="badge bg-secondary">
+                          {getDaysAndTime(item.CREATED_DATE)}
+                        </span>
+                      </div>
+                    </td>
+
+
                   </tr>
                 ))
               ) : (
