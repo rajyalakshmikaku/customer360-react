@@ -126,7 +126,7 @@ const MainLayout = () => {
                     }
                   >
                     <i className="menu-icon bx bx-list-check"></i>
-                    <div>Status List</div>
+                    <div>Account List</div>
                   </NavLink>
                 </li>
               </>
