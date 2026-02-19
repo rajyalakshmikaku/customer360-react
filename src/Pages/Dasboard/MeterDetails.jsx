@@ -5,7 +5,7 @@ import { fetchWardDetails } from "../../redux/wardDetailsSlice";
 import "./InterimsDetails.css";
 import { useNavigate } from "react-router-dom";
 
-function InterimsDetails() {
+function MeterDetails() {
   const dispatch = useDispatch();
       const navigate = useNavigate();
       const { wardNo, type , search} = useParams();
@@ -29,7 +29,7 @@ function InterimsDetails() {
 
 
 
-                <h2>104 - Interims  Categories </h2>
+                <h2>{wardNo} - Total Water and Electricity Meters</h2>
                 <button
                     className="back-btn"
                     onClick={() => navigate("/dashboard")}
@@ -38,34 +38,7 @@ function InterimsDetails() {
                     <span>Back to Dashboard</span>
                 </button>
             </div>
-            {/* Data Overview */}
-            {/* <div className="card debt-style">
-
-                <div className="card-row">
-
-                    <div className="card-left">
-                        <div className="icon-circle">
-                            <i className="fa fa-database"></i>
-                        </div>
-                        <div className="card-title">Data Overview</div>
-                    </div>
-
-                    <div className="card-right overview-data">
-                        <div className="overview-item">
-
-                            <span>Total Items</span>
-        <h3>{details.length}</h3>
-                        </div>
-
-                        <div className="overview-item">
-                            <span>Ward Number</span>
-                            <h3>104</h3>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div> */}
+          
  <div className="card debt-style">
 
   {/* Title Row */}
@@ -149,4 +122,4 @@ function InterimsDetails() {
     );
 }
 
-export default InterimsDetails;
+export default MeterDetails;

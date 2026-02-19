@@ -1,0 +1,69 @@
+.debt-style {
+  padding: 10px 20px;   /* reduced padding */
+  border-radius: 15px;
+}
+
+/* Header */
+.card-header {
+  margin-bottom: 35px;
+}
+
+.title-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-icon {
+  font-size: 22px;
+  color: teal;
+}
+
+/* Overview Row */
+.overview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -60px;
+}
+
+/* Item */
+.overview-item {
+    margin-bottom: 2px;
+  flex: 1;
+}
+
+.overview-item.right {
+  text-align: right;
+}
+
+/* Label + icon */
+.item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #777;
+}
+
+.overview-item.right .item-header {
+  justify-content: flex-end;
+}
+
+.item-icon {
+  color: teal;
+}
+
+/* Numbers */
+.overview-item h3 {
+  margin-top: 5px;
+  font-size: 22px;
+  color: teal;
+}
+
+/* Divider */
+.divider {
+  width: 1px;
+  height: 40px;
+  background: black;
+}

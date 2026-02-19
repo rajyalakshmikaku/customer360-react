@@ -10,21 +10,21 @@ function Dashboard() {
   const dispatch = useDispatch();
   const { counts, loading } = useSelector((state) => state.dashboard);
 
-  // const wardNo="123";
-  const WardNo = "104";
+ 
+  const WardNo = sessionStorage.getItem("LoggedWardId");
 
   useEffect(() => {
     dispatch(fetchDashboardCounts(WardNo));
     // setDashboardData(res.data); // IMPORTANT
 
   }, [dispatch, WardNo]);
- const handleOutstandingClick = () => {
-  navigate(`/details/${WardNo}/Outstanding`);
-};
+//  const handleOutstandingClick = () => {
+//   navigate(`/details/${WardNo}/Outstanding`);
+// };
 
-  const handleinterimsClick = () => {
-  navigate(`/details/${WardNo}/InterimsDetails`);
-  };
+ const handleNavigate = (type) => {
+  navigate(`/Details/${WardNo}/${type}`);
+};
   const getValue = (name) => {
     const item = counts?.find((d) => d.name === name);
     return item ? Number(item.value).toLocaleString() : 0;
@@ -41,8 +41,7 @@ function Dashboard() {
           <div className="row card-row mb-1">
             <div className="col-lg-3 col-md-4 col-sm-6">
               <div className="summary-card border-green"
-                onClick={handleOutstandingClick}
-                style={{ cursor: "pointer" }}>
+onClick={() => handleNavigate("Outstanding")}                style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-money" />
                 </div>
@@ -55,7 +54,7 @@ function Dashboard() {
             </div>
 
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-blue" onClick={handleinterimsClick}
+              <div className="summary-card border-blue" onClick={() => handleNavigate("Interims")}
                 style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-file-text" />
@@ -69,7 +68,8 @@ function Dashboard() {
             </div>
 
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-orange">
+              <div className="summary-card border-orange" onClick={() => handleNavigate("IMS")}
+                style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-warning" />
                 </div>
@@ -82,7 +82,8 @@ function Dashboard() {
             </div>
 
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-red">
+              <div className="summary-card border-red" onClick={() => handleNavigate("Meter")}
+                style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-tachometer" />
                 </div>
@@ -97,7 +98,8 @@ function Dashboard() {
           {/* ROW 2 */}
           <div className="row card-row mb-1">
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-green">
+              <div className="summary-card border-green" onClick={() => handleNavigate("Property")}
+                style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-building" />
                 </div>
@@ -109,7 +111,8 @@ function Dashboard() {
             </div>
 
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-blue">
+              <div className="summary-card border-blue" onClick={() => handleNavigate("Customer")}
+                style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-users" />
                 </div>
@@ -121,7 +124,8 @@ function Dashboard() {
             </div>
 
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-orange">
+              <div className="summary-card border-orange" onClick={() => handleNavigate("MetersNotRead")}
+                style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-exclamation-triangle" />
                 </div>
@@ -132,7 +136,7 @@ function Dashboard() {
               </div>
             </div>
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-orange">
+              <div className="summary-card border-red">
                 <div className="icon-circle">
                   <i className="fa fa-exclamation-triangle" />
                 </div>
@@ -142,9 +146,11 @@ function Dashboard() {
                 </div>
               </div>
             </div>
+ </div>
+           <div className="row card-row mb-1">
 
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-orange">
+              <div className="summary-card border-green">
                 <div className="icon-circle">
                   <i className="fa fa-exclamation-triangle" />
                 </div>
@@ -155,7 +161,8 @@ function Dashboard() {
               </div>
             </div>
             <div className="col-lg-3 col-md-4 col-sm-6">
-              <div className="summary-card border-orange">
+              <div className="summary-card border-blue" onClick={() => handleNavigate("Indigent")}
+                style={{ cursor: "pointer" }}>
                 <div className="icon-circle">
                   <i className="fa fa-exclamation-triangle" />
                 </div>
@@ -165,6 +172,7 @@ function Dashboard() {
                 </div>
               </div>
             </div>
+
           </div>
 
         </div>

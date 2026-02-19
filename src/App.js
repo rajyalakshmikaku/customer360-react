@@ -5,13 +5,10 @@ import Login from "./Pages/Login/Login";
 import Dashboard from "./Pages/Dasboard/Dashboard";
 import MainLayout from "./Layout/MainLayout";
 import CoplaintsList from "./Pages/Complaints/ComplaintsList";
-
 import UsersList from "./Pages/Users/UsersList";
-
 import StatusList from "./Pages/Status/Status-list";
 
-import OutstandingDetails from "./Pages/Dasboard/OutstandingDetails";
-import InterimsDetails from "./Pages/Dasboard/InterimsDetails";
+import Details from "./Pages/Dasboard/Details";
 function App() {
   return (
     <Routes>
@@ -24,9 +21,7 @@ function App() {
          <Route path="/coplaintsList" element={<CoplaintsList />} />
         <Route path="/users-list" element={<UsersList />} />
          <Route path="/status-list" element={<StatusList />} />
-<Route path="/details/:wardNo/:type" element={<OutstandingDetails />} />               
-   <Route path="/details/:wardNo/:type" element={<InterimsDetails />} />
-
+<Route path="/details/:wardNo/:type" element={<Details />} />
       </Route>
     </Routes>
   );
