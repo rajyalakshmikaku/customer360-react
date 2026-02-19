@@ -5,6 +5,7 @@ import alertify from 'alertifyjs';
 import "alertifyjs/build/css/alertify.css";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 
@@ -50,6 +51,14 @@ function Login() {
 
   return (
     <div className="login-page">
+       {/* Top Right Registration Link */}
+       {/* Top Right Registration Link */}
+    <div className="top-register">
+      <Link to="/register" className="register-link">
+         Registration
+      </Link>
+    </div>
+      
       <div className="login-container">
         <div className="login-form">
           <h3>Login</h3>
@@ -85,6 +94,9 @@ function Login() {
             )}
           </button>
 
+          {/* <p className="signup-link">
+  <Link to="/register">Sign Up</Link>
+</p> */}
 
         </div>
 

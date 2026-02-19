@@ -9,11 +9,13 @@ import UsersList from "./Pages/Users/UsersList";
 import StatusList from "./Pages/Status/Status-list";
 
 import Details from "./Pages/Dasboard/Details";
+import Registration from "./Pages/Registration/Registration";
 function App() {
   return (
     <Routes>
       {/* Login without layout */}
       <Route path="/" element={<Login />} />
+       <Route path="/register" element={<Registration />} />
 
       {/* Pages with layout */}
       <Route element={<MainLayout />}>
@@ -21,7 +23,7 @@ function App() {
          <Route path="/coplaintsList" element={<CoplaintsList />} />
         <Route path="/users-list" element={<UsersList />} />
          <Route path="/status-list" element={<StatusList />} />
-<Route path="/details/:wardNo/:type" element={<Details />} />
+          <Route path="/details/:wardNo/:type" element={<Details />} />
       </Route>
     </Routes>
   );

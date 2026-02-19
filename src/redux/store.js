@@ -8,10 +8,12 @@ import UserReducer from "./UserListSlice";
 
 export const store = configureStore({
   reducer: {
-    auth: loginReducer,
+        auth: loginReducer,
         dashboard: dashboardReducer,
-    wardDetails: wardDetailsReducer,
+        wardDetails: wardDetailsReducer,
         complaints : complaintsReducer,
-         User: UserReducer,
+        User: UserReducer,
+        
+
   },
 });
