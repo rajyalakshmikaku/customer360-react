@@ -3,10 +3,11 @@ import ViewModal from "./ViewModal";
 
 
 
-const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch }) => {
+const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch,onStatusChange  }) => {
   const [ward, setWard] = useState("");
   const [user, setUser] = useState("");
-
+  const [modalMode, setModalMode] = useState("");
+  console.log('Ward',WardType);
   const handleSearch = () => {
     onSearch(ward, user);
   };
@@ -22,9 +23,10 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
   const [selectedItemImages, setSelectedItemImages] = useState([]);
   const [type, setType] = useState("");
 
-  const handleView = (item) => {
+  const handleView = (item, mode) => {
     setSelectedItem(item);
     setType(WardType);
+    setModalMode(mode);
     setSelectedItemImages(item.Images || []); // adjust if needed
     setShowModal(true);
   };
@@ -123,9 +125,22 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
             <thead className="table-dark">
               <tr>
                 <th>Activity</th>
-                <th hidden>ID</th>
+                <th>ID</th>
                 <th>Ward</th>
-                <th>Type</th>
+                {[
+                  "HOTSPOT",
+                  "ROADCLOSURE",
+                  "MEETING",
+                  "MISSINGPERSON",
+                  // "HEALTH",
+                   //"WARNING",
+                  //"WORKSHOP",
+                  
+                  
+                ].includes(WardType) && (
+                    <th>Type</th>
+                  )}
+           
                 <th>Details</th>
                 <th>Status</th>
                 <th>Created By</th>
@@ -136,15 +151,24 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
               {ComplaintsListInfo && ComplaintsListInfo.length > 0 ? (
                 ComplaintsListInfo.map((item, index) => (
                   <tr key={item.ID || index}>
+                   
                     <td>
                       <i
-                        className="fa fa-eye text-primary"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleView(item)}
+                        className="fa fa-eye text-primary me-2"
+                        style={{ cursor: "pointer", color: 'blue' }}
+                        onClick={() => handleView(item, "View")}
                       ></i>
-
+                      {(item.STATUS === "Active" || item.STATUS === "Pending") && (
+                        <i
+                          className="fa fa-edit"
+                          style={{ cursor: "pointer", color: "blue" }}
+                          onClick={() => handleView(item, "edit")}
+                        ></i>
+                      )}
+                 
                     </td>
 
+                    <td>{item.ID}</td>
                     <td>{item.WARD_NO}</td>
 
                     {WardType === "HOTSPOT" && (
@@ -175,7 +199,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                       </>
                     )}
 
-                    {WardType === "HEALTH" && (
+                    {WardType === "HEALTHCARE" && (
                       <td>{item.HEALTHCARE_DETAILS}</td>
                     )}
 
@@ -202,7 +226,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
 
 
           </table>
-          <ViewModal show={showModal} onClose={() => setShowModal(false)} WardType={category} selectedItem={selectedItem} selectedItemImages={selectedItemImages} formatDotNetDate={formatDotNetDate} formatTimeSpan={formatTimeSpan} />
+          <ViewModal show={showModal} onClose={() => setShowModal(false)} WardType={category} mode={modalMode} selectedItem={selectedItem} selectedItemImages={selectedItemImages} formatDotNetDate={formatDotNetDate} formatTimeSpan={formatTimeSpan} onStatusChange={onStatusChange}/>
 
         </div>
       </div>
