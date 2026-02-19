@@ -40,7 +40,7 @@ console.log("COUNTS ARRAY:", details);
       </button>
     </div>
             {/* Data Overview */}
- <div className="card debt-style">
+ {/* <div className="card debt-style">
 
   <div className="card-row">
 
@@ -66,8 +66,41 @@ console.log("COUNTS ARRAY:", details);
 
   </div>
 
-</div>
+</div> */}
+<div className="card debt-style">
 
+  {/* Title Row */}
+  <div className="card-header">
+    <div className="title-with-icon">
+      <i className="fa fa-database title-icon"></i>
+      <h3>Data Overview</h3>
+    </div>
+  </div>
+
+  {/* Overview Row */}
+  <div className="overview-row">
+
+    <div className="overview-item">
+      <div className="item-header">
+        <i className="fa fa-list item-icon"></i>
+        <span>Total Items</span>
+      </div>
+      <h3>{details.length}</h3>
+    </div>
+
+    <div className="divider"></div>
+
+    <div className="overview-item right">
+      <div className="item-header">
+        <i className="fa fa-map-marker item-icon"></i>
+        <span>Ward Number</span>
+      </div>
+      <h3>{wardNo}</h3>
+    </div>
+
+  </div>
+
+</div>
             {/* 30 Days */}
           <div class="debt-card">
     <div class="card-left">
