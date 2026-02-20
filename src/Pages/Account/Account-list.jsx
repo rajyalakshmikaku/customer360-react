@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAccountListInfo } from "../../redux/AccountListSlice";
 import AccountViewModal from "./AccountViewModal";
 
-const AccountList = () => {
+const AccountList = ({ category, onStatusChange, approveSuccess }) => {
   const dispatch = useDispatch();
 
   const { loading, totalCount, AccountsListInfo = [] } =
@@ -12,6 +12,8 @@ const AccountList = () => {
 
 
   console.log('AccountsListInfo', AccountsListInfo)
+
+  const [modalMode, setModalMode] = useState("");
 
   //  const handleSearch = () => {
   //   dispatch(fetchAccountList({ search: "" }));
@@ -55,6 +57,7 @@ const AccountList = () => {
   const handleView = (item, mode) => {
     setSelectedItem(item);
     setShowModal(true);
+    setModalMode(mode);
   };
 
 
@@ -94,7 +97,7 @@ const AccountList = () => {
                   className="form-select"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}>
-                    <option selected>Please Select</option>
+                  <option selected>Select Status</option>
                   <option value="Y">Active</option>
                   <option value="N">Inactive</option>
                   <option value="P">Pending</option>
@@ -138,17 +141,17 @@ const AccountList = () => {
                     <td>
                       <i
                         className="fa fa-eye text-primary me-2"
-                        style={{ cursor: "pointer", color: 'blue' }}
+                        style={{ cursor: "pointer", color: "teal" }}
                         onClick={() => handleView(item, "View")}
                       ></i>
-                      {(item.STATUS === "Active" || item.STATUS === "Pending") && (
+
+                      {item.ACTIVESTATUS !== "Y" && (
                         <i
                           className="fa fa-edit"
                           style={{ cursor: "pointer", color: "blue" }}
                           onClick={() => handleView(item, "edit")}
                         ></i>
                       )}
-
                     </td>
                     {/* <td>{item.USERREFNUMBER }</td>    */}
                     {/* <td>{item.WARD_NO?.NUMBER ?? ""}</td> */}
@@ -156,13 +159,8 @@ const AccountList = () => {
                     <td>{item.SURNAME}</td>
                     <td>{item.EMAIL}</td>
                     <td>{item.PHONENUMBER}</td>
-                     <td>{item.CREATEDDATE}</td>
+                    <td>{item.CREATEDDATE}</td>
                     <td>{item.ACTIVESTATUS}</td>
-                    {/* <td>{item?.NAME ?? ""}</td>
-                    <td>{item?.SURNAME ?? ""}</td>
-                    <td>{item?.EMAIL ?? ""}</td>
-                    <td>{item?.CELLNUMBER ?? ""}</td> */}
-
                     {/* <td>
                       {typeof item?.ACTIVESTATUS === "object"
                         ? item?.ACTIVESTATUS?.STATUSNAME ?? ""
@@ -183,10 +181,8 @@ const AccountList = () => {
 
         {/* MODAL */}
         <AccountViewModal
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          selectedItem={selectedItem}
-          selectedItemImages={selectedItemImages}
+          show={showModal} onClose={() => setShowModal(false)} WardType={category} mode={modalMode} selectedItem={selectedItem} onStatusChange={onStatusChange} approveSuccess={approveSuccess}
+
         />
       </div>
     </div>

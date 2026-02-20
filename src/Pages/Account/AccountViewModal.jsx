@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
+import ReactDOM from "react-dom";
 
-const AccountViewModal = ({ show, onClose, selectedItem }) => {
-  if (!show || !selectedItem) return null;
+const AccountViewModal = ({
+    show,
+    onClose,
+    selectedItem,
+    mode,
+    WardType,
+    onStatusChange,
+    setShowRejectModal,
+    approveLoading,
+    showRejectModal
+}) => {
+    const [rejectComment, setRejectComment] = useState("");
 
- 
-  return (
-          <div className="modal fade show d-block" tabIndex="-1">
-              <div className="modal-dialog modal-xl modal-dialog-centered">
-                  <div className="modal-content shadow-lg">
-  
-                     <div className="modal-header bg-light">
-                       <h5 className="modal-title">Account Details</h5>
+    if (!show || !selectedItem) return null;
+
+
+    return (
+        <div className="modal fade show d-block" tabIndex="-1">
+            <div className="modal-dialog modal-xl modal-dialog-centered">
+                <div className="modal-content shadow-lg">
+
+                    <div className="modal-header bg-light">
+
+                        <h5 className="modal-title">Account Details
+                            {mode === "edit" ? "Edit" : "View"} 
+                        </h5>
 
                         <button
                             type="button"
@@ -20,12 +36,8 @@ const AccountViewModal = ({ show, onClose, selectedItem }) => {
                         >
                             <i className="bx bx-x" style={{ fontSize: "18px" }}></i>
                         </button>
-                    
-          
-            {/* <h5 className="modal-title">Account Details</h5> */}
-            {/* <button className="btn-close" onClick={onClose}></button> */}
-          </div>
- <div className="modal-body">
+                    </div>
+                    <div className="modal-body">
                         <div className="container-fluid">
 
                             <table className="table table-borderless mb-3">
@@ -42,38 +54,86 @@ const AccountViewModal = ({ show, onClose, selectedItem }) => {
                                         <td>: {selectedItem?.WARD_NO}</td>
                                     </tr> */}
 
-                                   <tr>
+                                    <tr>
                                         <td><b>NAME</b></td>
                                         <td>: {selectedItem?.NAME}</td>
                                     </tr>
-                                     <tr>
+                                    <tr>
                                         <td><b>SURNAME</b></td>
                                         <td>: {selectedItem?.SURNAME}</td>
                                     </tr>
-                                     <tr>
+                                    <tr>
                                         <td><b>EMAIL</b></td>
                                         <td>: {selectedItem?.EMAIL}</td>
                                     </tr>
-                                     <tr>
+                                    <tr>
                                         <td><b>PHONE NUMBER</b></td>
                                         <td>: {selectedItem?.PHONENUMBER}</td>
                                     </tr>
-                                      {/* <tr>
+                                    {/* <tr>
                                         <td><b>GENDER</b></td>
                                         <td>: {selectedItem?.GENDER}</td>
                                     </tr> */}
-                                     <tr>
+                                    <tr>
                                         <td><b>ACTIVE STATUS</b></td>
-                                        <td>: {selectedItem?.ACTIVESTATUS}</td>
+                                        <td>
+                                            :{" "}
+                                            {(() => {
+                                                const raw = selectedItem?.ACTIVESTATUS;
+                                                const value =
+                                                    typeof raw === "object" ? raw?.STATUSNAME : raw;
+
+                                                const normalized = String(value || "")
+                                                    .trim()
+                                                    .toLowerCase();
+
+                                                if (normalized === "y" || normalized === "active") {
+                                                    return <span className="badge bg-success">Active</span>;
+                                                }
+                                                if (normalized === "p" || normalized === "pending") {
+                                                    return <span className="badge bg-warning text-dark">Pending</span>;
+                                                }
+                                                if (normalized === "n" || normalized === "inactive") {
+                                                    return <span className="badge bg-danger">Inactive</span>;
+                                                }
+
+                                                return value || "-";
+                                            })()}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><b>CREATED DATE</b></td>
                                         <td>: {selectedItem?.CREATEDDATE}</td>
                                     </tr>
 
-                                   <tr>
+                                    <tr>
                                         <td><b>USER TYPE</b></td>
-                                        <td>: {selectedItem?.USERTYPE}</td>
+                                        <td>
+                                            :{" "}
+                                            {(() => {
+                                                const raw = selectedItem?.USERTYPE;
+                                                const value =
+                                                    typeof raw === "object" ? raw?.TYPENAME : raw;
+
+                                                const normalized = String(value || "")
+                                                    .trim()
+                                                    .toLowerCase();
+
+                                                if (normalized === "c" || normalized === "councilour") {
+                                                    return "Councilor";
+                                                }
+
+                                                if (normalized === "a" || normalized === "admin") {
+                                                    return "Admin";
+                                                }
+
+                                                if (normalized === "u" || normalized === "user") {
+                                                    return "User";
+                                                }
+
+                                                return value || "-";
+                                            })()}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td><b>ADDRESS </b></td>
@@ -94,18 +154,66 @@ const AccountViewModal = ({ show, onClose, selectedItem }) => {
                         </div>
                     </div>
 
-          {/* <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={onClose}>
-              Close
-            </button>
-          </div> */}
+                    {mode === "edit" && selectedItem && (
+  <div className="d-flex justify-content-center gap-2 mt-3 flex-wrap">
 
-  
-  
-                  </div>
-              </div>
-          </div>
-      );
+    {/* APPROVE only if Pending (P) */}
+    {selectedItem.ACTIVESTATUS === "P" && (
+      <button
+        type="button"
+        className="btn btn-success btn-sm"
+        onClick={() =>
+          onStatusChange(selectedItem.ID, "APPROVE", WardType)
+        }
+      >
+        {approveLoading ? (
+          <>
+            <i className="fa fa-spinner fa-spin"></i> Approve
+          </>
+        ) : (
+          "Approve"
+        )}
+      </button>
+    )}
+
+    {/* COMPLETE only if Active (Y) */}
+    {selectedItem.ACTIVESTATUS === "Y" && (
+      <button
+        type="button"
+        disabled={approveLoading}
+        className="btn btn-success btn-sm"
+        onClick={() =>
+          onStatusChange(selectedItem.ID, "COMPLETED", WardType)
+        }
+      >
+        {approveLoading ? (
+          <>
+            <i className="fa fa-spinner fa-spin"></i> Complete
+          </>
+        ) : (
+          "Complete"
+        )}
+      </button>
+    )}
+
+    {/* REJECT for Y or P */}
+    {(selectedItem.ACTIVESTATUS === "Y" ||
+      selectedItem.ACTIVESTATUS === "P") && (
+      <button
+        type="button"
+        className="btn btn-danger btn-sm"
+        onClick={() => setShowRejectModal(true)}
+      >
+        Reject
+      </button>
+    )}
+  </div>
+)}
+
+                </div>
+            </div>
+        </div>
+    );
 };
 
 
