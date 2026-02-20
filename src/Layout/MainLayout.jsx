@@ -122,7 +122,7 @@ const MainLayout = () => {
 
                 <li className="menu-item">
                   <NavLink
-                    to="/status-list"
+                    to="/Account-list"
                     className={({ isActive }) =>
                       `menu-link ${isActive ? "active" : ""}`
                     }

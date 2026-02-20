@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
-import "./Status.css";
+import "./AccountList.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchStatusListInfo } from "../../redux/StatusListSlice";
-import StatusViewModal from "./StatusViewModal";
+import { fetchAccountListInfo } from "../../redux/AccountListSlice";
+import AccountViewModal from "./AccountViewModal";
 
-const StatusList = () => {
+const AccountList = () => {
   const dispatch = useDispatch();
 
-  const { loading, totalCount, AccountsListInfo } = useSelector(
-    (state) => state.Status
-  );
+  const { loading, totalCount, AccountsListInfo = [] } =
+    useSelector((state) => state.Account || {});
 
-  console.log('AccountsListInfo',AccountsListInfo)
+
+  console.log('AccountsListInfo', AccountsListInfo)
+
+  //  const handleSearch = () => {
+  //   dispatch(fetchAccountList({ search: "" }));
+  // };
 
   // FILTERS
   const [fromDate, setFromDate] = useState("");
@@ -31,7 +35,7 @@ const StatusList = () => {
 
   useEffect(() => {
     dispatch(
-      fetchStatusListInfo({
+      fetchAccountListInfo({
         pageIndex,
         pageSize,
         search,
@@ -48,11 +52,11 @@ const StatusList = () => {
     setPageIndex(1);
   };
 
-  const handleView = (item) => {
+  const handleView = (item, mode) => {
     setSelectedItem(item);
-    setSelectedItemImages(item?.Images || []);
     setShowModal(true);
   };
+
 
   return (
     <div className="layout-container">
@@ -67,8 +71,8 @@ const StatusList = () => {
               <div>
                 <label className="form-label fw-semibold">From Date</label>
                 <input
-                  type="date"
-                  className="form-control"
+                  type="date" style={{ minWidth: '230px' }}
+                  className="form-selectAccount"
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
                 />
@@ -77,8 +81,8 @@ const StatusList = () => {
               <div>
                 <label className="form-label fw-semibold">To Date</label>
                 <input
-                  type="date"
-                  className="form-control"
+                  type="date" style={{ minWidth: '230px' }}
+                  className="form-selectAccount"
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
                 />
@@ -86,17 +90,24 @@ const StatusList = () => {
 
               <div>
                 <label className="form-label fw-semibold">Status</label>
-                <input
-                  type="text"
-                  className="form-control"
+                <select type="text" style={{ minWidth: '230px' }}
+                  className="form-select"
                   value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                />
+                  onChange={(e) => setStatus(e.target.value)}>
+                    <option selected>Please Select</option>
+                  <option value="Y">Active</option>
+                  <option value="N">Inactive</option>
+                  <option value="P">Pending</option>
+                </select>
               </div>
 
               <div className="d-flex gap-2">
+                <button className="btn btn-success" >
+                  <i className="bx bx-search me-1"></i> Search
+                </button>
+
                 <button className="btn btn-warning" onClick={handleClear}>
-                  Clear
+                  <i className="bx bx-reset me-1"></i> Clear
                 </button>
               </div>
 
@@ -106,15 +117,16 @@ const StatusList = () => {
 
         {/* TABLE */}
         <div className="table-responsive">
-          <table className="table table-hover align-middle">
+          <table className="table table-hover table-bordered align-middle">
             <thead className="table-dark">
               <tr>
                 <th>Activity</th>
-                <th>Ward</th>
+                {/* <th>Ward</th> */}
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Email</th>
-                <th>Cell</th>
+                <th>PHONE NO</th>
+                <th>CREATED DATE</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -125,15 +137,27 @@ const StatusList = () => {
                   <tr key={item.USERID || index}>
                     <td>
                       <i
-                        className="fa fa-eye text-primary"
-                        style={{ cursor: "pointer" }}
-                        // onClick={() => handleView(item)}
+                        className="fa fa-eye text-primary me-2"
+                        style={{ cursor: "pointer", color: 'blue' }}
+                        onClick={() => handleView(item, "View")}
                       ></i>
+                      {(item.STATUS === "Active" || item.STATUS === "Pending") && (
+                        <i
+                          className="fa fa-edit"
+                          style={{ cursor: "pointer", color: "blue" }}
+                          onClick={() => handleView(item, "edit")}
+                        ></i>
+                      )}
+
                     </td>
-
-                   <td>{item.WARD_NO?.NUMBER ?? ""}</td>
-
-                     <td>{item.ACTIVESTATUS }</td>
+                    {/* <td>{item.USERREFNUMBER }</td>    */}
+                    {/* <td>{item.WARD_NO?.NUMBER ?? ""}</td> */}
+                    <td>{item.NAME}</td>
+                    <td>{item.SURNAME}</td>
+                    <td>{item.EMAIL}</td>
+                    <td>{item.PHONENUMBER}</td>
+                     <td>{item.CREATEDDATE}</td>
+                    <td>{item.ACTIVESTATUS}</td>
                     {/* <td>{item?.NAME ?? ""}</td>
                     <td>{item?.SURNAME ?? ""}</td>
                     <td>{item?.EMAIL ?? ""}</td>
@@ -158,7 +182,7 @@ const StatusList = () => {
         </div>
 
         {/* MODAL */}
-        <StatusViewModal
+        <AccountViewModal
           show={showModal}
           onClose={() => setShowModal(false)}
           selectedItem={selectedItem}
@@ -169,4 +193,4 @@ const StatusList = () => {
   );
 };
 
-export default StatusList;
+export default AccountList;
