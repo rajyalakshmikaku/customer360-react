@@ -5,7 +5,7 @@ import wardDetailsReducer from "./wardDetailsSlice";
 
 import complaintsReducer from './complaintListSlice';
 import UserReducer from "./UserListSlice"; 
-import StatusReducer from "./StatusListSlice"; 
+import AccountReducer from "./AccountListSlice"; 
 
 export const store = configureStore({
   reducer: {
@@ -15,5 +15,7 @@ export const store = configureStore({
         complaints : complaintsReducer,
         User: UserReducer,
         Status: StatusReducer,
+         User: UserReducer,
+         Account: AccountReducer,
   },
 });

@@ -6386,6 +6386,7 @@ label.btn {
   background-color: #71dd37;
   border-color: #71dd37;
   box-shadow: 0 0.125rem 0.25rem 0 rgba(113, 221, 55, 0.4);
+  font-size: 16px;
 }
 .btn-success:hover {
   color: #fff;
@@ -6620,6 +6621,7 @@ label.btn {
   background-color: #ff3e1d;
   border-color: #ff3e1d;
   box-shadow: 0 0.125rem 0.25rem 0 rgba(255, 62, 29, 0.4);
+  font-size: 16px;
 }
 .btn-danger:hover {
   color: #fff;
@@ -10063,10 +10065,14 @@ button.list-group-item-gray.active {
   background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
 }
 
-.bg-secondary {
+/* .bg-secondary {
   --bs-bg-opacity: 1;
   background-color: rgba(var(--bs-secondary-rgb), var(--bs-bg-opacity)) !important;
+} */
+.bg-secondary {
+  background-color: rgb(31, 107, 207) !important;
 }
+
 
 .bg-success {
   --bs-bg-opacity: 1;
