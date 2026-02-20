@@ -21,7 +21,7 @@ const ComplaintsList = () => {
   const dispatch = useDispatch();
   const { counts, loading, wardInfo,UserInfo,ComplaintsListInfo,WardType,totalCount,onSearch,ApproveInfo} = useSelector((state) => state.complaints);
   
-  //console.log('ApproveInfo',ApproveInfo);
+  console.log('ComplaintsListInfo',ComplaintsListInfo);
   const userType = sessionStorage.getItem("LoggedUserType");
   // THIS gets called from menu
   const handleView = (category, status) => {
@@ -111,6 +111,22 @@ useEffect(() => {
     ).unwrap(); 
 };
 
+const getStatusBadgeClass = (status) => {
+        switch (status) {
+            case "Pending":
+                return "badge bg-warning text-dark";
+            case "Active":
+                return "badge bg-primary";
+            case "Completed":
+                return "badge bg-success";
+            case "In-Active":
+                return "badge bg-secondary";
+            case "Rejected":
+                return "badge bg-danger";
+            default:
+                return "badge bg-light text-dark";
+        }
+    };
 
   return (
     <div className="d-flex">
@@ -122,7 +138,7 @@ useEffect(() => {
         <div className="container-xxl flex-grow-1 container-p-y">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5 className="mb-0">
-              {category} – {status}
+              {category} – <span className={getStatusBadgeClass(status)}>{status}</span>
             </h5>
 
             <button
