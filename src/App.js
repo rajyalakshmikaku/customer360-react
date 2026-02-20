@@ -23,7 +23,7 @@ function App() {
          <Route path="/coplaintsList" element={<CoplaintsList />} />
         <Route path="/users-list" element={<UsersList />} />
 
-         <Route path="/status-list" element={<StatusList />} />
+         {/* <Route path="/status-list" element={<StatusList />} /> */}
           <Route path="/details/:wardNo/:type" element={<Details />} />
          <Route path="/Account-list" element={<AccountList />} />
 <Route path="/details/:wardNo/:type" element={<Details />} />

@@ -16,8 +16,6 @@ const MainLayout = () => {
 
 
 
-
-
   useEffect(() => {
     if (window.Helpers?.init) {
       window.Helpers.init();
@@ -108,7 +106,7 @@ const MainLayout = () => {
                   </NavLink>
                 </li>
 
-                <li className="menu-item">
+                {/* <li className="menu-item">
                   <NavLink
                     to="/users-list"
                     className={({ isActive }) =>
@@ -118,7 +116,7 @@ const MainLayout = () => {
                     <i className="menu-icon bx bx-list-check"></i>
                     <div>Users List</div>
                   </NavLink>
-                </li>
+                </li> */}
 
                 <li className="menu-item">
                   <NavLink
