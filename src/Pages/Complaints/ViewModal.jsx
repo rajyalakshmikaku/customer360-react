@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
 import ReactDOM from "react-dom";
 
@@ -11,7 +11,8 @@ const ViewModal = ({
     selectedItemImages,
     formatDotNetDate,
     formatTimeSpan,
-    onStatusChange
+    onStatusChange,
+    approveSuccess   
 }) => {
 
     const [rejectComment, setRejectComment] = useState("");
@@ -21,6 +22,12 @@ const ViewModal = ({
     const [loading, setLoading] = useState(false);
     const { approveLoading } = useSelector((state) => state.complaints);
 
+   useEffect(() => {
+  if (approveSuccess) {
+    setShowRejectModal(false);  // close reject popup
+    setRejectComment("");       // clear textarea
+  }
+}, [approveSuccess]);
 
 
 

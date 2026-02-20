@@ -93,7 +93,8 @@ const Registration = () => {
 
   <div className="form-field">
     <span className="icon-box"><i className="fas fa-user-circle"></i></span>
-    <input type="text" placeholder="User Name"  readOnly  />
+    <input type="text" placeholder="User Name"  
+     style={{ backgroundColor: "rgb(233, 236, 239)" }} readOnly  />
   </div>
 
 </div>

@@ -15,7 +15,7 @@
 
 /* Parent */
 .complaints-menu__parent {
-  color: #4A6FE3;
+  color: teal;
   border-radius: 8px;
   margin: 4px 8px;
   padding: 8px 12px;
@@ -27,7 +27,7 @@
 
 /* Hover */
 .complaints-menu__parent:hover {
-  background-color: #4A6FE3;
+  background-color: teal;
   color: orange;
 }
 
