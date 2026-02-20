@@ -26,9 +26,9 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
   const handleView = (item, mode) => {
     const daysTime = getDaysAndTime(item.CREATED_DATE);
     setSelectedItem({
-    ...item,
-    DAYS_TIME: daysTime,   
-  });
+      ...item,
+      DAYS_TIME: daysTime,
+    });
     setType(WardType);
     setModalMode(mode);
     setSelectedItemImages(item.Images || []); // adjust if needed
@@ -75,69 +75,54 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
 
         <div className="row mb-4">
           <div className="col-12">
-            <div className="card-body d-flex align-items-end flex-wrap gap-3">
-              {/* <div className="me-3">
-                <label className="form-label fw-semibold text-teal">Status</label>
-                <input style={{ minWidth: '230px' }}
-                  className="form-control"
-                  value={status}
-                  readOnly
-                />
-              </div> */}
+            <div className="card-body">
+              <div className="row g-3 align-items-end">
 
-              {/* WARD */}
-              <div className="me-3">
-                <label className="form-label fw-semibold text-teal">Ward</label>
-                <select
-                  style={{ minWidth: '230px' }}
-                  className="form-select"
-                  value={ward}
-                  onChange={(e) => setWard(e.target.value)}
-                >
-                  <option value="">Select option</option>
-                  {wardInfo &&
-                    wardInfo.map((item, index) => (
+                <div className="col-md-3">
+                  <label className="form-label fw-semibold text-teal">Ward</label>
+                  <select
+                    className="form-select"
+                    value={ward}
+                    onChange={(e) => setWard(e.target.value)}
+                  >
+                    <option value="">Select option</option>
+                    {wardInfo?.map((item, index) => (
                       <option key={index} value={item.name}>
                         {item.name}
                       </option>
                     ))}
-                </select>
-              </div>
+                  </select>
+                </div>
 
-              {/* USERS */}
-              <div className="me-3">
-                <label className="form-label fw-semibold text-teal">Users</label>
-                <select
-                  style={{ minWidth: '230px' }}
-                  className="form-select"
-                  value={user}
-                  onChange={(e) => setUser(e.target.value)}
-                >
-                  <option value="">Select option</option>
-                  {UserInfo &&
-                    UserInfo.map((item, index) => (
+                <div className="col-md-3">
+                  <label className="form-label fw-semibold text-teal">Users</label>
+                  <select
+                    className="form-select"
+                    value={user}
+                    onChange={(e) => setUser(e.target.value)}
+                  >
+                    <option value="">Select option</option>
+                    {UserInfo?.map((item, index) => (
                       <option key={index} value={item.userid}>
                         {item.email}
                       </option>
                     ))}
-                </select>
-              </div>
-              <div className="d-flex gap-2">
-                <button className="btn btn-success" onClick={handleSearch}>
-                  <i className="bx bx-search me-1"></i> Search
-                </button>
+                  </select>
+                </div>
 
-                <button className="btn btn-warning" onClick={handleClear}>
-                  <i className="bx bx-reset me-1"></i> Clear
-                </button>
-              </div>
+                <div className="col-md-3 d-flex gap-2">
+                  <button className="btn btn-success w-50" onClick={handleSearch}>
+                    Search
+                  </button>
 
+                  <button className="btn btn-warning w-50" onClick={handleClear}>
+                    Clear
+                  </button>
+                </div>
+
+              </div>
             </div>
 
-
-
-
-            {/* ACTIONS */}
 
           </div>
         </div>
@@ -167,7 +152,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
 
                 <th>Details</th>
                 <th>Created Date</th>
-                <th>No.of Days</th>
+                <th>No.of Days & Time</th>
               </tr>
             </thead>
 
