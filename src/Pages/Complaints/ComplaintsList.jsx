@@ -2,21 +2,25 @@ import { useState,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ComplaintsMenu from "./ComplaintsMenu";
 import ComplaintsTable from "./ComplaintsTable";
-import { fetchComplaintsCounts,fetchwardInfo ,fetchUserInfo,fetchComplaintsListInfo} from "../../redux/complaintListSlice";
+import { fetchComplaintsCounts,fetchwardInfo ,fetchUserInfo,fetchComplaintsListInfo,fetchApproveComplaintsInfo } from "../../redux/complaintListSlice";
 import Pagination from "../../Components/Pagination";
+import alertify from "alertifyjs";
 
 
 const ComplaintsList = () => {
   const [showList, setShowList] = useState(false);
   const [category, setCategory] = useState("");
   const [status, setStatus] = useState("");
+  const [loadingType, setLoadingType] = useState(null);
+
 
   const [pageIndex, setPageIndex] = useState(1);
   const pageSize = 10;
 
 
   const dispatch = useDispatch();
-  const { counts, loading, wardInfo,UserInfo,ComplaintsListInfo,WardType,totalCount,onSearch} = useSelector((state) => state.complaints);
+  const { counts, loading, wardInfo,UserInfo,ComplaintsListInfo,WardType,totalCount,onSearch,ApproveInfo} = useSelector((state) => state.complaints);
+  
   console.log('ComplaintsListInfo',ComplaintsListInfo);
   const userType = sessionStorage.getItem("LoggedUserType");
   // THIS gets called from menu
@@ -72,12 +76,57 @@ const ComplaintsList = () => {
   }));
 };
 
+useEffect(() => {
+  if (ApproveInfo?.success) {
+    alertify.alert("Message", ApproveInfo.message);
 
-  
+    dispatch(fetchComplaintsListInfo({
+      pageIndex,
+      pageSize,
+      search: "",
+      type: category,
+      status: status,
+      role: userType,
+      wardId: "",
+      userId: ""
+    }));
+  }
+}, [ApproveInfo]);
+
+
+
   const wardNo = 0;
   useEffect(() => {
     dispatch(fetchComplaintsCounts(wardNo));
   }, [dispatch, wardNo]);
+
+  const handleStatusChange = (userId, status, screen, comments = "") => {
+    return dispatch(
+        fetchApproveComplaintsInfo({
+            UserId: userId,
+            Status: status,
+            Screen: screen,
+            Comments: comments
+        })
+    ).unwrap(); 
+};
+
+const getStatusBadgeClass = (status) => {
+        switch (status) {
+            case "Pending":
+                return "badge bg-warning text-dark";
+            case "Active":
+                return "badge bg-primary";
+            case "Completed":
+                return "badge bg-success";
+            case "In-Active":
+                return "badge bg-secondary";
+            case "Rejected":
+                return "badge bg-danger";
+            default:
+                return "badge bg-light text-dark";
+        }
+    };
 
   return (
     <div className="d-flex">
@@ -89,7 +138,7 @@ const ComplaintsList = () => {
         <div className="container-xxl flex-grow-1 container-p-y">
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5 className="mb-0">
-              {category} – {status}
+              {category} – <span className={getStatusBadgeClass(status)}>{status}</span>
             </h5>
 
             <button
@@ -99,11 +148,9 @@ const ComplaintsList = () => {
               <i className="bx bx-x"></i>
             </button>
           </div>
-          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch}/>
+          <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch}  onStatusChange={handleStatusChange} approveSuccess={ApproveInfo?.success}/>
 
-          <div className="pagination-fixed">
-             <Pagination pageIndex={pageIndex} pageSize={pageSize} totalCount={totalCount} onPageChange={handlePageChange}/>
-          </div>
+          <Pagination pageIndex={pageIndex} pageSize={pageSize} totalCount={totalCount} onPageChange={handlePageChange}/>
           
         </div>
       )}

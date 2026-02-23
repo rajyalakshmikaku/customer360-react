@@ -63,7 +63,7 @@
 
 /* Login button */
 .btn-login {
-  width: 100%;
+  width: 90%;
   padding: 14px;
   background: #0f766e;
   border: none;
@@ -123,3 +123,24 @@
 .powered-by span {
   font-weight: 600;
 }
+
+
+
+
+/* Top Right Corner */
+.top-register {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+}
+
+.register-link {
+  text-decoration: none;
+  color: #00a3a3;
+  font-weight: 600;
+  font-size: 25px;
+}
+
+/* .register-link:hover {
+  text-decoration: underline;
+} */

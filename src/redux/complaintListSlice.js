@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getComplaintsCounts, getWardInfo, getUserInfo, getComplaintsList } from '../services/complaintListApi';
+import { getComplaintsCounts, getWardInfo, getUserInfo, getComplaintsList ,PostApproveComplaint} from '../services/complaintListApi';
 
 export const fetchComplaintsCounts = createAsyncThunk(
   "complaints/fetchCounts",
@@ -51,6 +51,19 @@ export const fetchComplaintsListInfo = createAsyncThunk(
     }
   }
 );
+export const fetchApproveComplaintsInfo = createAsyncThunk(
+  "complaints/fetchApproveComplaintsInfo",
+  async (payload, thunkAPI) => {
+    try {
+      return await PostApproveComplaint(payload);
+     
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
 
 const complaintListSlice = createSlice({
   name: "complaints",
@@ -60,7 +73,9 @@ const complaintListSlice = createSlice({
     WardType: null,
     UserInfo: null,
     ComplaintsListInfo: null,
+    ApproveInfo: null,
     loading: false,
+    approveLoading : false,
     error: null
   },
   reducers: {},
@@ -109,10 +124,8 @@ const complaintListSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchComplaintsListInfo.fulfilled, (state, action) => {
-        debugger
         state.loading = false;
         const response = action.payload;
-
         state.success = response?.success;
         state.ComplaintsListInfo = response?.list;
         state.totalCount = response?.totalCount;
@@ -120,6 +133,22 @@ const complaintListSlice = createSlice({
       })
       .addCase(fetchComplaintsListInfo.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload;
+      });
+      builder
+      .addCase(fetchApproveComplaintsInfo.pending, (state) => {
+        state.approveLoading  = true;
+      })
+      .addCase(fetchApproveComplaintsInfo.fulfilled, (state, action) => {
+        debugger
+        state.approveLoading  = false;
+        const response = action.payload;
+        state.success = response?.success;
+        state.ApproveInfo = response;
+
+      })
+      .addCase(fetchApproveComplaintsInfo.rejected, (state, action) => {
+        state.approveLoading  = false;
         state.error = action.payload;
       });
 

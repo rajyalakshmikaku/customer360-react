@@ -1,14 +1,53 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import ReactDOM from "react-dom";
 
 const ViewModal = ({
     show,
     onClose,
     WardType,
+    mode,
     selectedItem,
     selectedItemImages,
     formatDotNetDate,
-    formatTimeSpan
+    formatTimeSpan,
+    onStatusChange,
+    approveSuccess
 }) => {
+
+    const [rejectComment, setRejectComment] = useState("");
+    const [showRejectBox, setShowRejectBox] = useState(false);
+
+    const [showRejectModal, setShowRejectModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const { approveLoading } = useSelector((state) => state.complaints);
+
+    const getStatusBadgeClass = (status) => {
+        switch (status) {
+            case "Pending":
+                return "badge bg-warning text-dark";
+            case "Active":
+                return "badge bg-primary";
+            case "Completed":
+                return "badge bg-success";
+            case "In-Active":
+                return "badge bg-secondary";
+            case "Rejected":
+                return "badge bg-danger";
+            default:
+                return "badge bg-light text-dark";
+        }
+    };
+
+    useEffect(() => {
+        if (approveSuccess) {
+            setShowRejectModal(false);  // close reject popup
+            setRejectComment("");       // clear textarea
+        }
+
+    }, [approveSuccess]);
+
+
 
     if (!show) return null;
 
@@ -19,7 +58,10 @@ const ViewModal = ({
 
                     {/* HEADER */}
                     <div className="modal-header bg-light">
-                        <h5 className="modal-title">View - {WardType}</h5>
+                        <h5 className="modal-title">
+                            {mode === "edit" ? "Edit" : "View"} - {WardType}
+                        </h5>
+
                         <button
                             type="button"
                             className="btn btn-outline-danger btn-sm"
@@ -36,7 +78,7 @@ const ViewModal = ({
 
                             <table className="table table-borderless mb-3">
                                 <tbody>
-                                    
+
                                     {/* COMMON FIELDS */}
                                     <tr>
                                         <td><b>Ref No.</b></td>
@@ -313,14 +355,40 @@ const ViewModal = ({
                                     {/* STATUS */}
                                     <tr>
                                         <td><b>Status</b></td>
-                                        <td>: {selectedItem?.STATUS}</td>
+                                        <td>
+                                            : <span className={getStatusBadgeClass(selectedItem?.STATUS)}>
+                                                {selectedItem?.STATUS}
+                                            </span>
+                                        </td>
                                     </tr>
+                                    <tr>
+                                        <td><b>Created Name</b></td>
+                                        <td>: {selectedItem.NAME} {selectedItem.SURNAME}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Created Email</b></td>
+                                        <td>: {selectedItem.EMAIL}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><b>Created Date</b></td>
+                                        <td>: {selectedItem.CREATED_DATE}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>No of Days</b></td>
+                                        <td>: {selectedItem.DAYS_TIME}</td>
+                                    </tr>
+
 
                                     {selectedItem?.STATUS === "In-Active" && (
                                         <>
                                             <tr>
                                                 <td><b>Comments</b></td>
-                                                <td>: {selectedItem?.Comments}</td>
+                                                <td>: {typeof selectedItem?.Comments === "string"
+                                                    ? selectedItem?.Comments
+                                                    : selectedItem?.Comments?.comment || ""}</td>
+
+
                                             </tr>
                                             <tr>
                                                 <td><b>Comments Date</b></td>
@@ -328,6 +396,8 @@ const ViewModal = ({
                                             </tr>
                                         </>
                                     )}
+
+
 
                                 </tbody>
                             </table>
@@ -366,8 +436,134 @@ const ViewModal = ({
                                 )}
                             </div>
 
+                            {mode === "edit" &&
+                                selectedItem &&
+                                (selectedItem.STATUS === "Pending" || selectedItem.STATUS === "Active") && (
+                                    <div className="d-flex justify-content-center gap-2 mt-3 flex-wrap">
+
+                                        {selectedItem.STATUS === "Pending" && (
+                                            <button
+                                                type="button"
+                                                className="btn btn-success btn-sm"
+                                                onClick={() =>
+                                                    onStatusChange(selectedItem.ID, "APPROVE", WardType)
+                                                }
+                                            >
+                                                {approveLoading ? (
+                                                    <>
+                                                        <i className="fa fa-spinner fa-spin"></i> Approve
+                                                    </>
+                                                ) : (
+                                                    "Approve"
+                                                )}
+                                            </button>
+                                        )}
+
+                                        {selectedItem.STATUS === "Active" && (
+                                            <button
+                                                type="button"
+                                                disabled={approveLoading}
+                                                className="btn btn-success btn-sm"
+                                                onClick={() =>
+                                                    onStatusChange(selectedItem.ID, "COMPLETED", WardType)
+                                                }
+                                            >
+                                                {approveLoading ? (
+                                                    <>
+                                                        <i className="fa fa-spinner fa-spin"></i> Complete
+                                                    </>
+                                                ) : (
+                                                    "Complete"
+                                                )}
+
+                                            </button>
+                                        )}
+
+                                        {/* Reject Button */}
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() => setShowRejectModal(true)}
+                                        >
+                                            Reject
+                                        </button>
+
+
+
+
+                                    </div>
+                                )}
+
+
                         </div>
                     </div>
+                    {showRejectModal &&
+                        ReactDOM.createPortal(
+                            <>
+                                <div className="modal-backdrop fade show"></div>
+
+                                <div className="modal fade show d-block" tabIndex="-1">
+                                    <div className="modal-dialog modal-sm modal-dialog-centered">
+                                        <div className="modal-content shadow">
+
+                                            <div className="modal-header bg-danger text-white py-2">
+                                                <h6 className="modal-title">Reject Complaint</h6>
+                                                <button
+                                                    type="button"
+                                                    className="btn-close btn-close-white"
+                                                    onClick={() => setShowRejectModal(false)}
+                                                ></button>
+                                            </div>
+
+                                            <div className="modal-body py-2">
+                                                <textarea
+                                                    className="form-control form-control-sm"
+                                                    rows="3"
+                                                    placeholder="Enter reject reason"
+                                                    value={rejectComment}
+                                                    onChange={(e) => setRejectComment(e.target.value)}
+                                                />
+                                            </div>
+
+                                            <div className="modal-footer py-2">
+                                                <button
+                                                    className="btn btn-damger btn-sm"
+                                                    onClick={() => setShowRejectModal(false)}
+                                                    disabled={loading}
+                                                >
+                                                    Cancel
+                                                </button>
+
+                                                <button
+                                                    className="btn btn-success btn-sm"
+                                                    disabled={approveLoading || !rejectComment}
+                                                    onClick={() =>
+                                                        onStatusChange(
+                                                            selectedItem.ID,
+                                                            "REJECT",
+                                                            WardType,
+                                                            rejectComment
+                                                        )
+                                                    }
+                                                >
+                                                    {loading ? (
+                                                        <span className="fa fa-spinner fa-spin"></span>
+                                                    ) : (
+                                                        "Submit"
+                                                    )}
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </>,
+                            document.body
+                        )
+                    }
+
+
 
                 </div>
             </div>

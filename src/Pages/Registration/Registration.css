@@ -1,0 +1,148 @@
+.register-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f7fb;
+  padding: 20px;
+}
+
+.register-card {
+  width: 850px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 30px 40px 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* .header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+  margin-bottom: 10px;
+} */
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.back-button {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  border: none;
+  background: transparent;
+  color: #e53935;     /* red */
+  font-size: 22px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  margin-top: -18px;
+}
+
+.back-button:hover {
+  background: rgba(229, 57, 53, 0.12);  /* light red box */
+  box-shadow: 0 0 0 1px #e53935 inset;  /* thin border */
+  transform: scale(1.05);
+}
+
+
+
+.header h2 {
+  text-align: center;
+  width: 100%;
+  font-size: 25px;
+  margin-bottom: 16px;
+}
+
+.sub-title {
+  text-align: center;
+  color: black;
+  margin: 10px 0 25px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px 20px;
+}
+
+.form-grid input,
+.form-grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+  border-color: #00a3a3;
+  box-shadow: 0 0 0 2px rgba(0, 163, 163, 0.1);
+}
+
+.btn-register {
+  display: block;
+  margin: 30px auto 0;
+  background: #00a3a3;
+  color: #fff;
+  padding: 12px 40px;
+  border-radius: 8px;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-register:hover {
+  opacity: 0.9;
+}
+
+.form-field {
+  display: flex;
+  align-items: center;
+  border: 2px solid #cfd6dc;   /* thick border */
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.icon-box {
+  width: 45px;
+  height: 45px;
+  background: #00a3a3;
+  border-right: 2px solid #00a3a3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #555;
+}
+
+
+.form-field input,
+.form-field select {
+  border: none;
+  outline: none;
+  height: 42px;
+  padding: 0 12px;
+  width: 100%;
+  font-size: 16px;
+}
+
+/* .form-field:focus-within {
+  border-color: #00a3a3;
+}
+
+.form-field:focus-within .icon-box {
+  border-right-color: #00a3a3;
+} */

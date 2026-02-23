@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./Complaints.css";
-const ComplaintsMenu = ({ onView,counts, loading  }) => {
+const ComplaintsMenu = ({ onView, counts, loading }) => {
   const [openIndex, setOpenIndex] = useState(null);
 
   // const complaints = [
@@ -17,21 +17,20 @@ const ComplaintsMenu = ({ onView,counts, loading  }) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-if (loading) {
-  return <div>Loading...</div>;
-}
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
- return (
-  <aside className="complaints-menu">
+  return (
+    <aside className="complaints-menu">
       <ul className="complaints-menu__list">
         {counts?.map((item, i) => (
           <li
             key={i}
-            className={`complaints-menu__item ${
-              openIndex === i
+            className={`complaints-menu__item ${openIndex === i
                 ? "complaints-menu--open complaints-menu--active"
                 : ""
-            }`}
+              }`}
           >
             <a
               href="#"
@@ -41,9 +40,14 @@ if (loading) {
                 toggleMenu(i);
               }}
             >
+
               <span className="complaints-menu__title">
-                {item.Name}
+                <div className="complaintsicon-circle">
+                  <i className={`${item.Icon} ${item.Color}`} aria-hidden="true"></i>
+                </div>
+                <span className="complaints-name">{item.Name}</span>
               </span>
+
               <span className="complaints-menu__total">
                 Total : {item.Total}
               </span>
@@ -106,7 +110,7 @@ if (loading) {
     </aside>
 
 
-);
+  );
 
 };
 

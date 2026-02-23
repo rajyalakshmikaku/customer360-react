@@ -3,6 +3,8 @@ import { Outlet, Link, useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/LoginSlice";
 import "./MainLayout.css"
+import alertify from 'alertifyjs';
+import "alertifyjs/build/css/alertify.css";
 
 const MainLayout = () => {
   const navigate = useNavigate();
@@ -11,8 +13,6 @@ const MainLayout = () => {
   const name = sessionStorage.getItem("LoggedName");
   const type = sessionStorage.getItem("LoggedUserType");
   const ward = sessionStorage.getItem("LoggedWardId");
-
-
 
 
 
@@ -106,7 +106,7 @@ const MainLayout = () => {
                   </NavLink>
                 </li>
 
-                <li className="menu-item">
+                {/* <li className="menu-item">
                   <NavLink
                     to="/users-list"
                     className={({ isActive }) =>
@@ -116,17 +116,17 @@ const MainLayout = () => {
                     <i className="menu-icon bx bx-list-check"></i>
                     <div>Users List</div>
                   </NavLink>
-                </li>
+                </li> */}
 
                 <li className="menu-item">
                   <NavLink
-                    to="/status-list"
+                    to="/Account-list"
                     className={({ isActive }) =>
                       `menu-link ${isActive ? "active" : ""}`
                     }
                   >
                     <i className="menu-icon bx bx-list-check"></i>
-                    <div>Status List</div>
+                    <div>Account List</div>
                   </NavLink>
                 </li>
               </>
