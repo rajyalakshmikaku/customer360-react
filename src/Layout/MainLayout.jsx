@@ -16,8 +16,6 @@ const MainLayout = () => {
 
 
 
-
-
   useEffect(() => {
     if (window.Helpers?.init) {
       window.Helpers.init();
@@ -112,6 +110,18 @@ const MainLayout = () => {
               <>
                 <li className="menu-item">
                   <NavLink
+                    to="/coplaintsList"
+                    className={({ isActive }) =>
+                      `menu-link ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <i className="menu-icon bx bx-list-check"></i>
+                    <div>Complaints List</div>
+                  </NavLink>
+                </li>
+
+                {/* <li className="menu-item">
+                  <NavLink
                     to="/users-list"
                     className={({ isActive }) =>
                       `menu-link ${isActive ? "active" : ""}`
@@ -120,11 +130,11 @@ const MainLayout = () => {
                     <i className="menu-icon fa fa-users"></i>
                     <span className="menu-text">Users</span>
                   </NavLink>
-                </li>
+                </li> */}
 
                 <li className="menu-item">
                   <NavLink
-                    to="/status-list"
+                    to="/Account-list"
                     className={({ isActive }) =>
                       `menu-link ${isActive ? "active" : ""}`
                     }
