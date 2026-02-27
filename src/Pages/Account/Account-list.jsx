@@ -1,19 +1,37 @@
 import { useEffect, useState } from "react";
 import "./AccountList.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAccountListInfo } from "../../redux/AccountListSlice";
+import { fetchAccountListInfo ,fetchApproveAccountsInfo} from "../../redux/AccountListSlice";
 import AccountViewModal from "./AccountViewModal";
+import Pagination from "../../Components/Pagination";
+
 
 const AccountList = ({ category, onStatusChange, approveSuccess }) => {
   const dispatch = useDispatch();
 
-  const { loading, totalCount, AccountsListInfo = [] } =
+  const { loading, totalCount, AccountsListInfo = [],ApproveInfo  } =
     useSelector((state) => state.Account || {});
 
 
   console.log('AccountsListInfo', AccountsListInfo)
 
   const [modalMode, setModalMode] = useState("");
+
+    const handleStatusChange = (USERID, status = "") => {
+      //console.log('userid',USERID);
+      return dispatch(
+          fetchApproveAccountsInfo({
+              USERID: USERID,
+              Status: status
+          })
+      ).unwrap(); 
+  };
+ 
+
+  // ✅ ADD THIS FUNCTION HERE
+  const handlePageChange = (newPage) => {
+    setPageIndex(newPage);
+  };
 
   //  const handleSearch = () => {
   //   dispatch(fetchAccountList({ search: "" }));
@@ -125,6 +143,7 @@ const AccountList = ({ category, onStatusChange, approveSuccess }) => {
               <tr>
                 <th>Activity</th>
                 {/* <th>Ward</th> */}
+                  {/* <th>User Id</th> */}
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Email</th>
@@ -155,6 +174,7 @@ const AccountList = ({ category, onStatusChange, approveSuccess }) => {
                     </td>
                     {/* <td>{item.USERREFNUMBER }</td>    */}
                     {/* <td>{item.WARD_NO?.NUMBER ?? ""}</td> */}
+                    {/* <td>{item.USERID}</td> */}
                     <td>{item.NAME}</td>
                     <td>{item.SURNAME}</td>
                     <td>{item.EMAIL}</td>
@@ -177,11 +197,17 @@ const AccountList = ({ category, onStatusChange, approveSuccess }) => {
               )}
             </tbody>
           </table>
+          <Pagination
+  pageIndex={pageIndex}
+  pageSize={pageSize}
+  totalCount={totalCount}
+  onPageChange={handlePageChange}
+/>
         </div>
 
         {/* MODAL */}
         <AccountViewModal
-          show={showModal} onClose={() => setShowModal(false)} WardType={category} mode={modalMode} selectedItem={selectedItem} onStatusChange={onStatusChange} approveSuccess={approveSuccess}
+          show={showModal} onClose={() => setShowModal(false)} WardType={category} mode={modalMode} selectedItem={selectedItem} onStatusChange={handleStatusChange} approveSuccess={ApproveInfo?.success}
 
         />
       </div>
