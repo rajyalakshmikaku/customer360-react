@@ -10,11 +10,9 @@ const ComplaintsMenu = ({ onView, counts, loading }) => {
 
   if (loading) {
     return (
-      <div className="complaints-menu">
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <div className="spinner"></div>
-          <p style={{ marginTop: '12px', color: '#6b7280' }}>Loading complaints...</p>
-        </div>
+      <div className="dashboard-loading">
+        <div className="spinner"></div>
+        <p>Loading...</p>
       </div>
     );
   }
@@ -43,32 +41,48 @@ const ComplaintsMenu = ({ onView, counts, loading }) => {
       <ul className="complaints-menu__list">
         {counts?.map((item, i) => (
           <li
-            key={i}
-            className={`complaints-menu__item ${openIndex === i
-                ? "complaints-menu--open complaints-menu--active"
-                : ""
-              }`}
-          >
-            <a
-              href="#"
-              className="complaints-menu__parent"
-              onClick={(e) => {
-                e.preventDefault();
-                onView(item.Name, "");
-              }}
-            >
-              <span className="complaints-menu__title">
-                <div className="complaintsicon-circle">
-                  <i className={`fa ${getIconForType(item.Name)}`} aria-hidden="true"></i>
-                </div>
-                <span className="complaints-name">{item.Name}</span>
-              </span>
+  key={i}
+  className="complaints-menu__item"
+>
+  <div
+    className="complaints-card"
+    // onClick={() => onView(item.Name, "")}
+  >
+    <div className="card-header">
+      <div className="complaintsicon-circle">
+        <i className={`fa ${getIconForType(item.Name)}`} aria-hidden="true"></i>
+      </div>
+      <span className="complaints-name">{item.Name}</span>
+    </div>
 
-              <span className="complaints-menu__total">
-                {item.Total}
-              </span>
-            </a>
-          </li>
+    <div className="card-stats" onClick={() => onView(item.Name, "")}>
+      <div className="stat-box total">
+        <span>{item.Total}</span>
+        <small>Total</small>
+      </div>
+
+      <div className="stat-box active" onClick={() => onView(item.Name, "Active")}>
+        <span>{item.Active}</span>
+        <small>Active</small>
+      </div>
+
+      <div className="stat-box inactive" onClick={() => onView(item.Name, "In-Active")}>
+        <span>{item.InActive}</span>
+        <small>Inactive</small>
+      </div>
+
+      <div className="stat-box pending" onClick={() => onView(item.Name, "Pending")}>
+        <span>{item.Pending}</span>
+        <small>Pending</small>
+      </div>
+
+      <div className="stat-box completed" onClick={() => onView(item.Name, "Completed")}>
+        <span>{item.Completed}</span>
+        <small>Completed</small>
+      </div>
+    </div>
+  </div>
+</li>
         ))}
       </ul>
     </div>

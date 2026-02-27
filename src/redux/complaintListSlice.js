@@ -72,7 +72,7 @@ const complaintListSlice = createSlice({
     wardInfo: null,
     WardType: null,
     UserInfo: null,
-    ComplaintsListInfo: null,
+    ComplaintsListInfo: [],
     ApproveInfo: null,
     loading: false,
     approveLoading : false,
@@ -122,6 +122,7 @@ const complaintListSlice = createSlice({
     builder
       .addCase(fetchComplaintsListInfo.pending, (state) => {
         state.loading = true;
+        state.ComplaintsListInfo = [];
       })
       .addCase(fetchComplaintsListInfo.fulfilled, (state, action) => {
         state.loading = false;
