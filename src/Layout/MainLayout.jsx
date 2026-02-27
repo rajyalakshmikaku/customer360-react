@@ -92,18 +92,8 @@ const MainLayout = () => {
               </NavLink>
             </li>
 
-            {/* COMPLAINTS */}
-            <li className="menu-item">
-              <NavLink
-                to="/coplaintsList"
-                className={({ isActive }) =>
-                  `menu-link ${isActive ? "active" : ""}`
-                }
-              >
-                <i className="menu-icon fa fa-exclamation-triangle"></i>
-                <span className="menu-text">Complaints</span>
-              </NavLink>
-            </li>
+      
+           
 
             {/* ADMIN MENU */}
             {type === "A" && (
