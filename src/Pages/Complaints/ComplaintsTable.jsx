@@ -3,7 +3,7 @@ import ViewModal from "./ViewModal";
 
 
 
-const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch, onStatusChange, approveSuccess }) => {
+const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch, onStatusChange, approveSuccess,loading }) => {
   const [ward, setWard] = useState("");
   const [user, setUser] = useState("");
   const [modalMode, setModalMode] = useState("");
@@ -138,7 +138,15 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
             </tr>
           </thead>
           <tbody>
-            {ComplaintsListInfo && ComplaintsListInfo.length > 0 ? (
+            {loading ? (
+    <tr>
+      <td colSpan="9" style={{ textAlign: "center", padding: "30px" }}>
+        <div className=""></div>
+        <p>Loading complaints...</p>
+      </td>
+    </tr>
+  ) : ComplaintsListInfo && ComplaintsListInfo.length > 0 ? (
+           
               ComplaintsListInfo.map((item, index) => (
                 <tr key={item.ID || index}>
                   <td>
@@ -151,7 +159,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                       ></i>
                       {(item.STATUS === "Active" || item.STATUS === "Pending") && (
                         <i
-                          className="fa fa-pencil"
+                          className="fa fa-edit"
                           style={{ cursor: "pointer", color: '#f97316', fontSize: '16px' }}
                           onClick={() => handleView(item, "edit")}
                           title="Edit complaint"

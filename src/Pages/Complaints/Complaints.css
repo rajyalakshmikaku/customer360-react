@@ -666,3 +666,103 @@
 .complaints-menu__count.inactive {
   color: #EF4444; /* bright red */
 }
+.complaints-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.complaints-card:hover {
+  transform: translateY(-4px);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.stat-box {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+}
+
+.stat-box span {
+  font-size: 18px;
+  font-weight: bold;
+  display: block;
+}
+
+.stat-box small {
+  font-size: 12px;
+  color: #6b7280;
+}
+.stat-box {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* TOTAL */
+.stat-box.total:hover {
+  background: #0284c7;
+  color: white;
+}
+
+/* ACTIVE */
+.stat-box.active:hover {
+  background: #16a34a;
+  color: white;
+}
+
+/* INACTIVE */
+.stat-box.inactive:hover {
+  background: #dc2626;
+  color: white;
+}
+
+/* PENDING */
+.stat-box.pending:hover {
+  background: #ca8a04;
+  color: white;
+}
+
+/* COMPLETED */
+.stat-box.completed:hover {
+  background: #7c3aed;
+  color: white;
+}
+
+/* Make small text white on hover */
+.stat-box:hover small {
+  color: white;
+}
+
+/* Slight lift effect */
+.stat-box:hover {
+  transform: translateY(-3px);
+}
+
+/* Optional colors */
+.total { background: #e0f2fe; }
+.active { background: #dcfce7; }
+.inactive { background: #fee2e2; }
+.pending { background: #fef9c3; }
+.completed { background: #ede9fe; }
