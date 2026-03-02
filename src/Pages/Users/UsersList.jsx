@@ -25,9 +25,9 @@ const UsersList = () => {
 
       {!showForm && (
         <div className="page-header">
-          <h3>Users Details</h3>
+          <h3><i className="fa fa-users"></i>Users Details</h3>
           <button className="btn add" onClick={() => setShowForm(true)}>
-            + Add User
+            <i className="fa fa-plus"></i> Add User
           </button>
         </div>
       )}
@@ -37,7 +37,7 @@ const UsersList = () => {
         <div className="add-user-section">
 
           <div className="add-user-header">
-            <h4>Add User</h4>
+            <h4><i className="fa fa-user-plus"></i>Add New User</h4>
             <button className="close-btn" onClick={() => setShowForm(false)}>✕</button>
           </div>
 
@@ -95,7 +95,7 @@ const UsersList = () => {
 
           <div className="table-top">
             <div>
-              Records per page{" "}
+              <label>Records per page</label>
               <select
                 value={pageSize}
                 onChange={(e) => {
@@ -110,30 +110,33 @@ const UsersList = () => {
               </select>
             </div>
 
-            <input
-              type="text"
-              placeholder="Search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPageIndex(1);
-              }}
-            />
+            <div>
+              <label>Search</label>
+              <input
+                type="text"
+                placeholder="Search by name, email, or mobile"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPageIndex(1);
+                }}
+              />
+            </div>
           </div>
 
           {/* {loading && <p>Loading...</p>} */}
 
           <div className="table-responsive">
-            <table className="table table-hover align-middle">
-              <thead className="table-dark">
+            <table className="table align-middle">
+              <thead>
                 <tr>
-                  <th>NAME</th>
-                  <th>SURNAME</th>
-                  <th>EMAIL</th>
-                  <th>ADDRESS</th>
-                  <th>MOBILE</th>
-                  <th>STATUS</th>
-                  <th>ACTION</th>
+                  <th width="12%">NAME</th>
+                  <th width="12%">SURNAME</th>
+                  <th width="20%">EMAIL</th>
+                  <th width="20%">ADDRESS</th>
+                  <th width="12%">MOBILE</th>
+                  <th width="12%">STATUS</th>
+                  <th width="12%">ACTION</th>
                 </tr>
               </thead>
 
@@ -142,22 +145,27 @@ const UsersList = () => {
                 {UserListInfo.length > 0 ? (
                   UserListInfo.map((item, index) => (
                     <tr key={item.USERID || index}>
-                      <td>{item.NAME}</td>
+                      <td><strong>{item.NAME}</strong></td>
                       <td>{item.SURNAME}</td>
                       <td>{item.EMAIL}</td>
                       <td>{item.ADDRESS}</td>
                       <td>{item.CELLNUMBER}</td>
-                      <td>{item.ACTIVESTATUS}</td>
+                      <td>
+                        <span className={`status-${item.ACTIVESTATUS?.toLowerCase()}`}>
+                          {item.ACTIVESTATUS}
+                        </span>
+                      </td>
                       <td className="action-col">
-                        <i className="fa fa-edit edit-icon" title="Edit"></i>
-                        <i className="fa fa-trash delete-icon" title="Delete"></i>
+                        <i className="fa fa-edit edit-icon" title="Edit User"></i>
+                        <i className="fa fa-trash delete-icon" title="Delete User"></i>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="text-center">
-                      No Users Found
+                    <td colSpan="7">
+                      <i className="fa fa-inbox"></i>
+                      <strong>No Users Found</strong>
                     </td>
                   </tr>
                 )}

@@ -1,28 +1,45 @@
 import { useState } from "react";
 import "./Complaints.css";
+
 const ComplaintsMenu = ({ onView, counts, loading }) => {
   const [openIndex, setOpenIndex] = useState(null);
-
-  // const complaints = [
-  //   { name: "HOTSPOT", total: 47, completed: 5, pending: 0, active: 12, inactive: 27 },
-  //   { name: "ROADCLOSURE", total: 35 },
-  //   { name: "MEETING", total: 37 },
-  //   { name: "MISSINGPERSON", total: 21 },
-  //   { name: "HEALTHCARE", total: 20 },
-  //   { name: "WORKSHOP", total: 19 },
-  //   { name: "WARNING", total: 26 },
-  // ];
 
   const toggleMenu = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="complaints-menu">
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <div className="spinner"></div>
+          <p style={{ marginTop: '12px', color: '#6b7280' }}>Loading complaints...</p>
+        </div>
+      </div>
+    );
   }
 
+  // Icon mapping for complaints types
+  const getIconForType = (name) => {
+    const iconMap = {
+      'HOTSPOT': 'fa-fire',
+      'ROADCLOSURE': 'fa-ban',
+      'MEETING': 'fa-users',
+      'MISSINGPERSON': 'fa-user-secret',
+      'HEALTHCARE': 'fa-hospital-o',
+      'WORKSHOP': 'fa-wrench',
+      'WARNING': 'fa-exclamation-triangle',
+      'COMPLAINT': 'fa-comments-o',
+      'INCIDENT': 'fa-exclamation-circle',
+      'REPORT': 'fa-file-text',
+      'REQUEST': 'fa-lightbulb-o',
+      'FEEDBACK': 'fa-thumbs-up',
+    };
+    return iconMap[name?.toUpperCase()] || 'fa-exclamation-circle';
+  };
+
   return (
-    <aside className="complaints-menu">
+    <div className="complaints-menu">
       <ul className="complaints-menu__list">
         {counts?.map((item, i) => (
           <li
@@ -37,82 +54,27 @@ const ComplaintsMenu = ({ onView, counts, loading }) => {
               className="complaints-menu__parent"
               onClick={(e) => {
                 e.preventDefault();
-                toggleMenu(i);
+                onView(item.Name, "");
               }}
             >
-
               <span className="complaints-menu__title">
                 <div className="complaintsicon-circle">
-                  <i className={`${item.Icon} ${item.Color}`} aria-hidden="true"></i>
+                  <i className={`fa ${getIconForType(item.Name)}`} aria-hidden="true"></i>
                 </div>
                 <span className="complaints-name">{item.Name}</span>
               </span>
 
               <span className="complaints-menu__total">
-                Total : {item.Total}
+                {item.Total}
               </span>
             </a>
-
-            {openIndex === i && (
-              <ul className="complaints-menu__sub">
-                <li>
-                  <a
-                    className="complaints-menu__link"
-                    onClick={() => onView(item.Name, "Completed")}
-                  >
-                    Completed
-                    <span className="complaints-menu__count completed">
-                      {item.Completed}
-                    </span>
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="complaints-menu__link"
-                    onClick={() => onView(item.Name, "Pending")}
-                  >
-                    Pending
-                    <span className="complaints-menu__count pending">
-                      {item.Pending}
-                    </span>
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="complaints-menu__link"
-                    onClick={() => onView(item.Name, "Active")}
-                  >
-                    Active
-                    <span className="complaints-menu__count active">
-                      {item.Active}
-                    </span>
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="complaints-menu__link"
-                    onClick={() => onView(item.Name, "In-Active")}
-                  >
-                    In-Active
-                    <span className="complaints-menu__count inactive">
-                      {item.InActive}
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            )}
           </li>
         ))}
       </ul>
-    </aside>
-
-
+    </div>
   );
-
 };
 
 export default ComplaintsMenu;
+
 

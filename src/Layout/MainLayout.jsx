@@ -53,8 +53,9 @@ const MainLayout = () => {
           id="layout-menu"
           className="layout-menu menu-vertical menu bg-menu-theme"
         >
-          <div className="app-brand demo d-flex align-items-center px-3">
-            <img src="/SixStepLogo.jpg" alt="Logo" width="40" height="40" />
+          {/* Brand Section */}
+          <div className="app-brand d-flex align-items-center">
+            <img src="/SixStepLogo.jpg" alt="Logo" />
             <NavLink to="/dashboard" className="app-brand-link ms-2">
               <span className="app-brand-text fw-bolder">
                 Customer 360
@@ -62,14 +63,14 @@ const MainLayout = () => {
             </NavLink>
           </div>
 
-          {/* 👇 MOVE USER INFO BELOW BRAND */}
-          <div className="px-3 pb-3">
+          {/* User Info Section */}
+          <div className="sidebar-user-info">
             <div className="text-white fw-semibold">
-              Hi, {name || ""}
+              Hi, {name || "User"}
             </div>
             {type !== "A" && (
-              <div className="text-white small">
-                WARD No {ward || "Not Assigned"}
+              <div className="text-white small mt-2">
+                📍 Ward {ward || "Not Assigned"}
               </div>
             )}
           </div>
@@ -86,10 +87,13 @@ const MainLayout = () => {
                   `menu-link ${isActive ? "active" : ""}`
                 }
               >
-                <i className="menu-icon bx bx-list-check"></i>
-                <div>Dashboard</div>
+                <i className="menu-icon fa fa-th-large"></i>
+                <span className="menu-text">Dashboard</span>
               </NavLink>
             </li>
+
+      
+           
 
             {/* ADMIN MENU */}
             {type === "A" && (
@@ -113,8 +117,8 @@ const MainLayout = () => {
                       `menu-link ${isActive ? "active" : ""}`
                     }
                   >
-                    <i className="menu-icon bx bx-list-check"></i>
-                    <div>Users List</div>
+                    <i className="menu-icon fa fa-users"></i>
+                    <span className="menu-text">Users</span>
                   </NavLink>
                 </li> */}
 
@@ -125,8 +129,8 @@ const MainLayout = () => {
                       `menu-link ${isActive ? "active" : ""}`
                     }
                   >
-                    <i className="menu-icon bx bx-list-check"></i>
-                    <div>Account List</div>
+                    <i className="menu-icon fa fa-list-ul"></i>
+                    <span className="menu-text">Accounts</span>
                   </NavLink>
                 </li>
               </>
@@ -142,37 +146,31 @@ const MainLayout = () => {
           {/* Navbar */}
           <nav className="layout-navbar navbar navbar-expand-xl navbar-detached bg-navbar-theme">
             <div className="d-flex align-items-center ms-auto me-3">
+              {/* User Dropdown */}
               <div className="dropdown">
                 <button
-                  className="nav-link dropdown-toggle btn btn-link"
+                  className="dropdown-toggle btn btn-link"
                   data-bs-toggle="dropdown"
                   type="button"
+                  aria-expanded="false"
                 >
                   <img
                     src="/assets/img/User_Logo.png"
-                    alt="User"
-                    className="w-px-40 h-auto rounded-circle"
+                    alt="User Avatar"
                   />
                 </button>
 
                 <ul className="dropdown-menu dropdown-menu-end">
-                  {/* USER INFO */}
+                  {/* USER INFO HEADER */}
                   <li>
                     <div className="dropdown-item">
-                      <div className="d-flex">
-                        <div className="flex-shrink-0 me-3">
-                          <div className="avatar avatar-online">
-                            {/* <img
-                              src="/assets/img/User_Logo.png"
-                              alt="User"
-                              className="w-px-40 h-auto rounded-circle"
-                            /> */}
-                            <i className="bx bx-user fs-4"></i>
-                          </div>
+                      <div className="d-flex align-items-center">
+                        <div className="avatar flex-shrink-0">
+                          <i className="fas fa-user-circle"></i>
                         </div>
-                        <div className="flex-grow-1">
-                          <span className="fw-semibold d-block">
-                            {name || "Unknown"}
+                        <div className="flex-grow-1 ms-3">
+                          <span className="fw-semibold d-block lh-sm">
+                            {name || "Unknown User"}
                           </span>
                           <small className="text-muted">
                             {displayUserType}
@@ -182,43 +180,26 @@ const MainLayout = () => {
                     </div>
                   </li>
 
-                  <li><div className="dropdown-divider"></div></li>
+                  <li><hr className="dropdown-divider" /></li>
 
                   {/* PROFILE */}
                   <li>
                     <a className="dropdown-item" href="#">
-                      <i className="bx bx-user me-2"></i>
+                      <i className="fas fa-user"></i>
                       <span className="align-middle">My Profile</span>
                     </a>
                   </li>
 
-                  {/* SETTINGS */}
-                  {/* <li>
-                    <a className="dropdown-item" href="#">
-                      <i className="bx bx-cog me-2"></i>
-                      <span className="align-middle">Settings</span>
-                    </a>
-                  </li> */}
-
-                  {/* BILLING */}
-                  {/* <li>
-                    <a className="dropdown-item" href="#">
-                      <span className="d-flex align-items-center align-middle">
-                        <i className="bx bx-credit-card me-2"></i>
-                        <span className="flex-grow-1">Billing</span>
-                        <span className="badge badge-center rounded-pill bg-danger w-px-20 h-px-20">
-                          4
-                        </span>
-                      </span>
-                    </a>
-                  </li> */}
-
-                  <li><div className="dropdown-divider"></div></li>
+                  <li><hr className="dropdown-divider" /></li>
 
                   {/* LOGOUT */}
                   <li>
-                    <button className="dropdown-item" onClick={handleLogout}>
-                      <i className="bx bx-power-off me-2"></i>
+                    <button 
+                      className="dropdown-item" 
+                      onClick={handleLogout}
+                      title="Click to logout"
+                    >
+                      <i className="fas fa-sign-out-alt"></i>
                       <span className="align-middle">Log Out</span>
                     </button>
                   </li>
