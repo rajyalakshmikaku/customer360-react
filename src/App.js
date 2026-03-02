@@ -26,7 +26,7 @@ function App() {
          {/* <Route path="/status-list" element={<StatusList />} /> */}
           <Route path="/details/:wardNo/:type" element={<Details />} />
          <Route path="/Account-list" element={<AccountList />} />
-<Route path="/details/:wardNo/:type" element={<Details />} />
+          <Route path="/details/:wardNo/:type" element={<Details />} />
 
       </Route>
     </Routes>
