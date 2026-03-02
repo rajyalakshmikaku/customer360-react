@@ -445,9 +445,15 @@ const ViewModal = ({
                                             <button
                                                 type="button"
                                                 className="btn btn-success btn-sm"
-                                                onClick={() =>
-                                                    onStatusChange(selectedItem.ID, "APPROVE", WardType)
-                                                }
+
+                                                onClick={async () => {
+                                                    try {
+                                                        await onStatusChange(selectedItem.ID, "APPROVE", WardType);
+
+                                                    } catch (err) {
+                                                        console.error(err);
+                                                    }
+                                                }}
                                             >
                                                 {approveLoading ? (
                                                     <>
@@ -464,9 +470,14 @@ const ViewModal = ({
                                                 type="button"
                                                 disabled={approveLoading}
                                                 className="btn btn-success btn-sm"
-                                                onClick={() =>
-                                                    onStatusChange(selectedItem.ID, "COMPLETED", WardType)
-                                                }
+                                                onClick={async () => {
+                                                    try {
+                                                        await onStatusChange(selectedItem.ID, "COMPLETED", WardType);
+                                                        // onClose(); 
+                                                    } catch (err) {
+                                                        console.error(err);
+                                                    }
+                                                }}
                                             >
                                                 {approveLoading ? (
                                                     <>
@@ -483,12 +494,13 @@ const ViewModal = ({
                                         <button
                                             type="button"
                                             className="btn btn-danger btn-sm"
-                                            onClick={() => setShowRejectModal(true)}
+                                            onClick={() => {
+                                                setRejectComment("");      // clear old comment
+                                                setShowRejectModal(true);  // open reject popup
+                                            }}
                                         >
                                             Reject
                                         </button>
-
-
 
 
                                     </div>
@@ -536,21 +548,37 @@ const ViewModal = ({
 
                                                 <button
                                                     className="btn btn-success btn-sm"
-                                                    disabled={approveLoading || !rejectComment}
-                                                    onClick={() =>
-                                                        onStatusChange(
-                                                            selectedItem.ID,
-                                                            "REJECT",
-                                                            WardType,
-                                                            rejectComment
-                                                        )
-                                                    }
+                                                    disabled={loading  || !rejectComment.trim()}
+                                                    onClick={async () => {
+                                                        try {
+                                                            await onStatusChange(
+                                                                selectedItem.ID,
+                                                                "REJECT",
+                                                                WardType,
+                                                                rejectComment
+                                                            );
+
+                                                            // close popup after API success
+                                                            setShowRejectModal(false);
+                                                            setRejectComment("");
+
+                                                        } catch (err) {
+                                                            console.error(err);
+                                                        }
+                                                    }}
                                                 >
-                                                    {loading ? (
-                                                        <span className="fa fa-spinner fa-spin"></span>
+                                                    {/* {approveLoading ? (
+                                                        <span className="fa fa-spinner fa-spin"></span> 
                                                     ) : (
                                                         "Submit"
-                                                    )}
+                                                    )} */}
+                                                      {loading  ? (
+                                                    <>
+                                                        <i className="fa fa-spinner fa-spin"></i> Submit
+                                                    </>
+                                                ) : (
+                                                    "Submit"
+                                                )}
                                                 </button>
 
                                             </div>

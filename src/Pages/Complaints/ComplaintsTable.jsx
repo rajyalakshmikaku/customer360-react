@@ -68,194 +68,187 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
 
 
   return (
-
-
-    <div className="layout-container">
-      <div className="layout-page">
-
-        <div className="row mb-4">
-          <div className="col-12">
-            <div className="card-body">
-              <div className="row g-3 align-items-end">
-
-                <div className="col-md-3">
-                  <label className="form-label fw-semibold text-teal">Ward</label>
-                  <select
-                    className="form-select"
-                    value={ward}
-                    onChange={(e) => setWard(e.target.value)}
-                  >
-                    <option value="">Select option</option>
-                    {wardInfo?.map((item, index) => (
-                      <option key={index} value={item.name}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="col-md-3">
-                  <label className="form-label fw-semibold text-teal">Users</label>
-                  <select
-                    className="form-select"
-                    value={user}
-                    onChange={(e) => setUser(e.target.value)}
-                  >
-                    <option value="">Select option</option>
-                    {UserInfo?.map((item, index) => (
-                      <option key={index} value={item.userid}>
-                        {item.email}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="col-md-3 d-flex gap-2">
-                  <button className="btn btn-success w-50" onClick={handleSearch}>
-                    Search
-                  </button>
-
-                  <button className="btn btn-warning w-50" onClick={handleClear}>
-                    Clear
-                  </button>
-                </div>
-
-              </div>
-            </div>
-
-
-          </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {/* Filters Section */}
+      <div className="complaints-filters">
+        <div className="filter-group">
+          <label>🏢 Ward</label>
+          <select
+            value={ward}
+            onChange={(e) => setWard(e.target.value)}
+          >
+            <option value="">Select option</option>
+            {wardInfo?.map((item, index) => (
+              <option key={index} value={item.name}>
+                {item.name}
+              </option>
+            ))}
+          </select>
         </div>
-        <div className="table-responsive">
 
-          <table className="table table-hover table-bordered align-middle">
+        <div className="filter-group">
+          <label>👤 Users</label>
+          <select
+            value={user}
+            onChange={(e) => setUser(e.target.value)}
+          >
+            <option value="">Select option</option>
+            {UserInfo?.map((item, index) => (
+              <option key={index} value={item.userid}>
+                {item.email}
+              </option>
+            ))}
+          </select>
+        </div>
 
-            <thead className="table-dark">
-              <tr>
-                <th>Activity</th>
-                <th hidden>ID</th>
-                <th>Ref No.</th>
-                <th>Ward</th>
-                {[
-                  "HOTSPOT",
-                  "ROADCLOSURE",
-                  "MEETING",
-                  "MISSINGPERSON",
-                  // "HEALTH",
-                  //"WARNING",
-                  //"WORKSHOP",
-
-
-                ].includes(WardType) && (
-                    <th>Type</th>
-                  )}
-
-                <th>Details</th>
-                <th>Created Date</th>
-                <th>No.of Days & Time</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {ComplaintsListInfo && ComplaintsListInfo.length > 0 ? (
-                ComplaintsListInfo.map((item, index) => (
-                  <tr key={item.ID || index}>
-
-                    <td>
-                      <i
-                        className="fa fa-eye text-primary me-2"
-                        style={{ cursor: "pointer", color: 'blue' }}
-                        onClick={() => handleView(item, "View")}
-                      ></i>
-                      {(item.STATUS === "Active" || item.STATUS === "Pending") && (
-                        <i
-                          className="fa fa-edit"
-                          style={{ cursor: "pointer", color: "blue" }}
-                          onClick={() => handleView(item, "edit")}
-                        ></i>
-                      )}
-
-                    </td>
-
-                    <td hidden>{item.ID}</td>
-                    <td>{item.REFNUMBER}</td>
-                    <td>{item.WARD_NO}</td>
-
-                    {WardType === "HOTSPOT" && (
-                      <>
-                        <td>{item.CRIME_TYPE}</td>
-                        <td>{item.CRIME_DETAILS}</td>
-                      </>
-                    )}
-
-                    {WardType === "ROADCLOSURE" && (
-                      <>
-                        <td>{item.ROAD_NAME}</td>
-                        <td>{item.ROADCLOUSER_DETAILS}</td>
-                      </>
-                    )}
-
-                    {WardType === "MEETING" && (
-                      <>
-                        <td>{item.SUBJECT}</td>
-                        <td>{item.MEETING_DETAILS}</td>
-                      </>
-                    )}
-
-                    {WardType === "MISSINGPERSON" && (
-                      <>
-                        <td>{item.FULL_NAME}</td>
-                        <td>{item.MISSINGPERSON_DETAILS}</td>
-                      </>
-                    )}
-
-                    {WardType === "HEALTHCARE" && (
-                      <td>{item.HEALTHCARE_DETAILS}</td>
-                    )}
-
-                    {WardType === "WORKSHOP" && (
-                      <td>{item.WORKSHOP_DETAILS}</td>
-                    )}
-
-                    {WardType === "WARNING" && (
-                      <td>{item.WARNING_DETAILS}</td>
-                    )}
-
-                    <td>{new Date(item.CREATED_DATE).toLocaleDateString()}</td>
-                    {/* <td>{item.EMAIL}</td> */}
-                    <td>
-                      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                        {/* <span>{new Date(item.CREATED_DATE).toLocaleString()}</span> */}
-                        <span className="badge bg-secondary">
-                          {getDaysAndTime(item.CREATED_DATE)}
-                        </span>
-                      </div>
-                    </td>
-
-
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" className="text-center">
-                    No Users Found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-
-
-          </table>
-          <ViewModal show={showModal} onClose={() => setShowModal(false)} WardType={category} mode={modalMode} selectedItem={selectedItem} selectedItemImages={selectedItemImages} formatDotNetDate={formatDotNetDate} formatTimeSpan={formatTimeSpan} onStatusChange={onStatusChange} approveSuccess={approveSuccess} />
-
+        <div className="filter-group">
+          <label>&nbsp;</label>
+          <div className="filter-buttons">
+            <button className="btn-search" onClick={handleSearch}>
+              <i className="fa fa-search"></i> Search
+            </button>
+            <button className="btn-clear" onClick={handleClear}>
+              <i className="fa fa-refresh"></i> Clear
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* Table Section */}
+      <div style={{ overflowX: 'auto' }}>
+        <table className="complaints-table">
+          <thead>
+            <tr>
+              <th width="10%">Activity</th>
+              <th hidden>ID</th>
+              <th width="12%">Ref No.</th>
+              <th width="10%">Ward</th>
+              <th width="15%">Status</th>
+              {[
+                "HOTSPOT",
+                "ROADCLOSURE",
+                "MEETING",
+                "MISSINGPERSON",
+              ].includes(WardType) && (
+                <th width="15%">Type</th>
+              )}
+              <th width="20%">Details</th>
+              <th width="12%">Created Date</th>
+              <th width="12%">Time Elapsed</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ComplaintsListInfo && ComplaintsListInfo.length > 0 ? (
+              ComplaintsListInfo.map((item, index) => (
+                <tr key={item.ID || index}>
+                  <td>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <i
+                        className="fa fa-eye"
+                        style={{ cursor: "pointer", color: '#0d9488', fontSize: '16px' }}
+                        onClick={() => handleView(item, "View")}
+                        title="View details"
+                      ></i>
+                      {(item.STATUS === "Active" || item.STATUS === "Pending") && (
+                        <i
+                          className="fa fa-pencil"
+                          style={{ cursor: "pointer", color: '#f97316', fontSize: '16px' }}
+                          onClick={() => handleView(item, "edit")}
+                          title="Edit complaint"
+                        ></i>
+                      )}
+                    </div>
+                  </td>
+                  <td hidden>{item.ID}</td>
+                  <td><strong>{item.REFNUMBER}</strong></td>
+                  <td>{item.WARD_NO}</td>
+                  <td>
+                    <span className={`status-badge ${item.STATUS?.toLowerCase()}`}>
+                      {item.STATUS}
+                    </span>
+                  </td>
 
+                  {WardType === "HOTSPOT" && (
+                    <>
+                      <td><strong>{item.CRIME_TYPE}</strong></td>
+                      <td>{item.CRIME_DETAILS}</td>
+                    </>
+                  )}
+
+                  {WardType === "ROADCLOSURE" && (
+                    <>
+                      <td><strong>{item.ROAD_NAME}</strong></td>
+                      <td>{item.ROADCLOUSER_DETAILS}</td>
+                    </>
+                  )}
+
+                  {WardType === "MEETING" && (
+                    <>
+                      <td><strong>{item.SUBJECT}</strong></td>
+                      <td>{item.MEETING_DETAILS}</td>
+                    </>
+                  )}
+
+                  {WardType === "MISSINGPERSON" && (
+                    <>
+                      <td><strong>{item.FULL_NAME}</strong></td>
+                      <td>{item.MISSINGPERSON_DETAILS}</td>
+                    </>
+                  )}
+
+                  {WardType === "HEALTHCARE" && (
+                    <td>{item.HEALTHCARE_DETAILS}</td>
+                  )}
+
+                  {WardType === "WORKSHOP" && (
+                    <td>{item.WORKSHOP_DETAILS}</td>
+                  )}
+
+                  {WardType === "WARNING" && (
+                    <td>{item.WARNING_DETAILS}</td>
+                  )}
+
+                  {/* Fallback for types without Type column */}
+                  {!["HOTSPOT", "ROADCLOSURE", "MEETING", "MISSINGPERSON"].includes(WardType) && (
+                    <td>-</td>
+                  )}
+
+                  <td>
+                    {new Date(item.CREATED_DATE).toLocaleDateString()}
+                  </td>
+                  <td>
+                    <span className="time-elapsed-badge">
+                      <i className="fa fa-clock-o"></i>
+                      {getDaysAndTime(item.CREATED_DATE)}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" style={{ textAlign: 'center', padding: '24px', color: '#9ca3af' }}>
+                  <i className="fa fa-inbox" style={{ fontSize: '32px', marginBottom: '8px', display: 'block' }}></i>
+                  <strong>No results found</strong>
+                </td>
+              </tr>
+            )}
+        </tbody>
+      </table>
     </div>
 
-
-
+      <ViewModal 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        WardType={category} 
+        mode={modalMode} 
+        selectedItem={selectedItem} 
+        selectedItemImages={selectedItemImages} 
+        formatDotNetDate={formatDotNetDate} 
+        formatTimeSpan={formatTimeSpan} 
+        onStatusChange={onStatusChange} 
+        approveSuccess={approveSuccess} 
+      />
+    </div>
   );
 };
 

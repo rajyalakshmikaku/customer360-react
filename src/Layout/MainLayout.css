@@ -1,89 +1,517 @@
-/* Sidebar background */
+/* ========================================
+   ROOT VARIABLES - TEAL & ORANGE THEME
+   ======================================== */
+:root {
+  --primary-teal: #0d9488;
+  --primary-teal-dark: #0f766e;
+  --primary-teal-light: #14b8a6;
+  --accent-orange: #f97316;
+  --accent-orange-light: #fed7aa;
+  --sidebar-bg: linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #14b8a6 100%);
+  --text-white: #ffffff;
+  --text-dark: #1f2937;
+  --text-muted: #6b7280;
+  --border-light: #e5e7eb;
+  --bg-light: #f9fafb;
+}
+
+/* ========================================
+   GENERAL LAYOUT
+   ======================================== */
+* {
+  box-sizing: border-box;
+}
+
+.layout-wrapper {
+  background-color: var(--bg-light);
+  min-height: 100vh;
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.layout-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 280px;
+  min-height: 100vh;
+}
+
+/* ========================================
+   SIDEBAR - PROFESSIONAL DESIGN
+   ======================================== */
 .layout-menu {
-  background-color: teal;
+  background: linear-gradient(180deg, #0f766e 0%, #0d9488 50%, #14b8a6 100%);
+  width: 280px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  box-shadow: 4px 0 16px rgba(15, 118, 110, 0.2), -1px 0 2px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  z-index: 1000;
 }
 
-/* Menu links */
-.menu-link {
-  color: #ffffff;
-  border-radius: 8px;
-  margin: 4px 8px;
+.layout-menu::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Icons */
-.menu-icon {
-  color: #ffffff;
+.layout-menu::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* Hover */
-.menu-link:hover {
-  background-color: teal;
+.layout-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
 }
 
-/* Active menu (IMPORTANT) */
-.menu-link.active {
-  background-color: #F2B632;
-  color: #1E2A5A;
-  font-weight: 600;
+.layout-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
 }
 
-.menu-link.active .menu-icon {
-  color: #1E2A5A;
-}
-/* Sidebar background */
-.layout-menu {
-  background-color: teal !important;
+/* ========================================
+   BRAND SECTION
+   ======================================== */
+.app-brand {
+  padding: 24px 20px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.8) 0%, rgba(13, 148, 136, 0.8) 100%);
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  backdrop-filter: blur(10px);
 }
 
-/* App name */
+.app-brand img {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  object-fit: cover;
+}
+
+.app-brand img:hover {
+  transform: scale(1.08) rotate(2deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+.app-brand-link {
+  text-decoration: none !important;
+  flex: 1;
+}
+
 .app-brand-text {
-  color: #ffffff;
+  color: var(--text-white);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin: 0;
+  text-transform: none;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Menu links */
+/* ========================================
+   USER INFO SECTION
+   ======================================== */
+.sidebar-user-info {
+  padding: 20px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 0 !important;
+  backdrop-filter: blur(5px);
+}
+
+.sidebar-user-info .text-white {
+  color: var(--text-white);
+  display: block;
+  font-size: 15px;
+}
+
+.sidebar-user-info .fw-semibold {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-user-info .small {
+  font-size: 13px;
+  opacity: 0.95;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ========================================
+   MENU SECTION - PROFESSIONAL DESIGN
+   ======================================== */
+.menu-inner {
+  flex: 1;
+  padding: 16px 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.menu-item {
+  list-style: none;
+  margin: 0;
+}
+
 .menu-link {
-  color: #ffffff !important;
-  border-radius: 8px;
-  margin: 4px 8px;
-  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  line-height: 1.4;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: transparent;
 }
 
-/* Icons */
-.menu-icon {
-  color: #ffffff !important;
-}
-
-/* Hover */
-.menu-link:hover {
-  background-color: #4A6FE3;
-}
-
-/* Active */
+/* Active state with professional gradient */
 .menu-link.active {
-  background-color: #F2B632;
-  color: #1E2A5A !important;
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+  color: #ffffff;
   font-weight: 600;
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .menu-link.active .menu-icon {
-  color: #1E2A5A !important;
+  color: #ffffff;
+  transform: scale(1.1);
 }
-/* TOP NAVBAR (Muted) */
+
+/* Hover state */
+.menu-link:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.menu-link:hover .menu-icon {
+  color: #f97316;
+  transform: scale(1.15);
+}
+
+.menu-icon {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  transition: all 0.3s ease;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.3px;
+}
+
+/* ========================================
+   NAVBAR - PROFESSIONAL DESIGN
+   ======================================== */
 .layout-navbar {
-  background-color: #dae4e1 !important; /* soft blue-gray */
-  border-bottom: 1px solid #E0E6F5;
+  background-color: var(--text-white);
+  border-bottom: 2px solid var(--border-light);
+  padding: 18px 32px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 99;
 }
 
-/* Navbar text & icons */
-.layout-navbar .nav-link,
-.layout-navbar i {
-  color: #1E2A5A !important;
+.layout-navbar .d-flex {
+  display: flex;
 }
 
-/* Profile image */
-.layout-navbar img {
-  border: 2px solid #F2B632;
+.layout-navbar .ms-auto {
+  margin-left: auto;
 }
+
+.layout-navbar .me-3 {
+  margin-right: 12px;
+}
+
+/* Dropdown Menu */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-toggle:hover {
+  background-color: rgba(15, 118, 110, 0.1);
+}
+
+.dropdown-toggle img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25), 0 0 0 2px rgba(255, 255, 255, 0.5);
+  border: 2.5px solid var(--accent-orange);
+  transition: all 0.3s ease;
+}
+
+.dropdown-toggle img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(15, 118, 110, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.6);
+}
+
+.dropdown-toggle i {
+  font-size: 26px;
+  color: var(--primary-teal-dark);
+}
+
+/* Dropdown Menu Items */
+.dropdown-menu {
+  background: var(--text-white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 0 !important;
+  min-width: 340px;
+  top: calc(100% + 12px) !important;
+  right: 0 !important;
+  backdrop-filter: blur(8px);
+  border-top: 2px solid var(--accent-orange);
+}
+
+.dropdown-menu .dropdown-item {
+  padding: 16px 20px !important;
+  color: #1f2937 !important;
+  border: none;
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  line-height: 1.5;
+  background-color: transparent;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background: linear-gradient(90deg, rgba(13, 148, 136, 0.08) 0%, transparent 100%);
+  color: var(--primary-teal-dark) !important;
+  padding-left: 24px !important;
+}
+
+.dropdown-menu .dropdown-item i {
+  font-size: 18px;
+  color: var(--primary-teal-dark);
+  min-width: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.dropdown-menu .dropdown-item:hover i {
+  color: var(--accent-orange);
+  transform: scale(1.15);
+}
+
+.dropdown-menu > li:first-child .dropdown-item {
+  background: linear-gradient(90deg, rgba(13, 148, 136, 0.08) 0%, rgba(20, 184, 166, 0.05) 100%);
+  border-bottom: 1px solid var(--border-light);
+  pointer-events: none;
+  cursor: default;
+  padding: 20px !important;
+  color: #1f2937 !important;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.dropdown-menu > li:first-child .dropdown-item:hover {
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.05) 0%, rgba(20, 184, 166, 0.05) 100%);
+}
+
+.dropdown-menu .dropdown-item.active,
+.dropdown-menu .dropdown-item:hover.active {
+  background: linear-gradient(135deg, var(--accent-orange) 0%, #fb923c 100%);
+  color: var(--text-white) !important;
+}
+
+.dropdown-menu .dropdown-item.active i,
+.dropdown-menu .dropdown-item:hover.active i {
+  color: var(--text-white);
+}
+
+.dropdown-divider {
+  margin: 10px 0 !important;
+  border-color: #e5e7eb;
+  border-top: 1px solid #e5e7eb;
+}
+
+.dropdown-menu .avatar {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.dropdown-menu .avatar i {
+  background: linear-gradient(135deg, var(--primary-teal-dark) 0%, var(--primary-teal-light) 100%);
+  color: var(--text-white);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+}
+
+.dropdown-menu .flex-grow-1 {
+  color: #1f2937 !important;
+}
+
+.dropdown-menu .fw-semibold {
+  color: #1f2937 !important;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.dropdown-menu .text-muted {
+  color: #9ca3af !important;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ========================================
+   CONTENT WRAPPER
+   ======================================== */
+.content-wrapper {
+  flex: 1;
+  padding: 28px 32px !important;
+  overflow-y: auto;
+  background-color: var(--bg-light);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 1200px) {
+  .layout-menu {
+    width: 260px;
+  }
+
+  .layout-page {
+    margin-left: 260px;
+  }
+
+  .content-wrapper {
+    padding: 20px 24px !important;
+  }
+
+  .layout-navbar {
+    padding: 16px 24px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .layout-menu {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1050;
+  }
+
+  .layout-menu.show {
+    transform: translateX(0);
+  }
+
+  .layout-page {
+    margin-left: 0;
+  }
+
+  .content-wrapper {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-navbar {
+    padding: 12px 16px !important;
+  }
+
+  .content-wrapper {
+    padding: 12px !important;
+  }
+
+  .dropdown-menu {
+    min-width: 280px;
+  }
+
+  .layout-menu {
+    width: 240px;
+  }
+
+  .layout-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-navbar {
+    padding: 10px 12px !important;
+  }
+
+  .app-brand-text {
+    font-size: 16px;
+  }
+
+  .menu-link {
+    padding: 10px 12px;
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  .menu-icon {
+    font-size: 16px;
+  }
+
+  .layout-menu {
+    width: 220px;
+  }
+}
+
 .pagination-fixed {
   position: fixed;
   bottom: 10px;

@@ -23,6 +23,19 @@ export const GetStatuslist = async ({
   return response.data;
 };
 
+export const PostApproveAccounts = async ({USERID,Status}) => {
+  debugger
+  const response = await AxiosInstance.post(
+    "/api/Status/PostApproveAccounts",
+    null,
+    {
+      params: {USERID,Status}
+    }
+  );
+
+  return response.data;
+};
+
 // export const GetStatuslist = async (params) => {
 //   const response = await AxiosInstance.post(
 //     "/api/Status/GetStatuslist",

@@ -44,6 +44,10 @@ const AccountViewModal = ({
                                 <tbody>
 
                                     {/* COMMON FIELDS */}
+                                    {/* <tr>
+                                        <td><b>REF NO</b></td>
+                                        <td>: {selectedItem?.USERREFNUMBER}</td>
+                                    </tr> */}
                                     <tr>
                                         <td><b>REF NO</b></td>
                                         <td>: {selectedItem?.USERREFNUMBER}</td>

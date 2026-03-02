@@ -104,7 +104,7 @@
 }
 
 .bg-primary {
-  background-color: teal !important;
+  background-color: #003880 !important;
 }
 
 a.bg-primary:hover, a.bg-primary:focus {
@@ -696,7 +696,7 @@ a:hover {
   background: linear-gradient(#fff 41%, rgba(255, 255, 255, 0.11) 95%, rgba(255, 255, 255, 0));
 }
 .bg-menu-theme .menu-text {
-  color: #566a7f;
+  color: #ebeef3;
 }
 .bg-menu-theme .menu-header {
   color: #8f9baa;
