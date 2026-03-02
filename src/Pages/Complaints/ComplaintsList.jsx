@@ -25,6 +25,7 @@ const ComplaintsList = () => {
   const userType = sessionStorage.getItem("LoggedUserType");
   // THIS gets called from menu
   const handleView = (category, status) => {
+    debugger
     setCategory(category);
     setStatus(status);
     setShowList(true);
@@ -77,6 +78,7 @@ const ComplaintsList = () => {
 };
 
 useEffect(() => {
+  debugger
   if (ApproveInfo?.success) {
 
     alertify.alert("Message", ApproveInfo.message, function () {
@@ -138,7 +140,23 @@ const getStatusBadgeClass = (status) => {
                 return "badge bg-light text-dark";
         }
     };
-
+const getIconForType = (name) => {
+    const iconMap = {
+      'HOTSPOT': 'fa-fire',
+      'ROADCLOSURE': 'fa-ban',
+      'MEETING': 'fa-users',
+      'MISSINGPERSON': 'fa-user-secret',
+      'HEALTHCARE': 'fa-hospital-o',
+      'WORKSHOP': 'fa-wrench',
+      'WARNING': 'fa-exclamation-triangle',
+      'COMPLAINT': 'fa-comments-o',
+      'INCIDENT': 'fa-exclamation-circle',
+      'REPORT': 'fa-file-text',
+      'REQUEST': 'fa-lightbulb-o',
+      'FEEDBACK': 'fa-thumbs-up',
+    };
+    return iconMap[name?.toUpperCase()] || 'fa-exclamation-circle';
+  };
   return (
     <div className="complaints-wrapper">
       {/* LEFT MENU */}
@@ -150,7 +168,7 @@ const getStatusBadgeClass = (status) => {
           <div className="complaints-header">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div className="complaints-header-icon">
-                <i className="fa fa-list-check"></i>
+                <i className={`fa ${getIconForType(category)}`} aria-hidden="true"></i>
               </div>
               <div>
                 <h2 style={{ marginBottom: '4px' }}>{category}</h2>
@@ -171,7 +189,7 @@ const getStatusBadgeClass = (status) => {
           </div>
 
           <div style={{ flex: 1, overflow: 'auto' }}>
-            <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch} onStatusChange={handleStatusChange} approveSuccess={ApproveInfo?.success}/>
+            <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch} onStatusChange={handleStatusChange} approveSuccess={ApproveInfo?.success} loading={loading}/>
 
             <Pagination pageIndex={pageIndex} pageSize={pageSize} totalCount={totalCount} onPageChange={handlePageChange}/>
           </div>
