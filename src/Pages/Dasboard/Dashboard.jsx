@@ -15,7 +15,7 @@ function Dashboard() {
   }, [dispatch, WardNo]);
 
   const handleNavigate = (type) => {
-    navigate(`/Details/${WardNo}/${type}`);
+    navigate(`/details/${WardNo}/${type}`);
   };
 
   const formatNumber = (num) => {
