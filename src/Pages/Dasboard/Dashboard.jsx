@@ -109,7 +109,7 @@ function Dashboard() {
               clickable={false}
             />
             <DashboardCard
-              icon="fa-exchange"
+              icon="fa-users"
               title="Customer 360"
               value="View Insights"
               color="teal"

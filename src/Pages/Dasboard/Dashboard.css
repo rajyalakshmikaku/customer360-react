@@ -324,7 +324,7 @@ body {
   margin: 0 0 3px 0;
   font-size: 12px;
   font-weight: 700;
-  color: var(--text-secondary);
+  color:black;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   line-height: 1.3;
