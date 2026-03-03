@@ -172,9 +172,9 @@ const getIconForType = (name) => {
               </div>
               <div>
                 <h2 style={{ marginBottom: '4px' }}>{category}</h2>
-                <span className={`complaints-header-badge badge-${status.toLowerCase()}`}>
+                {/* <span className={`complaints-header-badge badge-${status.toLowerCase()}`}>
                   {status}
-                </span>
+                </span> */}
               </div>
             </div>
 

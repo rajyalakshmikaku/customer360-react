@@ -107,7 +107,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
             <button className="btn-search" onClick={handleSearch}>
               <i className="fa fa-search"></i> Search
             </button>
-            <button className="btn-clear" onClick={handleClear}>
+            <button className="btn-clear" onClick={handleClear} style={{color:"white",backgroundColor:"orange"}}>
               <i className="fa fa-refresh"></i> Clear
             </button>
           </div>
@@ -115,15 +115,16 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
       </div>
 
       {/* Table Section */}
-      <div style={{ overflowX: 'auto' }}>
+      <div className="table-responsive" >
+
         <table className="complaints-table">
-          <thead>
+          <thead style={{color:"teal"}}>
             <tr>
               <th width="10%">Activity</th>
               <th hidden>ID</th>
               <th width="12%">Ref No.</th>
               <th width="10%">Ward</th>
-              <th width="15%">Status</th>
+              
               {[
                 "HOTSPOT",
                 "ROADCLOSURE",
@@ -135,6 +136,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
               <th width="20%">Details</th>
               <th width="12%">Created Date</th>
               <th width="12%">Time Elapsed</th>
+              <th width="15%">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -170,11 +172,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                   <td hidden>{item.ID}</td>
                   <td><strong>{item.REFNUMBER}</strong></td>
                   <td>{item.WARD_NO}</td>
-                  <td>
-                    <span className={`status-badge ${item.STATUS?.toLowerCase()}`}>
-                      {item.STATUS}
-                    </span>
-                  </td>
+                  
 
                   {WardType === "HOTSPOT" && (
                     <>
@@ -230,12 +228,17 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                       {getDaysAndTime(item.CREATED_DATE)}
                     </span>
                   </td>
+                  <td>
+                    <span className={`status-badge ${item.STATUS?.toLowerCase()}`}>
+                      {item.STATUS}
+                    </span>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="9" style={{ textAlign: 'center', padding: '24px', color: '#9ca3af' }}>
-                  <i className="fa fa-inbox" style={{ fontSize: '32px', marginBottom: '8px', display: 'block' }}></i>
+                <td colSpan="9" style={{ textAlign: 'center', padding: '24px', color: 'red' }}>
+                  {/* <i className="fa fa-inbox" style={{ fontSize: '32px', marginBottom: '8px', display: 'block' }}></i> */}
                   <strong>No results found</strong>
                 </td>
               </tr>
