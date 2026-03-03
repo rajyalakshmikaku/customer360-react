@@ -55,8 +55,8 @@ const ComplaintsMenu = ({ onView, counts, loading }) => {
       <span className="complaints-name">{item.Name}</span>
     </div>
 
-    <div className="card-stats" onClick={() => onView(item.Name, "")}>
-      <div className="stat-box total">
+    <div className="card-stats">
+      <div className="stat-box total" onClick={() => onView(item.Name, "")}>
         <span>{item.Total}</span>
         <small>Total</small>
       </div>
