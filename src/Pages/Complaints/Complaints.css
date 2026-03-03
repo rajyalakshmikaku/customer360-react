@@ -526,7 +526,8 @@
   text-align: left;
   font-weight: 700;
   font-size: 13px;
-  color: var(--primary-teal-dark);
+  background-color: teal;
+  color: black;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -766,3 +767,24 @@
 .inactive { background: #fee2e2; }
 .pending { background: #fef9c3; }
 .completed { background: #ede9fe; }
+
+.complaints-table {
+  width: 100%;
+  border-collapse: collapse;   /* Important for single border */
+  border: 1px solid #d1d5db;   /* Light gray outer border */
+}
+
+.complaints-table th,
+.complaints-table td {
+  border: 1px solid #e5e7eb;   /* Light inner borders */
+  padding: 10px;
+  text-align: left;
+}
+
+.complaints-table thead {
+  background-color: #f9fafb;   /* Light header background */
+}
+
+.complaints-table th {
+  font-weight: 600;
+}
