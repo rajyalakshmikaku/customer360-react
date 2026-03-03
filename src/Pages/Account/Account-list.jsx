@@ -273,17 +273,17 @@ const AccountList = ({ category, onStatusChange, approveSuccess }) => {
       {/* Table Section */}
      <div style={{ overflowX: 'auto' }}>
           <table className="Account-table">
-            <thead >
+            <thead style={{color:"teal"}}>
               <tr>
-                <th>Activity</th>
+                <th width="10%">Activity</th>
                 {/* <th>Ward</th> */}
                   {/* <th>User Id</th> */}
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Email</th>
-                <th>PHONE NO</th>
-                <th>CREATED DATE</th>
-                <th>Status</th>
+                <th width="10%">Name</th>
+                <th width="10%">Surname</th>
+                <th width="10%">Email</th>
+                <th width="10%">PHONE NO</th>
+                <th width="10%">CREATED DATE</th>
+                <th width="10%">Status</th>
               </tr>
             </thead>
 
