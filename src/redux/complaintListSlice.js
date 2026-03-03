@@ -78,7 +78,11 @@ const complaintListSlice = createSlice({
     approveLoading : false,
     error: null
   },
-  reducers: {},
+  reducers: {
+  resetApproveInfo: (state) => {
+    state.ApproveInfo = null;
+  }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchComplaintsCounts.pending, (state) => {
@@ -155,5 +159,6 @@ const complaintListSlice = createSlice({
 
   }
 });
+export const { resetApproveInfo } = complaintListSlice.actions;
 
 export default complaintListSlice.reducer;

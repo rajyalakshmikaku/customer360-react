@@ -763,7 +763,7 @@
 
 /* Optional colors */
 .total { background: #e0f2fe; }
-.active { background: #dcfce7; }
+.actives { background: #dcfce7; }
 .inactive { background: #fee2e2; }
 .pending { background: #fef9c3; }
 .completed { background: #ede9fe; }
