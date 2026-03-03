@@ -71,10 +71,10 @@ function Dashboard() {
         {/* Header Section */}
         <div className="dashboard-header-section">
           <div className="header-top">
-            <div className="header-content">
-              <h1 className="dashboard-title">Dashboard</h1>
-              <p className="dashboard-subtitle">Ward #{WardNo} • Report & Analytics</p>
-            </div>
+            <h1 className="dashboard-title">Dashboard</h1>
+          </div>
+          <div className="header-bottom">
+            <p className="dashboard-subtitle">Ward #{WardNo} • Report & Analytics</p>
             <div className="header-stats">
               <div className="stat-badge">
                 <span className="stat-label">Total Items</span>
@@ -109,7 +109,7 @@ function Dashboard() {
               clickable={false}
             />
             <DashboardCard
-              icon="fa-exchange"
+              icon="fa-users"
               title="Customer 360"
               value="View Insights"
               color="teal"
