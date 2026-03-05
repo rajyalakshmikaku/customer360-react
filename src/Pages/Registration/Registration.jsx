@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Registration.css";
 import { useNavigate } from "react-router-dom";
+import alertify from 'alertifyjs';
+import 'alertifyjs/build/css/alertify.css';
 import { registerUser } from "../../redux/RegistrationSlice";
 
 const Registration = () => {
@@ -36,12 +38,19 @@ const Registration = () => {
     }
   }, [form.emaail]);
 
-  useEffect(() => {
-    if (registrationResult?.success === true) {
-      alert("Customer registered successful!");
-      navigate("/login");
-    }
-  }, [registrationResult, navigate]);
+ useEffect(() => {
+
+  if (registrationResult?.success === true) {
+    alertify.alert("Success", "Customer registered successfully", () => {
+      navigate("/Login");
+    });
+  }
+
+  if (registrationResult?.success === false) {
+    alertify.alert("Error", registrationResult.message);
+  }
+
+}, [registrationResult]);
 
   // ✅ CORRECT HANDLE CHANGE
 const handleChange = (e) => {
@@ -175,6 +184,7 @@ const handleChange = (e) => {
 
 dispatch(
   registerUser({
+    title: form.title,
     firstname: form.firstname,
     lastname: form.surname,     
     username: form.username,
@@ -185,6 +195,7 @@ dispatch(
     idnumber: form.idnumber,
     ward: form.ward,
     password: form.password,
+    confirmpassword: form.confirmPassword,
   })
 );
   };

@@ -1,47 +1,43 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Registration } from '../services/RegistrationApi';
-
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { Registration } from "../services/RegistrationApi";
 
 export const registerUser = createAsyncThunk(
-  'user/registerUser',
-  async (userdata, { rejectWithValue }) => {
+  "registration/registerUser",
+  async (data, { rejectWithValue }) => {
     try {
-      const res = await Registration(userdata);
-      return res;
-    } catch (err) {
-      let errorMessage = "Registration failed";
-
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      }
-
-      return rejectWithValue(errorMessage);
+      const response = await Registration(data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
 
 const registrationSlice = createSlice({
-  name: 'registration',
+  name: "registration",
   initialState: {
-    registrationResult: null,
     loading: false,
-    error: null,
+    registrationResult: null,
   },
   reducers: {},
+
   extraReducers: (builder) => {
     builder
-    .addCase(registerUser.pending, (state) => {
-    state.loading = true;
-  })
-  .addCase(registerUser.fulfilled, (state, action) => {
-    state.loading = false;
-    state.registrationResult = action.payload;
-  })
-  .addCase(registerUser.rejected, (state, action) => {
-    state.loading = false;
-    state.error = action.error.message;
-  });
+
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+      })
+
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.registrationResult = action.payload;
+      })
+
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.registrationResult = action.payload;
+      });
   },
 });
 
-export default registrationSlice.reducer;                
+export default registrationSlice.reducer;

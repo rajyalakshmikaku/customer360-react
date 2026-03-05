@@ -19,7 +19,6 @@ export const store = configureStore({
         // Status: StatusReducer,
          User: UserReducer,
          Account: AccountReducer,
-
-           registration: registrationReducer, 
+         registration: registrationReducer, 
   },
 });
