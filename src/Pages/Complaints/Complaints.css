@@ -527,7 +527,7 @@
   font-weight: 700;
   font-size: 13px;
   background-color: teal;
-  color: black;
+  color: white;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -572,7 +572,7 @@
   color: #155e75;
 }
 
-.status-badge.inactive {
+.status-badge.in-active {
   background: #fee2e2;
   color: #991b1b;
   border-left: 4px solid #F2B632;

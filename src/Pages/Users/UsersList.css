@@ -1,9 +1,4 @@
-/* ========================================
-   USERS LIST - PROFESSIONAL DESIGN
-   ======================================== */
-
-/* Root Variables */
-:root {
+/* :root {
   --primary-teal: #0d9488;
   --primary-teal-dark: #0f766e;
   --accent-orange: #f97316;
@@ -15,9 +10,6 @@
   --warning-amber: #f59e0b;
 }
 
-/* ========================================
-   PAGE CONTAINER
-   ======================================== */
 .users-page {
   padding: 0;
   background: var(--bg-light);
@@ -27,9 +19,7 @@
   gap: 0;
 }
 
-/* ========================================
-   PAGE HEADER
-   ======================================== */
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -84,9 +74,7 @@
   box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
 }
 
-/* ========================================
-   USERS LIST SECTION
-   ======================================== */
+
 .users-list-section {
   background: transparent;
   border-radius: 0;
@@ -98,9 +86,7 @@
   gap: 20px;
 }
 
-/* ========================================
-   FILTERS SECTION
-   ======================================== */
+
 .table-top {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -150,9 +136,7 @@
   color: var(--text-muted);
 }
 
-/* ========================================
-   TABLE SECTION
-   ======================================== */
+
 .table-responsive {
   background: white;
   border-radius: 12px;
@@ -200,9 +184,7 @@
   border-bottom: none;
 }
 
-/* ========================================
-   STATUS BADGE
-   ======================================== */
+
 .status-active {
   display: inline-block;
   padding: 6px 12px;
@@ -227,9 +209,7 @@
   color: #991b1b;
 }
 
-/* ========================================
-   ACTION ICONS
-   ======================================== */
+
 .action-col {
   display: flex;
   gap: 12px;
@@ -263,9 +243,7 @@
   transform: scale(1.1);
 }
 
-/* ========================================
-   EMPTY STATE
-   ======================================== */
+
 .users-page tbody tr td[colspan] {
   padding: 40px 16px !important;
   text-align: center;
@@ -279,9 +257,7 @@
   opacity: 0.5;
 }
 
-/* ========================================
-   ADD USER SECTION (MODAL STYLE)
-   ======================================== */
+
 .add-user-section {
   background: white;
   border-radius: 12px;
@@ -432,9 +408,7 @@
   box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
 }
 
-/* ========================================
-   RESPONSIVE DESIGN
-   ======================================== */
+
 @media (max-width: 1200px) {
   .form-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -513,17 +487,17 @@
 .login-actions {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Login & SignUp ki gap */
+  gap: 16px; 
 }
 
 .signup-link {
-  text-align: right;  /* Right side ki move */
+  text-align: right;  
   margin-top: 8px;
 }
 
 .signup-text {
   color: #00a3a3;
-  font-size: 16px;   /* font size increase */
+  font-size: 16px;   
   font-weight: 600;
   cursor: pointer;
 }
@@ -531,4 +505,4 @@
 .signup-text:hover {
   text-decoration: underline;
 }
-}
+} */

@@ -36,7 +36,7 @@ function DashboardDetails() {
     Outstanding: {
       title: "Outstanding Categories",
       icon: "fa-money",
-      color: "#FF6B6B",
+      color: "#4ECDC4",
       label: "Outstanding Debt",
     },
     Interims: {
@@ -48,49 +48,49 @@ function DashboardDetails() {
     Meter: {
       title: "otal Water and Electricity Meters",
       icon: "fa-tachometer",
-      color: "#45B7D1",
+      color: "#4ECDC4",
       label: "Number of Meters",
     },
     Meters: {
       title: " Total Water and Electricity Meters",
       icon: "fa-tachometer",
-      color: "#45B7D1",
+      color: "#4ECDC4",
       label: "Number of Meters",
     },
     Property: {
       title: "City's Total Properties",
       icon: "fa-building",
-      color: "#96CEB4",
+      color: "#4ECDC4",
       label: "Number of Properties",
     },
     Properties: {
       title: "City's Total Properties",
       icon: "fa-building",
-      color: "#96CEB4",
+      color: "#4ECDC4",
       label: "Number of Properties",
     },
     Customer: {
       title: "City's Total Customers",
       icon: "fa-users",
-      color: "#9B59B6",
+      color: "#4ECDC4",
       label: "Number of Customers",
     },
     Indigent: {
       title: "Indigent Support",
       icon: "fa-heart",
-      color: "#E74C3C",
+      color: "#4ECDC4",
       label: "Indigent Cases",
     },
     IMS: {
       title: "IMS Departments",
       icon: "fa-warning",
-      color: "#F39C12",
+      color: "#4ECDC4",
       label: "Number of Incidents",
     },
     MetersNotRead: {
       title: "Meters Not Read",
       icon: "fa-exclamation-triangle",
-      color: "#E67E22",
+      color: "#4ECDC4",
       label: "Not Read Count",
     },
   };
@@ -157,8 +157,8 @@ function DashboardDetails() {
         {details?.map((item, index) => (
           <div className="grid-item" key={index}>
             <div className="item-card" style={{ borderTopColor: current.color }}>
-              <div className="item-icon-wrapper" style={{ backgroundColor: `${current.color}20` }}>
-                <i className={`fa ${current?.icon || "fa-list"}`} style={{ color: current.color }}></i>
+              <div className="item-icon-wrapper" style={{ backgroundColor:"teal"  }}>
+                <i className={`fa ${current?.icon || "fa-list"}`} style={{ color: "white "}}></i>
               </div>
               <div className="item-content">
                 <h3 className="item-name">{item.name}</h3>
