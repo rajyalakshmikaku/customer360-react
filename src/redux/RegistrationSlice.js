@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { saveRegistration } from '../services/RegistrationApi';
+import { Registration } from '../services/RegistrationApi';
 
 
 export const registerUser = createAsyncThunk(
   'user/registerUser',
   async (userdata, { rejectWithValue }) => {
     try {
-      const res = await saveRegistration(userdata);
+      const res = await Registration(userdata);
       return res;
     } catch (err) {
       let errorMessage = "Registration failed";
@@ -30,18 +30,17 @@ const registrationSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.registrationResult = action.payload;
-        state.loading = false;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.error = action.payload || action.error.message;
-        state.loading = false;
-      });
+    .addCase(registerUser.pending, (state) => {
+    state.loading = true;
+  })
+  .addCase(registerUser.fulfilled, (state, action) => {
+    state.loading = false;
+    state.registrationResult = action.payload;
+  })
+  .addCase(registerUser.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.error.message;
+  });
   },
 });
 

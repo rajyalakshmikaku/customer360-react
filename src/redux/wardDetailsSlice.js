@@ -7,7 +7,11 @@ export const fetchWardDetails = createAsyncThunk(
     try {
       const res = await getWardDetailsByType(wardNo, type, search);
       console.log("THUNK RESPONSE:", res);
-      return res;
+      return {
+        data: res.data,
+        wardNo,
+        type,
+      };
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data || "Something went wrong"
@@ -21,7 +25,9 @@ const wardDetailsSlice = createSlice({
   initialState: {
     details: [],
     loading: false,
-    error: null
+    error: null,
+    lastFetchedWardNo: null,
+    lastFetchedType: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -30,9 +36,11 @@ const wardDetailsSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchWardDetails.fulfilled, (state, action) => {
-  state.loading = false;
-  state.details  = action.payload.data;   // ONLY array
-})
+        state.loading = false;
+        state.details = action.payload.data;
+        state.lastFetchedWardNo = action.payload.wardNo;
+        state.lastFetchedType = action.payload.type;
+      })
       .addCase(fetchWardDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;

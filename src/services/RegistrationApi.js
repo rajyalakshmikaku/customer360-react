@@ -1,11 +1,11 @@
 import { AxiosInstance } from "./api";
 
-
-
-export const saveRegistration = async (userdata) => {
+export const Registration = async (data) => {
+  debugger;
+  console.log('data',data);
   const response = await AxiosInstance.post(
     "/api/User/Registration",
-    userdata,
+    data,
     {
       headers: { 'Content-Type': 'application/json' }
     }
