@@ -2,7 +2,7 @@ import { useState,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ComplaintsMenu from "./ComplaintsMenu";
 import ComplaintsTable from "./ComplaintsTable";
-import { fetchComplaintsCounts,fetchwardInfo ,fetchUserInfo,fetchComplaintsListInfo,fetchApproveComplaintsInfo } from "../../redux/complaintListSlice";
+import { fetchComplaintsCounts,fetchwardInfo ,fetchUserInfo,fetchComplaintsListInfo,fetchApproveComplaintsInfo,resetApproveInfo  } from "../../redux/complaintListSlice";
 import Pagination from "../../Components/Pagination";
 import alertify from "alertifyjs";
 
@@ -78,15 +78,12 @@ const ComplaintsList = () => {
 };
 
 useEffect(() => {
-  debugger
   if (ApproveInfo?.success) {
 
     alertify.alert("Message", ApproveInfo.message, function () {
 
-      // ✅ CLOSE MODAL HERE
-      setShowList(false); // optional if needed
+      setShowList(false);
 
-      // ✅ REFRESH LIST
       dispatch(fetchComplaintsListInfo({
         pageIndex,
         pageSize,
@@ -98,9 +95,10 @@ useEffect(() => {
         userId: ""
       }));
 
-      // ✅ REFRESH COUNTS
       dispatch(fetchComplaintsCounts(wardNo));
 
+      // ✅ CLEAR OLD SUCCESS STATE
+      dispatch(resetApproveInfo());
     });
 
   }
