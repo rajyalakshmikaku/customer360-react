@@ -55,7 +55,6 @@ function Login() {
   return (
     <div className="login-page">
        {/* Top Right Registration Link */}
-       {/* Top Right Registration Link */}
     <div className="top-register">
       <Link to="/register" className="register-link">
          Registration

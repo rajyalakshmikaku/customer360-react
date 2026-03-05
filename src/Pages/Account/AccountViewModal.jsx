@@ -48,6 +48,10 @@ const AccountViewModal = ({
                                         <td><b>REF NO</b></td>
                                         <td>: {selectedItem?.USERREFNUMBER}</td>
                                     </tr> */}
+                                    {/* <tr>
+                                        <td><b>user id</b></td>
+                                        <td>: {selectedItem?.USERID}</td>
+                                    </tr> */}
                                     <tr>
                                         <td><b>REF NO</b></td>
                                         <td>: {selectedItem?.USERREFNUMBER}</td>
@@ -167,7 +171,7 @@ const AccountViewModal = ({
         type="button"
         className="btn btn-success btn-sm"
         onClick={() =>
-          onStatusChange(selectedItem.ID, "APPROVE", WardType)
+          onStatusChange(selectedItem.USERID, "APPROVE", WardType)
         }
       >
         {approveLoading ? (
@@ -187,7 +191,7 @@ const AccountViewModal = ({
         disabled={approveLoading}
         className="btn btn-success btn-sm"
         onClick={() =>
-          onStatusChange(selectedItem.ID, "COMPLETED", WardType)
+          onStatusChange(selectedItem.USERID, "COMPLETED", WardType)
         }
       >
         {approveLoading ? (

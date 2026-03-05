@@ -208,12 +208,15 @@
   text-decoration: none;
   color: #0f766e;
   font-weight: 600;
-  font-size: 18px;
+
+  font-size: 30px;
+
+  font-size: 25px;
 }
 
-.register-link:hover {
+/* .register-link:hover {
   text-decoration: underline;
-}
+} */
 
 /* forgot password text */
 .forgot-password {
@@ -226,6 +229,7 @@
 
 .forgot-password:hover {
   text-decoration: underline;
+
 }
 
 /* .register-link:hover {

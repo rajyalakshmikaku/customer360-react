@@ -5,7 +5,10 @@ export const GetStatuslist = async ({
   pageIndex,
   pageSize,
   search,
-  sorting
+  sorting,
+  fromDate,
+  toDate,
+  status
 }) => {
   debugger;
   const response = await AxiosInstance.get(
@@ -15,7 +18,10 @@ export const GetStatuslist = async ({
         fetch: pageSize,     // map correctly
         offset: pageIndex,   // map correctly
         search: search,
-        sort: sorting        // match backend name
+        sort: sorting,       // match backend name
+        fromDate: fromDate || null,
+        toDate: toDate || null,
+        status: status || null
       }
     }
   );
@@ -23,13 +29,13 @@ export const GetStatuslist = async ({
   return response.data;
 };
 
-export const PostApproveAccounts = async ({USERID,Status}) => {
+export const PostApproveAccounts = async ({ USERID, Status }) => {
   debugger
   const response = await AxiosInstance.post(
     "/api/Status/PostApproveAccounts",
     null,
     {
-      params: {USERID,Status}
+      params: { USERID, Status }
     }
   );
 

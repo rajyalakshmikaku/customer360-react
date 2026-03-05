@@ -38,6 +38,7 @@ const AccountListSlice = createSlice({
     ApproveInfo: null,
     success: false,
     error: null,
+    activestatus:[]
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -51,6 +52,7 @@ const AccountListSlice = createSlice({
         const response = action.payload;
         state.AccountsListInfo = response?.list || [];
         state.totalCount = response?.totalCount || 0;
+        state.activestatus = response?.activeStatus || [];
       })
       .addCase(fetchAccountListInfo.rejected, (state, action) => {
         state.loading = false;
