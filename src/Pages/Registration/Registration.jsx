@@ -24,7 +24,7 @@ const Registration = () => {
     idnumber: "",
     ward: "",
     password: "",
-    confirmPassword: "",
+    // confirmPassword: "",
     username: "",
     address: "",   
   });
@@ -195,7 +195,7 @@ dispatch(
     idnumber: form.idnumber,
     ward: form.ward,
     password: form.password,
-    confirmpassword: form.confirmPassword,
+    // confirmpassword: form.confirmPassword,
   })
 );
   };
@@ -220,6 +220,8 @@ dispatch(
               <option value="Miss">Miss</option>
               <option value="Mr">Mr</option>
               <option value="Mrs">Mrs</option>
+               <option value="Mrs">Dr.</option>
+                <option value="Mrs">Prof.</option>
             </select>
             {errors.title && <div className="error-message">{errors.title}</div>}
           </div>
