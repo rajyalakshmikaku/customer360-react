@@ -7,7 +7,6 @@ import UserReducer from "./UserListSlice";
 import AccountReducer from "./AccountListSlice"; 
 import registrationReducer from "./RegistrationSlice"; 
 
-import registrationReducer from "./RegistrationSlice";    
 
   
 export const store = configureStore({
@@ -22,6 +21,5 @@ export const store = configureStore({
          Account: AccountReducer,
 
            registration: registrationReducer, 
-         registration: registrationReducer,
   },
 });

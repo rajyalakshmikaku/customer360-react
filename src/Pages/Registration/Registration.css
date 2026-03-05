@@ -170,7 +170,7 @@
 /* ERROR MESSAGE */
 .error-message {
   position: absolute;
-  bottom: -22px;
+  bottom: -32px;
   left: 50px;
   font-size: 13px;
   color: #dc3545;
@@ -222,7 +222,7 @@
   display: inline-block;     /* important */
   vertical-align: middle;    /* important */
     margin-top: 24px;
-
+}
 .icon-box {
   width: 45px;
   height: 45px;
