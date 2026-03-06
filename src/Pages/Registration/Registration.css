@@ -126,7 +126,7 @@
   height: 50px;
 }
 
-.icon-box i { color: #083636; font-size: 16px; }
+.icon-box i { color: white; font-size: 16px; }
 
 .form-field input,
 .form-field select {
