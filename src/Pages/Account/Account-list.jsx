@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAccountListInfo, fetchApproveAccountsInfo } from "../../redux/AccountListSlice";
 import AccountViewModal from "./AccountViewModal";
 import Pagination from "../../Components/Pagination";
+import alertify from "alertifyjs";
+
 
 
 const AccountList = ({ category, onStatusChange, approveSuccess }) => {
@@ -90,8 +92,8 @@ const AccountList = ({ category, onStatusChange, approveSuccess }) => {
     setStatus("");
     setSearch("");
     setPageIndex(1);
+     handleSearch(); // reload list
   };
-
   const handleView = (item, mode) => {
     setSelectedItem(item);
     setShowModal(true);
@@ -351,9 +353,18 @@ const AccountList = ({ category, onStatusChange, approveSuccess }) => {
                   <td>{item.NAME}</td>
                   <td>{item.SURNAME}</td>
                   <td>{item.EMAIL}</td>
-                  <td>{item.PHONENUMBER}</td>
+                  <td>{item.PHONENUMBER || item.CELLNUMBER}</td>
                   <td>{item.CREATEDDATE}</td>
-                  <td>{item.ACTIVESTATUS}</td>
+                  {/* <td>{item.ACTIVESTATUS}</td> */}
+                  <td>
+                    {item.ACTIVESTATUS === "Y"
+                      ? "Completed"
+                      : item.ACTIVESTATUS === "P"
+                        ? "Pending"
+                        : item.ACTIVESTATUS === "N"
+                          ? "Inactive"
+                          : ""}
+                  </td>
                   {/* <td>
                       {typeof item?.ACTIVESTATUS === "object"
                         ? item?.ACTIVESTATUS?.STATUSNAME ?? ""
