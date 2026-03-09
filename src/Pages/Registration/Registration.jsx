@@ -42,7 +42,7 @@ const Registration = () => {
 
   if (registrationResult?.success === true) {
     alertify.alert("Success", "Customer registered successfully", () => {
-      navigate("/Login");
+      navigate("/");
     });
   }
 
@@ -51,6 +51,9 @@ const Registration = () => {
   }
 
 }, [registrationResult]);
+
+
+
 
   // ✅ CORRECT HANDLE CHANGE
 const handleChange = (e) => {

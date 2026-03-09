@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
+
 const AccountViewModal = ({
     show,
     onClose,
@@ -24,8 +25,8 @@ const AccountViewModal = ({
 
                     <div className="modal-header bg-light">
 
-                        <h5 className="modal-title">Account Details
-                            {mode === "edit" ? "Edit" : "View"} 
+                        <h5 className="modal-title">
+                            {mode === "edit" ? "Edit" : "View"} Account Details
                         </h5>
 
                         <button
@@ -76,7 +77,7 @@ const AccountViewModal = ({
                                     </tr>
                                     <tr>
                                         <td><b>PHONE NUMBER</b></td>
-                                        <td>: {selectedItem?.PHONENUMBER}</td>
+                                       <td>: {selectedItem?.PHONENUMBER || selectedItem?.CELLNUMBER}</td>
                                     </tr>
                                     {/* <tr>
                                         <td><b>GENDER</b></td>
