@@ -218,12 +218,16 @@ const Registration = () => {
 
   return (
     <div className="register-wrapper">
+      <span className="background-paint" />
       <form
         className="register-card"
         onSubmit={handleSubmit}
       >
         <div className="header">
-          <h2>Customer Registration</h2>
+          <div>
+            <h2 style={{ marginLeft: "50%" }}>Customer Registration</h2>
+            {/* <div className="sub-title">Please fill in your details to create a new account</div> */}
+          </div>
           <button
             type="button"
             className="backclose-button"
