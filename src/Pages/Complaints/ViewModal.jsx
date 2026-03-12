@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import ReactDOM from "react-dom";
+import alertify from "alertifyjs";
+
 
 const ViewModal = ({
     show,
@@ -21,6 +23,7 @@ const ViewModal = ({
     const [showRejectModal, setShowRejectModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const { approveLoading } = useSelector((state) => state.complaints);
+    const [rejectLoading, setRejectLoading] = useState(false);
 
     const getStatusBadgeClass = (status) => {
         switch (status) {
@@ -479,30 +482,36 @@ const ViewModal = ({
                                                     }
                                                 }}
                                             >
-                                                {approveLoading ? (
-                                                    <>
-                                                        <i className="fa fa-spinner fa-spin"></i> Complete
-                                                    </>
-                                                ) : (
-                                                    "Complete"
-                                                )}
-
+                                                {approveLoading && !showRejectModal ? (
+    <>
+        <i className="fa fa-spinner fa-spin"></i> Complete
+    </>
+) : (
+    "Complete"
+)}
                                             </button>
                                         )}
 
                                         {/* Reject Button */}
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() => {
-                                                setRejectComment("");      // clear old comment
-                                                setShowRejectModal(true);  // open reject popup
-                                            }}
-                                        >
-                                            Reject
-                                        </button>
-
-
+                                   <button
+    type="button"
+    className="btn btn-danger btn-sm"
+    onClick={() => {
+        alertify.confirm(
+            "Reject Confirmation",
+            "Are you sure you want to reject this complaint?",
+            function () {
+                setRejectComment("");
+                setShowRejectModal(true);
+            },
+            function () {
+                alertify.error("Cancelled");
+            }
+        );
+    }}
+>
+    Reject
+</button>
                                     </div>
                                 )}
 
@@ -515,11 +524,11 @@ const ViewModal = ({
                                 <div className="modal-backdrop fade show"></div>
 
                                 <div className="modal fade show d-block" tabIndex="-1">
-                                    <div className="modal-dialog modal-sm modal-dialog-centered">
+                                    <div className="modal-dialog modal-lg modal-dialog-centered">
                                         <div className="modal-content shadow">
 
                                             <div className="modal-header bg-danger text-white py-2">
-                                                <h6 className="modal-title">Reject Complaint</h6>
+                                                <h6 className="modal-title" style={{color: "white"}}>Reject Complaint</h6>
                                                 <button
                                                     type="button"
                                                     className="btn-close btn-close-white"
@@ -529,6 +538,7 @@ const ViewModal = ({
 
                                             <div className="modal-body py-2">
                                                 <textarea
+                                                    style={{color:"black", fontSize:"16px"}}
                                                     className="form-control form-control-sm"
                                                     rows="3"
                                                     placeholder="Enter reject reason"
@@ -540,46 +550,46 @@ const ViewModal = ({
                                             <div className="modal-footer py-2">
                                                 <button
                                                     className="btn btn-damger btn-sm"
+                                                    style={{backgroundColor: "red", color: "white"}}
                                                     onClick={() => setShowRejectModal(false)}
                                                     disabled={loading}
                                                 >
                                                     Cancel
                                                 </button>
 
-                                                <button
-                                                    className="btn btn-success btn-sm"
-                                                    disabled={loading  || !rejectComment.trim()}
-                                                    onClick={async () => {
-                                                        try {
-                                                            await onStatusChange(
-                                                                selectedItem.ID,
-                                                                "REJECT",
-                                                                WardType,
-                                                                rejectComment
-                                                            );
+                                              <button
+    className="btn btn-success btn-sm"
+    disabled={rejectLoading || !rejectComment.trim()}
+    onClick={async () => {
+        try {
 
-                                                            // close popup after API success
-                                                            setShowRejectModal(false);
-                                                            setRejectComment("");
+            setRejectLoading(true);
 
-                                                        } catch (err) {
-                                                            console.error(err);
-                                                        }
-                                                    }}
-                                                >
-                                                    {/* {approveLoading ? (
-                                                        <span className="fa fa-spinner fa-spin"></span> 
-                                                    ) : (
-                                                        "Submit"
-                                                    )} */}
-                                                      {loading  ? (
-                                                    <>
-                                                        <i className="fa fa-spinner fa-spin"></i> Submit
-                                                    </>
-                                                ) : (
-                                                    "Submit"
-                                                )}
-                                                </button>
+            await onStatusChange(
+                selectedItem.ID,
+                "REJECT",
+                WardType,
+                rejectComment
+            );
+
+            setShowRejectModal(false);
+            setRejectComment("");
+
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setRejectLoading(false);
+        }
+    }}
+>
+    {rejectLoading ? (
+        <>
+            <i className="fa fa-spinner fa-spin"></i> Submit
+        </>
+    ) : (
+        "Submit"
+    )}
+</button>
 
                                             </div>
 
@@ -590,6 +600,8 @@ const ViewModal = ({
                             document.body
                         )
                     }
+
+                    
 
 
 
