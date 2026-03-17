@@ -13,18 +13,6 @@ function DashboardDetails() {
     (state) => state.wardDetails
   );
 
-  // Format numbers to use K, M notation for values >= 1000
-  const formatNumber = (num) => {
-    if (!num) return '0';
-    const number = Number(num);
-    if (number >= 1000000) {
-      return (number / 1000000).toFixed(1) + 'M';
-    } else if (number >= 1000) {
-      return (number / 1000).toFixed(1) + 'K';
-    }
-    return number.toLocaleString();
-  };
-
   useEffect(() => {
     if (wardNo && type) {
       // Check if data is already cached for this wardNo and type
@@ -140,86 +128,46 @@ function DashboardDetails() {
   return (
     <div className="details-container">
       {/* Header Section */}
-      {/* <div className="details-header"> */}
-        <div className="header-wrapper">
-          <div className="header-left">
-            {/* <div className="header-icon-wrapper">
-              <i className={`fa ${current?.icon || "fa-list"}`}></i>
-            </div> */}
-            <div>
-              {/* <h1 className="page-title">Ward {wardNo}</h1>
-              <p className="page-subtitle">{current.title}</p> */}
-            </div>
+      <div className="details-header">
+        <div className="header-content">
+          <div>
+            <h1 className="page-title">{wardNo}</h1>
+            <p className="page-subtitle">{current.title}</p>
           </div>
           <button className="back-btn" onClick={() => navigate("/dashboard")}>
-            <i className="fa fa-arrow-left"></i> Back to Dashboard
+            <i className="fa fa-arrow-left"></i> Back
           </button>
-        </div>
-      {/* </div> */}
-
-      {/* Summary Stats */}
-      <div className="summary-section">
-        <div className="summary-card total-items">
-          <div className="summary-icon">
-            <i className="fa fa-list-ul"></i>
-          </div>
-          <div className="summary-content">
-            <div className="stat-label">Total Items</div>
-            <div className="stat-value">{details?.length || 0}</div>
-          </div>
-        </div>
-        <div className="summary-card ward-info">
-          <div className="summary-icon">
-            <i className="fa fa-map-marker"></i>
-          </div>
-          <div className="summary-content">
-            <div className="stat-label">Ward Number</div>
-            <div className="stat-value">{wardNo}</div>
-          </div>
-        </div>
-        <div className="summary-card quick-stat">
-          <div className="summary-icon">
-            <i className="fa fa-list"></i>
-          </div>
-          <div className="summary-content">
-            <div className="stat-label">Category Type</div>
-            <div className="stat-value" style={{ fontSize: '16px' }}>{type}</div>
-          </div>
         </div>
       </div>
 
-      {/* Grid Layout - Responsive */}
-      <div className="items-section">
-        <div className="items-header">
-          <h2 className="items-title">
-            <span className="items-count">{details?.length || 0}</span>
-            {type} Categories
-          </h2>
-          <p className="items-description">Detailed breakdown of all {type.toLowerCase()} items in this ward</p>
+      {/* Summary Stats */}
+      <div className="summary-section">
+        <div className="summary-card">
+          <div className="stat-value">{details?.length || 0}</div>
+          <div className="stat-label">Total Items</div>
         </div>
-        
-        <div className="items-grid">
-          {details?.map((item, index) => {
-            const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
-            const color = colors[index % colors.length];
-            
-            return (
-              <div className="grid-item" key={index} style={{ animationDelay: `${index * 0.05}s` }}>
-                <div className="item-card" style={{ borderLeftColor: color }}>
-                  <div className="item-icon-wrapper" style={{ background: `linear-gradient(135deg, ${color}, ${color}dd)` }}>
-                    <i className={`fa ${current?.icon || "fa-list"}`}></i>
-                  </div>
-                  <div className="item-content">
-                    <h3 className="item-name">{item.name}</h3>
-                    <div className="item-value" style={{ color: color }}>{formatNumber(item.value)}</div>
-                    <p className="item-label">{current.label}</p>
-                  </div>
-                  <div className="card-accent" style={{ backgroundColor: color }}></div>
-                </div>
+        <div className="summary-card">
+          <div className="stat-value">{wardNo}</div>
+          <div className="stat-label">Ward Number</div>
+        </div>
+      </div>
+
+      {/* Grid Layout - 4 Columns */}
+      <div className="items-grid">
+        {details?.map((item, index) => (
+          <div className="grid-item" key={index}>
+            <div className="item-card" style={{ borderTopColor: current.color }}>
+              <div className="item-icon-wrapper" style={{ backgroundColor:"teal"  }}>
+                <i className={`fa ${current?.icon || "fa-list"}`} style={{ color: "white "}}></i>
               </div>
-            );
-          })}
-        </div>
+              <div className="item-content">
+                <h3 className="item-name">{item.name}</h3>
+                <div className="item-value">{Number(item.value).toLocaleString()}</div>
+                <p className="item-label">{current.label}</p>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

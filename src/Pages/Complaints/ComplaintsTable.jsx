@@ -124,16 +124,15 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
               <th hidden>ID</th>
               <th width="12%">Ref No.</th>
               <th width="10%">Ward</th>
-              
+              <th width="15%">Type</th>
               {[
                 "HOTSPOT",
                 "ROADCLOSURE",
-                "MEETING",
+                "MEETING",            
                 "MISSINGPERSON",
               ].includes(WardType) && (
-                <th width="15%">Type</th>
-              )}
-              <th width="20%">Details</th>
+                 <th width="20%">Details</th>
+              )}    
               <th width="12%">Created Date</th>
               <th width="12%">Time Elapsed</th>
               <th width="15%">Status</th>
@@ -176,28 +175,28 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
 
                   {WardType === "HOTSPOT" && (
                     <>
-                      <td><strong>{item.CRIME_TYPE}</strong></td>
+                      <td>{item.CRIME_TYPE}</td>
                       <td>{item.CRIME_DETAILS}</td>
                     </>
                   )}
 
                   {WardType === "ROADCLOSURE" && (
                     <>
-                      <td><strong>{item.ROAD_NAME}</strong></td>
+                      <td>{item.ROAD_NAME}</td>
                       <td>{item.ROADCLOUSER_DETAILS}</td>
                     </>
                   )}
 
                   {WardType === "MEETING" && (
                     <>
-                      <td><strong>{item.SUBJECT}</strong></td>
+                      <td>{item.SUBJECT}</td>
                       <td>{item.MEETING_DETAILS}</td>
                     </>
                   )}
 
                   {WardType === "MISSINGPERSON" && (
                     <>
-                      <td><strong>{item.FULL_NAME}</strong></td>
+                      <td>{item.FULL_NAME}</td>
                       <td>{item.MISSINGPERSON_DETAILS}</td>
                     </>
                   )}
@@ -215,9 +214,9 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                   )}
 
                   {/* Fallback for types without Type column */}
-                  {!["HOTSPOT", "ROADCLOSURE", "MEETING", "MISSINGPERSON"].includes(WardType) && (
+                  {/* {!["HEALTHCARE", "WORKSHOP", "WARNING","WARNING"].includes(WardType) && (
                     <td>-</td>
-                  )}
+                  )} */}
 
                   <td>
                     {new Date(item.CREATED_DATE).toLocaleDateString()}

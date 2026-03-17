@@ -2,13 +2,19 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Registration.css";
 import { useNavigate } from "react-router-dom";
-import alertify from 'alertifyjs';
-import 'alertifyjs/build/css/alertify.css';
+import alertify from "alertifyjs";
+import "alertifyjs/build/css/alertify.css";
 import { registerUser } from "../../redux/RegistrationSlice";
+import CryptoJS from "crypto-js";
+
 
 const Registration = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+   const backonClose = () => {
+    navigate("/");   
+  };
 
   const { loading, registrationResult } = useSelector(
     (state) => state.registration || {}
@@ -24,191 +30,206 @@ const Registration = () => {
     idnumber: "",
     ward: "",
     password: "",
-    // confirmPassword: "",
+    confirmPassword: "",
     username: "",
-    address: "",   
+    address: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  // Auto username from email
+  // Auto username from email (only if username empty)
   useEffect(() => {
-    if (form.emaail) {
-      setForm((prev) => ({ ...prev, username: prev.emaail }));
+    if (form.emaail && !form.username) {
+      setForm((prev) => ({ ...prev, username: form.emaail }));
     }
   }, [form.emaail]);
 
- useEffect(() => {
+  useEffect(() => {
+    if (registrationResult?.success === true) {
+      alertify.alert("Success", "Customer registered successfully", () => {
+        navigate("/");
+      });
+    }
 
-  if (registrationResult?.success === true) {
-    alertify.alert("Success", "Customer registered successfully", () => {
-      navigate("/");
-    });
-  }
+    if (registrationResult?.success === false) {
+      alertify.alert("Error", registrationResult.message);
+    }
+  }, [registrationResult]);
 
-  if (registrationResult?.success === false) {
-    alertify.alert("Error", registrationResult.message);
-  }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let updatedValue = value;
+    let errorMessage = "";
 
-}, [registrationResult]);
+    const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const mobileRegex = /^[0-9]{10}$/;
+    const idRegex = /^[0-9]{13}$/;
 
+    if (name === "username") {
+      if (!value.trim()) errorMessage = "Username is required";
+    }
 
+    if (name === "firstname" || name === "surname") {
+      if (!/^[A-Za-z\s]*$/.test(value)) return;
+      if (!value.trim()) errorMessage = "This field is required";
+    }
 
+    if (name === "emaail") {
+      if (!value) errorMessage = "Email is required";
+      else if (!emailRegex.test(value))
+        errorMessage = "Enter valid email";
+    }
 
-  // ✅ CORRECT HANDLE CHANGE
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  let updatedValue = value;
-  let errorMessage = "";
+    if (name === "mobile") {
+      updatedValue = value.replace(/\D/g, "").slice(0, 10);
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const mobileRegex = /^[0-9]{10}$/;
-  const idRegex = /^[0-9]{13}$/;
+      if (!updatedValue) errorMessage = "Mobile is required";
+      else if (!mobileRegex.test(updatedValue))
+        errorMessage = "Mobile must be 10 digits";
+    }
 
-  // Name & Surname → only letters
-  if (name === "firstname" || name === "surname") {
-    if (!/^[A-Za-z\s]*$/.test(value)) return;
-    if (!value.trim()) errorMessage = "This field is required";
-  }
+    if (name === "idnumber") {
+      updatedValue = value.replace(/\D/g, "").slice(0, 13);
 
-  // Email
-  if (name === "emaail") {
-    if (!value) errorMessage = "Email is required";
-    else if (!emailRegex.test(value)) errorMessage = "Enter valid email";
-  }
+      if (!updatedValue) errorMessage = "ID number is required";
+      else if (!idRegex.test(updatedValue))
+        errorMessage = "ID must be 13 digits";
+    }
 
-  // Mobile
-  if (name === "mobile") {
-    updatedValue = value.replace(/\D/g, "").slice(0, 10);
+    if (name === "password") {
+      if (!value) errorMessage = "Password is required";
+      else if (value.length < 12)
+        errorMessage =
+          "Password must be at least 12 characters";
+    }
 
-    if (!updatedValue)
-      errorMessage = "Mobile is required";
-    else if (!mobileRegex.test(updatedValue))
-      errorMessage = "Mobile must be 10 digits";
-  }
+    if (name === "confirmPassword") {
+      if (!value)
+        errorMessage = "Confirm password is required";
+      else if (value !== form.password)
+        errorMessage = "Passwords do not match";
+    }
 
-  // ID Number
-  if (name === "idnumber") {
-    updatedValue = value.replace(/\D/g, "").slice(0, 13);
+    if (name === "title" || name === "gender") {
+      if (!value) errorMessage = "This field is required";
+    }
 
-    if (!updatedValue)
-      errorMessage = "ID number is required";
-    else if (!idRegex.test(updatedValue))
-      errorMessage = "ID must be 13 digits";
-  }
+    if (name === "ward") {
+      if (!value.trim())
+        errorMessage = "Ward number is required";
+    }
 
-  // Password
-  if (name === "password") {
-    if (!value) errorMessage = "Password is required";
-  }
+    setForm((prev) => ({
+      ...prev,
+      [name]: updatedValue,
+    }));
 
-  // Confirm Password
-  if (name === "confirmPassword") {
-    if (!value)
-      errorMessage = "Confirm password is required";
-    else if (value !== form.password)
-      errorMessage = "Passwords do not match";
-  }
+    setErrors((prev) => ({
+      ...prev,
+      [name]: errorMessage,
+    }));
+  };
 
-  // Dropdowns
-  if (name === "title" || name === "gender") {
-    if (!value) errorMessage = "This field is required";
-  }
+  const validate = () => {
+    let newErrors = {};
 
-  if (name === "ward") {
-    if (!value.trim()) errorMessage = "Ward number is required";
-  }
+    const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const mobileRegex = /^[0-9]{10}$/;
+    const idRegex = /^[0-9]{13}$/;
 
-  setForm((prev) => ({
-    ...prev,
-    [name]: updatedValue,
-  }));
+    if (!form.title) newErrors.title = "Title is required";
 
-  setErrors((prev) => ({
-    ...prev,
-    [name]: errorMessage,
-  }));
-};
+    if (!form.firstname.trim())
+      newErrors.firstname = "Name is required";
 
- const validate = () => {
-  let newErrors = {};
+    if (!form.surname.trim())
+      newErrors.surname = "Surname is required";
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const mobileRegex = /^[0-9]{10}$/;
-  const idRegex = /^[0-9]{13}$/;
+    if (!form.username.trim())
+      newErrors.username = "Username is required";
 
-  if (!form.title) newErrors.title = "Title is required";
+    if (!form.emaail)
+      newErrors.emaail = "Email is required";
+    else if (!emailRegex.test(form.emaail))
+      newErrors.emaail = "Enter valid email";
 
-  if (!form.firstname.trim())
-    newErrors.firstname = "Name is required";
+    if (!form.mobile)
+      newErrors.mobile = "Mobile number is required";
+    else if (!mobileRegex.test(form.mobile))
+      newErrors.mobile = "Mobile must be 10 digits";
 
-  if (!form.surname.trim())
-    newErrors.surname = "Surname is required";
+    if (!form.gender)
+      newErrors.gender = "Gender is required";
 
-  if (!form.emaail)
-    newErrors.emaail = "Email is required";
-  else if (!emailRegex.test(form.emaail))
-    newErrors.emaail = "Enter valid email (e.g. user@gmail.com)";
+    if (!form.address.trim())
+      newErrors.address = "Address is required";
 
-  if (!form.mobile)
-    newErrors.mobile = "Mobile number is required";
-  else if (!mobileRegex.test(form.mobile))
-    newErrors.mobile = "Mobile must be exactly 10 digits";
+    if (!form.idnumber)
+      newErrors.idnumber = "ID number is required";
+    else if (!idRegex.test(form.idnumber))
+      newErrors.idnumber = "ID must be 13 digits";
 
-  if (!form.gender)
-    newErrors.gender = "Gender is required";
+    if (!form.ward.trim())
+      newErrors.ward = "Ward number is required";
 
-  if (!form.address.trim())
-    newErrors.address = "Address is required";
+    if (!form.password)
+      newErrors.password = "Password is required";
+    else if (form.password.length < 12)
+      newErrors.password =
+        "Password must be at least 12 characters";
 
-  if (!form.idnumber)
-    newErrors.idnumber = "ID number is required";
-  else if (!idRegex.test(form.idnumber))
-    newErrors.idnumber = "ID must be exactly 13 digits";
+    if (!form.confirmPassword)
+      newErrors.confirmPassword =
+        "Confirm password is required";
+    else if (form.password !== form.confirmPassword)
+      newErrors.confirmPassword =
+        "Passwords do not match";
 
-  if (!form.ward.trim())
-    newErrors.ward = "Ward number is required";
-
-  if (!form.password)
-    newErrors.password = "Password is required";
-
-  if (!form.confirmPassword)
-    newErrors.confirmPassword = "Confirm password is required";
-  else if (form.password !== form.confirmPassword)
-    newErrors.confirmPassword = "Passwords do not match";
-
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!validate()) return;
 
-dispatch(
-  registerUser({
-    title: form.title,
-    firstname: form.firstname,
-    lastname: form.surname,     
-    username: form.username,
-    emaail: form.emaail,
-    mobile: form.mobile,
-    address: form.address , 
-    gender: form.gender,
-    idnumber: form.idnumber,
-    ward: form.ward,
-    password: form.password,
-    // confirmpassword: form.confirmPassword,
-  })
-);
+    const encryptedPassword =
+      CryptoJS.SHA256(form.password).toString();
+
+    dispatch(
+      registerUser({
+        title: form.title,
+        firstname: form.firstname,
+        lastname: form.surname,
+        username: form.username,
+        emaail: form.emaail,
+        mobile: form.mobile,
+        address: form.address,
+        gender: form.gender,
+        idnumber: form.idnumber,
+        ward: form.ward,
+        password: encryptedPassword,
+      })
+    );
   };
 
   return (
-      <div className="register-wrapper">
-      <form className="register-card" onSubmit={handleSubmit}>
+    <div className="register-wrapper">
+      <form
+        className="register-card"
+        onSubmit={handleSubmit}
+      >
         <div className="header">
           <h2>Customer Registration</h2>
-          <button type="button" onClick={() => navigate("/")} className="back-button">
+          <button
+            type="button"
+            className="backclose-button"
+            onClick={backonClose}
+            aria-label="Close registration"
+          >
             ✕
           </button>
         </div>
@@ -223,10 +244,17 @@ dispatch(
               <option value="Miss">Miss</option>
               <option value="Mr">Mr</option>
               <option value="Mrs">Mrs</option>
-               <option value="Mrs">Dr.</option>
-                <option value="Mrs">Prof.</option>
+              <option value="Dr">Dr</option>
+              <option value="Prof">Prof</option>
             </select>
             {errors.title && <div className="error-message">{errors.title}</div>}
+          </div>
+
+          {/* ID */}
+          <div className={`form-field ${errors.idnumber ? "field-error" : ""}`}>
+            <span className="icon-box"><i className="fas fa-id-card"></i></span>
+            <input name="idnumber" value={form.idnumber} onChange={handleChange} placeholder="ID Number" />
+            {errors.idnumber && <div className="error-message">{errors.idnumber}</div>}
           </div>
 
           {/* FIRSTNAME */}
@@ -250,6 +278,13 @@ dispatch(
             {errors.emaail && <div className="error-message">{errors.emaail}</div>}
           </div>
 
+          {/* USERNAME */}
+          <div className={`form-field ${errors.username ? "field-error" : ""}`}>
+            <span className="icon-box"><i className="fas fa-user-circle"></i></span>
+            <input type="text" name="username" value={form.username} onChange={handleChange} placeholder="Username" />
+            {errors.username && <div className="error-message">{errors.username}</div>}
+          </div>
+
           {/* MOBILE */}
           <div className={`form-field ${errors.mobile ? "field-error" : ""}`}>
             <span className="icon-box"><i className="fas fa-phone"></i></span>
@@ -269,19 +304,15 @@ dispatch(
             {errors.gender && <div className="error-message">{errors.gender}</div>}
           </div>
 
-           
+          {/* ADDRESS */}
+         {/* ADDRESS */}
           <div className={`form-field ${errors.ward ? "field-error" : ""}`}>
              <span className="icon-box"><i className="fas fa-home"></i></span>
             <input name="address" value={form.address} onChange={handleChange} placeholder="Address" />
             {errors.address && <div className="error-message">{errors.address}</div>}
           </div>
 
-          {/* ID NUMBER */}
-          <div className={`form-field ${errors.idnumber ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-id-card"></i></span>
-            <input name="idnumber" value={form.idnumber} onChange={handleChange} placeholder="ID Number" />
-            {errors.idnumber && <div className="error-message">{errors.idnumber}</div>}
-          </div>
+        
 
           {/* WARD */}
           <div className={`form-field ${errors.ward ? "field-error" : ""}`}>
@@ -289,6 +320,10 @@ dispatch(
             <input name="ward" value={form.ward} onChange={handleChange} placeholder="Ward Number" />
             {errors.ward && <div className="error-message">{errors.ward}</div>}
           </div>
+
+
+
+
 
           {/* PASSWORD */}
           <div className={`form-field ${errors.password ? "field-error" : ""}`}>
@@ -304,19 +339,11 @@ dispatch(
             {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
           </div>
 
-          {/* USERNAME */}
-          <div className="form-field">
-            <span className="icon-box"><i className="fas fa-user-circle"></i></span>
-            <input type="text" name="username" value={form.username} placeholder="Username" readOnly style={{ background: "#e9ecef" }} />
-          </div>
-
-
         </div>
 
-       <button className="btn-register" type="submit" disabled={loading}>
-  {loading && <span className="spinner"></span>} Register
-  
-</button>
+        <button className="btn-register" type="submit" disabled={loading}>
+          {loading && <span className="spinner"></span>} Register
+        </button>
 
       </form>
     </div>
