@@ -118,7 +118,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
       <div className="table-responsive" >
 
         <table className="complaints-table">
-          <thead style={{color:"teal"}}>
+          <thead style={{color:"#346ba2"}}>
             <tr>
               <th width="10%">Activity</th>
               <th hidden>ID</th>
@@ -154,7 +154,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <i
                         className="fa fa-eye"
-                        style={{ cursor: "pointer", color: '#0d9488', fontSize: '16px' }}
+                        style={{ cursor: "pointer", color: '#346ba2', fontSize: '16px' }}
                         onClick={() => handleView(item, "View")}
                         title="View details"
                       ></i>

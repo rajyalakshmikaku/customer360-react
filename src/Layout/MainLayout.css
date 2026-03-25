@@ -44,7 +44,7 @@
    SIDEBAR - PROFESSIONAL DESIGN
    ======================================== */
 .layout-menu {
-  background: #1976d2;
+  background: linear-gradient(180deg, #194892 0%, #346ba2 50%, #42a5f5 100%);
   width: 280px;
   height: 100vh;
   position: fixed;
@@ -81,7 +81,7 @@
 .app-brand {
   padding: 24px 20px !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  background: linear-gradient(135deg, rgba(15, 118, 110, 0.8) 0%, rgba(13, 148, 136, 0.8) 100%);
+  background:  #346ba2;
   margin: 0 !important;
   display: flex;
   align-items: center;
