@@ -1,18 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWardDetails } from "../../redux/wardDetailsSlice";
 import "./InterimsDetails.css";
-
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { FaChartPie } from "react-icons/fa";
 function DashboardDetails() {
   const { wardNo, type } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+const [showChart, setShowChart] = useState(false);
   const { details, loading, error, lastFetchedWardNo, lastFetchedType } = useSelector(
     (state) => state.wardDetails
   );
+const totalOutstanding = details?.reduce(
+  (sum, item) => sum + Number(item.value || 0),
+  0
+);
 
+const pieData = details?.map((item) => ({
+  name: item.name,
+  value: Number(item.value || 0),
+  percentage: totalOutstanding
+    ? ((item.value / totalOutstanding) * 100).toFixed(1)
+    : 0,
+}));
   // Format numbers to use K, M notation for values >= 1000
   const formatNumber = (num) => {
     if (!num) return '0';
@@ -191,12 +203,27 @@ function DashboardDetails() {
       {/* Grid Layout - Responsive */}
       <div className="items-section">
         <div className="items-header">
-          <h2 className="items-title">
-            <span className="items-count">{details?.length || 0}</span>
-            {type} Categories
-          </h2>
-          <p className="items-description">Detailed breakdown of all {type.toLowerCase()} items in this ward</p>
-        </div>
+  <div className="items-header-left">
+    <h2 className="items-title">
+      <span className="items-count">{details?.length || 0}</span>
+      {type} Categories
+    </h2>
+    <p className="items-description">
+      Detailed breakdown of all {type.toLowerCase()} items in this ward
+    </p>
+  </div>
+
+  {type === "Outstanding" && (
+    <div className="chart-toggle">
+     <FaChartPie
+      className="chart-icon"
+      onClick={() => setShowChart(!showChart)}
+      title={showChart ? "Hide Chart" : "Show Chart"}
+       style={{  color: "orange",fontSize: "40px",  borderRadius: "4px", cursor: "pointer" }}
+    />
+    </div>
+  )}
+</div>
         
         <div className="items-grid">
           {details?.map((item, index) => {
@@ -221,6 +248,42 @@ function DashboardDetails() {
           })}
         </div>
       </div>
+     {type === "Outstanding" && showChart && (
+  <div className="chart-section" style={{ marginBottom: '20px' }}>
+    <div className="chart-header">
+      <h2>
+        <FaChartPie style={{ marginRight: "8px" }} />
+        Outstanding Distribution
+      </h2>
+      <p>
+        Total Outstanding: <strong>{formatNumber(totalOutstanding)}</strong>
+      </p>
+    </div>
+
+    <div className="chart-container">
+      <ResponsiveContainer width="100%" height={350}>
+        <PieChart>
+          <Pie
+            data={pieData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={120}
+            label={({ percentage }) => `${percentage}%`}
+          >
+            {pieData.map((entry, index) => {
+              const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
+              return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+            })}
+          </Pie>
+          <Tooltip formatter={(value) => formatNumber(value)} />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+)}
     </div>
   );
 }
