@@ -96,11 +96,11 @@
 }
 
 .text-primary {
-  color: teal !important;
+  color: #346ba2 !important;
 }
 
 .text-body[href]:hover {
-  color: teal !important;
+  color: #346ba2 !important;
 }
 
 .bg-primary {

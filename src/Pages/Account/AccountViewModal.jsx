@@ -49,19 +49,19 @@ const AccountViewModal = ({
                                         <td><b>REF NO</b></td>
                                         <td>: {selectedItem?.USERREFNUMBER}</td>
                                     </tr> */}
-                                    {/* <tr>
-                                        <td><b>user id</b></td>
+                                    <tr>
+                                        <td><b>User Id</b></td>
                                         <td>: {selectedItem?.USERID}</td>
-                                    </tr> */}
+                                    </tr>
                                     <tr>
                                         <td><b>REF NO</b></td>
                                         <td>: {selectedItem?.USERREFNUMBER}</td>
                                     </tr>
 
-                                    {/* <tr>
+                                    <tr>
                                         <td><b>Ward No.</b></td>
                                         <td>: {selectedItem?.WARD_NO}</td>
-                                    </tr> */}
+                                    </tr>
 
                                     <tr>
                                         <td><b>NAME</b></td>
@@ -145,16 +145,12 @@ const AccountViewModal = ({
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><b>ADDRESS </b></td>
-                                        <td>: {selectedItem?.ADDRESS}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>CITY </b></td>
-                                        <td>: {selectedItem?.CITY}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>DISTRICT NAME</b></td>
-                                        <td>: {selectedItem?.DISTRICT_NAME}</td>
+                                        <td><b>ADDRESS</b></td>
+                                        <td>
+                                            : {[selectedItem?.ADDRESS, selectedItem?.CITY, selectedItem?.DISTRICT_NAME]
+                                                .filter(Boolean)
+                                                .join(", ")}
+                                        </td>
                                     </tr>
 
 

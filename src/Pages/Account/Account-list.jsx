@@ -314,7 +314,7 @@ const AccountList = ({ category, onStatusChange, approveSuccess }) => {
       {/* Table Section */}
       <div style={{ overflowX: 'auto' }}>
         <table className="Account-table">
-          <thead style={{ color: "teal" }}>
+          <thead style={{ color: "#346ba2" }}>
             <tr>
               <th width="10%">Activity</th>
               {/* <th>Ward</th> */}
@@ -335,7 +335,7 @@ const AccountList = ({ category, onStatusChange, approveSuccess }) => {
                   <td>
                     <i
                       className="fa fa-eye text-primary me-2"
-                      style={{ cursor: "pointer", color: "teal" }}
+                      
                       onClick={() => handleView(item, "View")}
                     ></i>
 
