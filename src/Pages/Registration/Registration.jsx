@@ -225,7 +225,7 @@ const Registration = () => {
       >
         <div className="header">
           <div>
-            <h2 style={{ marginLeft: "50%" }}>Customer Registration</h2>
+            <h2 style={{ marginLeft: "-8%" }}>Customer Registration</h2>
             {/* <div className="sub-title">Please fill in your details to create a new account</div> */}
           </div>
           <button
