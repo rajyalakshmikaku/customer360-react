@@ -5,23 +5,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #e9f5ff 0%, #c6b3d4 45%, #a9d6ff 80%, #86c6ff 100%);
+  background: #ffffff;
   padding: 24px;
   position: relative;
   overflow: hidden;
 }
 
-.login-page::before,
-.login-page::after,
-.login-page .wave-1,
-.login-page .wave-2,
-.login-page .wave-3,
-.login-page .pattern-left,
-.login-page .pattern-right {
-  content: "";
-  position: absolute;
-  z-index: 0;
-}
+
 
 .login-page::before {
   top: -40px;
@@ -186,68 +176,9 @@
   max-width: 360px;
 }
 
-.left-panel::before {
-  content: "";
-  position: absolute;
-  left: -95px;
-  top: -90px;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: rgba(210, 245, 255, 0.16);
-}
 
-.left-panel::after {
-  content: "";
-  position: absolute;
-  right: -110px;
-  top: -20px;
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  background: rgba(103, 63, 226, 0.22);
-  z-index: 1;
-}
 
-.left-shapes .circle-large,
-.left-shapes .circle-medium,
-.left-shapes .circle-small {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.3;
-  z-index: 0;
-}
 
-.left-shapes .circle-large {
-  width: 165px;
-  height: 165px;
-  left: -65px;
-  bottom: -55px;
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.left-shapes .circle-medium {
-  width: 120px;
-  height: 120px;
-  right: -40px;
-  bottom: 30px;
-  background: rgba(198, 237, 255, 0.22);
-}
-
-.left-shapes .circle-small {
-  width: 90px;
-  height: 90px;
-  left: 30px;
-  top: 30px;
-  background: rgba(255, 255, 255, 0.27);
-}
-
-.left-panel .left-content {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 93%;
-}
 
 .left-illustration {
   width: 200px;
@@ -298,27 +229,7 @@
   justify-content: center;
 }
 
-.right-panel::before {
-  content: "";
-  position: absolute;
-  right: -85px;
-  top: -58px;
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  background: rgba(93, 145, 233, 0.14);
-}
 
-.right-panel::after {
-  content: "";
-  position: absolute;
-  left: -64px;
-  bottom: -64px;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: rgba(82, 99, 223, 0.10);
-}
 
 .right-inner {
   width: 100%;

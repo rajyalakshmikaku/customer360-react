@@ -53,13 +53,13 @@ function Login() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <div className="divider-curve" aria-hidden="true" />
+     
         <div className="left-panel">
-          <div className="left-shapes">
+          {/* <div className="left-shapes">
             <div className="circle-large" />
             <div className="circle-small" />
             <div className="circle-medium" />
-          </div>
+          </div> */}
           <div className="left-content">
             <div className="left-illustration" aria-hidden="true">
              <img 
@@ -67,7 +67,7 @@ function Login() {
             alt="Illustration of man with laptop" 
           />
             </div>
-            <h1>WELCOME <span role="img" aria-label="bouquet">💐</span>
+            <h1>WELCOME <span role="img" aria-label="bouquet"></span>
 </h1>
             <h2>Customer 360 Project</h2>
             <p>
