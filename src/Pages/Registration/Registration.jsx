@@ -325,10 +325,6 @@ const Registration = () => {
             {errors.ward && <div className="error-message">{errors.ward}</div>}
           </div>
 
-
-
-
-
           {/* PASSWORD */}
           <div className={`form-field ${errors.password ? "field-error" : ""}`}>
             <span className="icon-box"><i className="fas fa-lock"></i></span>
