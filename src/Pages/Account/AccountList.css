@@ -17,7 +17,7 @@
 
 /* Parent */
 .Account-menu__parent {
-  color: teal;
+  color: #346ba2;
   border-radius: 8px;
   margin: 4px 8px;
   padding: 8px 12px;
@@ -29,7 +29,7 @@
 
 /* Hover */
 .Account-menu__parent:hover {
-  background-color: teal;
+  background-color: #346ba2;
   color: orange;
 }
 
@@ -125,7 +125,7 @@
 }
 
 .form-selectAccount {
-    border-color: teal;
+    border-color: #346ba2;
 }
 
 .Account-filters {
@@ -156,7 +156,7 @@
   text-align: left;
   font-weight: 700;
   font-size: 13px;
-  background-color: teal;
+  background-color: #346ba2;
   color: black;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -204,7 +204,7 @@
 .Account-header-icon {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-dark) 100%);
+  background: #346ba2;
   color: white;
   border-radius: 50%;
   display: flex;
