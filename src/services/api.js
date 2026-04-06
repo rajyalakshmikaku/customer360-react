@@ -7,8 +7,8 @@ import alertify from "alertifyjs";
 
 // export const baseURL = "http://102.130.114.194:1510";
 
- //export const baseURL = "http://localhost:5055";
- export const baseURL = "http://102.130.114.194:1541";
+ export const baseURL = "http://localhost:5055";
+ //export const baseURL = "http://102.130.114.194:1541";
 
 
  //export const baseURL = "http://102.130.114.194:1510";
@@ -49,8 +49,11 @@ AxiosInstance.interceptors.request.use(
 AxiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Optional: redirect to login
+    const status = error.response?.status;
+    const requestUrl = error.config?.url || "";
+    const isAuthLoginRequest = requestUrl.includes("/api/Auth/Login");
+
+    if (status === 401 && !isAuthLoginRequest) {
       logout();
     }
     return Promise.reject(error);

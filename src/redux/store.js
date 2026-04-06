@@ -20,5 +20,6 @@ export const store = configureStore({
          User: UserReducer,
          Account: AccountReducer,
          registration: registrationReducer, 
+           
   },
 });

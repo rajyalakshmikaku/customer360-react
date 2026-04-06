@@ -4,7 +4,11 @@ import "./Registration.css";
 import { useNavigate } from "react-router-dom";
 import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
-import { registerUser } from "../../redux/RegistrationSlice";
+import {
+  clearRegistrationResult,
+  registerUser,
+  resetRegistrationState,
+} from "../../redux/RegistrationSlice";
 import CryptoJS from "crypto-js";
 
 
@@ -16,9 +20,10 @@ const Registration = () => {
     navigate("/");   
   };
 
-  const { loading, registrationResult } = useSelector(
+  const { registrationResult } = useSelector(
     (state) => state.registration || {}
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
@@ -45,16 +50,49 @@ const Registration = () => {
   }, [form.emaail]);
 
   useEffect(() => {
-    if (registrationResult?.success === true) {
-      alertify.alert("Success", "Customer registered successfully", () => {
-        navigate("/");
-      });
-    }
+    dispatch(resetRegistrationState());
+  }, [dispatch]);
 
-    if (registrationResult?.success === false) {
-      alertify.alert("Error", registrationResult.message);
-    }
-  }, [registrationResult]);
+  // useEffect(() => {
+  //   if (registrationResult?.success === true) {
+  //     alertify.alert("Success", "Customer registered successfully", () => {
+  //       dispatch(clearRegistrationResult());
+  //       navigate("/");
+  //     });
+  //     return;
+  //   }
+
+  //   if (registrationResult?.success === false) {
+  //     alertify.alert("Error", registrationResult.message);
+  //     dispatch(clearRegistrationResult());
+  //   }
+  // }, [registrationResult, dispatch, navigate]);
+
+  useEffect(() => {
+  if (registrationResult?.success === true) {
+    alertify.alert(
+      "Success",
+      "Customer registered successfully",
+      () => {
+        dispatch(clearRegistrationResult());
+        navigate("/"); // ✅ redirect ONLY on success
+      }
+    );
+    return;
+  }
+
+  if (registrationResult?.success === false) {
+    alertify.alert(
+      "Error",
+      registrationResult.message,
+      () => {
+        // ❌ NO redirect here
+        // ✅ Stay on same page
+        dispatch(clearRegistrationResult());
+      }
+    );
+  }
+}, [registrationResult, dispatch, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -191,29 +229,54 @@ const Registration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
 
     if (!validate()) return;
 
     const encryptedPassword =
       CryptoJS.SHA256(form.password).toString();
 
-    dispatch(
-      registerUser({
-        title: form.title,
-        firstname: form.firstname,
-        lastname: form.surname,
-        username: form.username,
-        emaail: form.emaail,
-        mobile: form.mobile,
-        address: form.address,
-        gender: form.gender,
-        idnumber: form.idnumber,
-        ward: form.ward,
-        password: encryptedPassword,
-      })
-    );
+    setIsSubmitting(true);
+    try {
+      await dispatch(
+        registerUser({
+          title: form.title,
+          firstname: form.firstname,
+          lastname: form.surname,
+          username: form.username,
+          emaail: form.emaail,
+          mobile: form.mobile,
+          address: form.address,
+          gender: form.gender,
+          idnumber: form.idnumber,
+          ward: form.ward,
+          password: encryptedPassword,
+        })
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClear = () => {
+    setForm({
+      title: "",
+      firstname: "",
+      surname: "",
+      emaail: "",
+      mobile: "",
+      gender: "",
+      idnumber: "",
+      ward: "",
+      password: "",
+      confirmPassword: "",
+      username: "",
+      address: "",
+    });
+    setErrors({});
   };
 
   return (
@@ -241,78 +304,95 @@ const Registration = () => {
         <div className="form-grid">
 
           {/* TITLE */}
-          <div className={`form-field ${errors.title ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-id-badge"></i></span>
-            <select name="title" value={form.title} onChange={handleChange}>
-              <option value="">Select Title</option>
-              <option value="Miss">Miss</option>
-              <option value="Mr">Mr</option>
-              <option value="Mrs">Mrs</option>
-              <option value="Dr">Dr</option>
-              <option value="Prof">Prof</option>
-            </select>
+         <div className={`form-field ${errors.title ? "field-error" : ""}`}>
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-id-badge"></i></span>
+              <select name="title" value={form.title} onChange={handleChange}>
+                <option value="">Select Title</option>
+                <option value="Miss">Miss</option>
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Dr">Dr</option>
+                <option value="Prof">Prof</option>
+              </select>
+            </div>
             {errors.title && <div className="error-message">{errors.title}</div>}
           </div>
-
           {/* ID */}
-          <div className={`form-field ${errors.idnumber ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-id-card"></i></span>
-            <input name="idnumber" value={form.idnumber} onChange={handleChange} placeholder="ID Number" />
+        <div className={`form-field ${errors.idnumber ? "field-error" : ""}`}>
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-id-card"></i></span>
+              <input name="idnumber" value={form.idnumber} onChange={handleChange} placeholder="ID Number" />
+            </div>
             {errors.idnumber && <div className="error-message">{errors.idnumber}</div>}
           </div>
 
           {/* FIRSTNAME */}
           <div className={`form-field ${errors.firstname ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-user"></i></span>
-            <input name="firstname" value={form.firstname} onChange={handleChange} placeholder="Name" />
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-user"></i></span>
+              <input name="firstname" value={form.firstname} onChange={handleChange} placeholder="Name" />
+            </div>
             {errors.firstname && <div className="error-message">{errors.firstname}</div>}
           </div>
 
           {/* SURNAME */}
           <div className={`form-field ${errors.surname ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-user-tag"></i></span>
-            <input name="surname" value={form.surname} onChange={handleChange} placeholder="Surname" />
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-user-tag"></i></span>
+              <input name="surname" value={form.surname} onChange={handleChange} placeholder="Surname" />
+            </div>
             {errors.surname && <div className="error-message">{errors.surname}</div>}
           </div>
 
           {/* EMAIL */}
           <div className={`form-field ${errors.emaail ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-envelope"></i></span>
-            <input type="email" name="emaail" value={form.emaail} onChange={handleChange} placeholder="Email" />
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-envelope"></i></span>
+              <input type="email" name="emaail" value={form.emaail} onChange={handleChange} placeholder="Email" />
+            </div>
             {errors.emaail && <div className="error-message">{errors.emaail}</div>}
           </div>
 
           {/* USERNAME */}
           <div className={`form-field ${errors.username ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-user-circle"></i></span>
-            <input type="text" name="username" value={form.username} onChange={handleChange} placeholder="Username" />
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-user-circle"></i></span>
+              <input type="text" name="username" value={form.username} onChange={handleChange} placeholder="Username" />
+            </div>
             {errors.username && <div className="error-message">{errors.username}</div>}
           </div>
 
           {/* MOBILE */}
           <div className={`form-field ${errors.mobile ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-phone"></i></span>
-            <input name="mobile" value={form.mobile} onChange={handleChange} placeholder="Mobile" />
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-phone"></i></span>
+              <input name="mobile" value={form.mobile} onChange={handleChange} placeholder="Mobile" />
+            </div>
             {errors.mobile && <div className="error-message">{errors.mobile}</div>}
           </div>
 
           {/* GENDER */}
           <div className={`form-field ${errors.gender ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-venus-mars"></i></span>
-            <select name="gender" value={form.gender} onChange={handleChange}>
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Others">Others</option>
-            </select>
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-venus-mars"></i></span>
+              <select name="gender" value={form.gender} onChange={handleChange}>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
             {errors.gender && <div className="error-message">{errors.gender}</div>}
           </div>
 
           {/* ADDRESS */}
          {/* ADDRESS */}
-          <div className={`form-field ${errors.ward ? "field-error" : ""}`}>
-             <span className="icon-box"><i className="fas fa-home"></i></span>
-            <input name="address" value={form.address} onChange={handleChange} placeholder="Address" />
+          <div className={`form-field ${errors.address ? "field-error" : ""}`}>
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-home"></i></span>
+              <input name="address" value={form.address} onChange={handleChange} placeholder="Address" />
+            </div>
             {errors.address && <div className="error-message">{errors.address}</div>}
           </div>
 
@@ -320,30 +400,50 @@ const Registration = () => {
 
           {/* WARD */}
           <div className={`form-field ${errors.ward ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-map-marker-alt"></i></span>
-            <input name="ward" value={form.ward} onChange={handleChange} placeholder="Ward Number" />
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-map-marker-alt"></i></span>
+              <input name="ward" value={form.ward} onChange={handleChange} placeholder="Ward Number" />
+            </div>
             {errors.ward && <div className="error-message">{errors.ward}</div>}
           </div>
 
           {/* PASSWORD */}
           <div className={`form-field ${errors.password ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-lock"></i></span>
-            <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password" />
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-lock"></i></span>
+              <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password" />
+            </div>
             {errors.password && <div className="error-message">{errors.password}</div>}
           </div>
 
           {/* CONFIRM PASSWORD */}
           <div className={`form-field ${errors.confirmPassword ? "field-error" : ""}`}>
-            <span className="icon-box"><i className="fas fa-lock"></i></span>
-            <input type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} placeholder="Confirm Password" />
+            <div className="field-control">
+              <span className="icon-box"><i className="fas fa-lock"></i></span>
+              <input type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} placeholder="Confirm Password" />
+            </div>
             {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
           </div>
 
         </div>
 
-        <button className="btn-register" type="submit" disabled={loading}>
-          {loading && <span className="spinner"></span>} Register
-        </button>
+        <div className="form-actions">
+          <button
+  className={`btn-register ${isSubmitting ? "loading" : ""}`}
+  type="submit"
+  disabled={isSubmitting} >
+  {isSubmitting && <span className="spinner"></span>}
+  {isSubmitting ? "Registering..." : "Register"}
+</button>
+          <button
+            className="btn-clear"
+            type="button"
+            onClick={handleClear}
+            disabled={isSubmitting}
+          >
+            Clear
+          </button>
+        </div>
 
       </form>
     </div>
