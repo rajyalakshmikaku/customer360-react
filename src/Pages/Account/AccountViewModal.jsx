@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLinkedAccounts } from "../../redux/AccountListSlice";
 
 const AccountViewModal = ({
     show,
@@ -14,9 +15,21 @@ const AccountViewModal = ({
     showRejectModal
 }) => {
     const [rejectComment, setRejectComment] = useState("");
+    const [selectedAccount, setSelectedAccount] = useState("");
+
+   const dispatch = useDispatch();
+
+const { linkedAccounts = [], linkedLoading = false } = useSelector(
+  (state) => state.account || {}
+);
+
+useEffect(() => {
+  if (mode === "link" && selectedItem?.IDNUMBER) {
+    dispatch(fetchLinkedAccounts(selectedItem.IDNUMBER));
+  }
+}, [mode, selectedItem, dispatch]);
 
     if (!show || !selectedItem) return null;
-
 
     return (
         <div className="modal fade show d-block" tabIndex="-1">
@@ -24,9 +37,12 @@ const AccountViewModal = ({
                 <div className="modal-content shadow-lg">
 
                     <div className="modal-header bg-light">
-
                         <h5 className="modal-title">
-                            {mode === "edit" ? "Edit" : "View"} Account Details
+                            {mode === "edit"
+                                ? "Edit"
+                                : mode === "link"
+                                ? "Link"
+                                : "View"} Account Details
                         </h5>
 
                         <button
@@ -38,188 +54,99 @@ const AccountViewModal = ({
                             <i className="bx bx-x" style={{ fontSize: "18px" }}></i>
                         </button>
                     </div>
+
                     <div className="modal-body">
                         <div className="container-fluid">
 
-                            <table className="table table-borderless mb-3">
-                                <tbody>
+                            {/* LINK POPUP */}
+                            {mode === "link" && (
+                                <div className="mt-3 border rounded p-3 bg-light">
+                                    {/* <h6 className="mb-3">Link Account</h6> */}
 
-                                    {/* COMMON FIELDS */}
-                                    {/* <tr>
-                                        <td><b>REF NO</b></td>
-                                        <td>: {selectedItem?.USERREFNUMBER}</td>
-                                    </tr> */}
-                                    <tr>
-                                        <td><b>User Id</b></td>
-                                        <td>: {selectedItem?.USERID}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>REF NO</b></td>
-                                        <td>: {selectedItem?.USERREFNUMBER}</td>
-                                    </tr>
+                                    <label><b>Select Account Number</b></label>
+                                  <select
+  className="form-select"
+  value={selectedAccount}
+  onChange={(e) => setSelectedAccount(e.target.value)}
+>
+  <option value="">
+    {linkedLoading ? "Loading..." : "Select Account Number"}
+  </option>
 
-                                    <tr>
-                                        <td><b>Ward No.</b></td>
-                                        <td>: {selectedItem?.WARD_NO}</td>
-                                    </tr>
+  {linkedAccounts?.map((item, index) => (
+    <option key={index} value={item.AccountNo}>
+      {item.AccountNo}
+    </option>
+  ))}
+</select>
 
-                                    <tr>
-                                        <td><b>NAME</b></td>
-                                        <td>: {selectedItem?.NAME}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>SURNAME</b></td>
-                                        <td>: {selectedItem?.SURNAME}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>EMAIL</b></td>
-                                        <td>: {selectedItem?.EMAIL}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>PHONE NUMBER</b></td>
-                                       <td>: {selectedItem?.PHONENUMBER || selectedItem?.CELLNUMBER}</td>
-                                    </tr>
-                                    {/* <tr>
-                                        <td><b>GENDER</b></td>
-                                        <td>: {selectedItem?.GENDER}</td>
-                                    </tr> */}
-                                    <tr>
-                                        <td><b>ACTIVE STATUS</b></td>
-                                        <td>
-                                            :{" "}
-                                            {(() => {
-                                                const raw = selectedItem?.ACTIVESTATUS;
-                                                const value =
-                                                    typeof raw === "object" ? raw?.STATUSNAME : raw;
-
-                                                const normalized = String(value || "")
-                                                    .trim()
-                                                    .toLowerCase();
-
-                                                if (normalized === "y" || normalized === "active") {
-                                                    return <span className="badge bg-success">Active</span>;
-                                                }
-                                                if (normalized === "p" || normalized === "pending") {
-                                                    return <span className="badge bg-warning text-dark">Pending</span>;
-                                                }
-                                                if (normalized === "n" || normalized === "inactive") {
-                                                    return <span className="badge bg-danger">Inactive</span>;
-                                                }
-
-                                                return value || "-";
-                                            })()}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>CREATED DATE</b></td>
-                                        <td>: {selectedItem?.CREATEDDATE}</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td><b>USER TYPE</b></td>
-                                        <td>
-                                            :{" "}
-                                            {(() => {
-                                                const raw = selectedItem?.USERTYPE;
-                                                const value =
-                                                    typeof raw === "object" ? raw?.TYPENAME : raw;
-
-                                                const normalized = String(value || "")
-                                                    .trim()
-                                                    .toLowerCase();
-
-                                                if (normalized === "c" || normalized === "councilour") {
-                                                    return "Councilor";
-                                                }
-
-                                                if (normalized === "a" || normalized === "admin") {
-                                                    return "Admin";
-                                                }
-
-                                                if (normalized === "u" || normalized === "user") {
-                                                    return "User";
-                                                }
-
-                                                return value || "-";
-                                            })()}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>ADDRESS</b></td>
-                                        <td>
-                                            : {[selectedItem?.ADDRESS, selectedItem?.CITY, selectedItem?.DISTRICT_NAME]
-                                                .filter(Boolean)
-                                                .join(", ")}
-                                        </td>
-                                    </tr>
-
-
-                                </tbody>
-                            </table>
+                                    <div className="mt-3 text-center">
+                                        <button className="btn btn-primary btn-sm">
+                                            Link Account
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     {mode === "edit" && selectedItem && (
-  <div className="d-flex justify-content-center gap-2 mt-3 flex-wrap">
+                        <div className="d-flex justify-content-center gap-2 mt-3 flex-wrap">
 
-    {/* APPROVE only if Pending (P) */}
-    {selectedItem.ACTIVESTATUS === "P" && (
-      <button
-        type="button"
-        className="btn btn-success btn-sm"
-        onClick={() =>
-          onStatusChange(selectedItem.USERID, "APPROVE", WardType)
-        }
-      >
-        {approveLoading ? (
-          <>
-            <i className="fa fa-spinner fa-spin"></i> Approve
-          </>
-        ) : (
-          "Approve"
-        )}
-      </button>
-    )}
+                            {selectedItem.ACTIVESTATUS === "P" && (
+                                <button
+                                    type="button"
+                                    className="btn btn-success btn-sm"
+                                    onClick={() =>
+                                        onStatusChange(selectedItem.USERID, "APPROVE", WardType)
+                                    }
+                                >
+                                    {approveLoading ? (
+                                        <>
+                                            <i className="fa fa-spinner fa-spin"></i> Approve
+                                        </>
+                                    ) : (
+                                        "Approve"
+                                    )}
+                                </button>
+                            )}
 
-    {/* COMPLETE only if Active (Y) */}
-    {selectedItem.ACTIVESTATUS === "Y" && (
-      <button
-        type="button"
-        disabled={approveLoading}
-        className="btn btn-success btn-sm"
-        onClick={() =>
-          onStatusChange(selectedItem.USERID, "COMPLETED", WardType)
-        }
-      >
-        {approveLoading ? (
-          <>
-            <i className="fa fa-spinner fa-spin"></i> Complete
-          </>
-        ) : (
-          "Complete"
-        )}
-      </button>
-    )}
+                            {selectedItem.ACTIVESTATUS === "Y" && (
+                                <button
+                                    type="button"
+                                    disabled={approveLoading}
+                                    className="btn btn-success btn-sm"
+                                    onClick={() =>
+                                        onStatusChange(selectedItem.USERID, "COMPLETED", WardType)
+                                    }
+                                >
+                                    {approveLoading ? (
+                                        <>
+                                            <i className="fa fa-spinner fa-spin"></i> Complete
+                                        </>
+                                    ) : (
+                                        "Complete"
+                                    )}
+                                </button>
+                            )}
 
-    {/* REJECT for Y or P */}
-    {(selectedItem.ACTIVESTATUS === "Y" ||
-      selectedItem.ACTIVESTATUS === "P") && (
-      <button
-        type="button"
-        className="btn btn-danger btn-sm"
-        onClick={() => setShowRejectModal(true)}
-      >
-        Reject
-      </button>
-    )}
-  </div>
-)}
+                            {(selectedItem.ACTIVESTATUS === "Y" ||
+                                selectedItem.ACTIVESTATUS === "P") && (
+                                <button
+                                    type="button"
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => setShowRejectModal(true)}
+                                >
+                                    Reject
+                                </button>
+                            )}
+                        </div>
+                    )}
 
                 </div>
             </div>
         </div>
     );
 };
-
 
 export default AccountViewModal;

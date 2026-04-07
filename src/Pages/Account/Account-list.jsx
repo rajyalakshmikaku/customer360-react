@@ -333,20 +333,34 @@ const AccountList = ({ category, onStatusChange, approveSuccess }) => {
               AccountsListInfo.map((item, index) => (
                 <tr key={item.USERID || index}>
                   <td>
-                    <i
-                      className="fa fa-eye text-primary me-2"
-                      
-                      onClick={() => handleView(item, "View")}
-                    ></i>
+  {/* View */}
+  <i
+    className="fa fa-eye text-primary me-2"
+    style={{ cursor: "pointer" }}
+    onClick={() => handleView(item, "View")}
+    title="View"
+  ></i>
 
-                    {item.ACTIVESTATUS !== "Y" && (
-                      <i
-                        className="fa fa-edit"
-                        style={{ cursor: "pointer", color: "blue" }}
-                        onClick={() => handleView(item, "edit")}
-                      ></i>
-                    )}
-                  </td>
+  {/* Edit */}
+  {item.ACTIVESTATUS !== "Y" && (
+    <i
+      className="fa fa-edit me-2"
+      style={{ cursor: "pointer", color: "blue" }}
+      onClick={() => handleView(item, "edit")}
+      title="Edit"
+    ></i>
+  )}
+
+  {/* Link icon only for Pending */}
+  {item.ACTIVESTATUS === "P" && (
+    <i
+      className="fa fa-link"
+      style={{ cursor: "pointer", color: "purple" }}
+      onClick={() => handleView(item, "link")}
+      title="Link"
+    ></i>
+  )}
+</td>
                   {/* <td>{item.USERREFNUMBER }</td>    */}
                   {/* <td>{item.WARD_NO?.NUMBER ?? ""}</td> */}
                   {/* <td>{item.USERID}</td> */}
