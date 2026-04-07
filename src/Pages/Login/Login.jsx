@@ -8,41 +8,59 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 function Login() {
-  const [username, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const [history, setHistory] = useState([{ username: "", password: "" }]);
-  const [historyIndex, setHistoryIndex] = useState(0);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     setErrorMessage("");
-    if (!username || !password) {
-      alertify.alert("Validation", "Please enter both email and password");
+
+    if (!username.trim() || !password) {
+      const msg = "Please enter both username and password";
+      setErrorMessage(msg);
+      alertify.alert("Validation", msg);
       return;
     }
 
     try {
       setIsLoading(true);
-      const response = await dispatch(
-        login({
-          username,
-          password,
-          usertype: "Null",
-          device: "Null",
-          userlattitude: "0",
-          userlongitude: "0",
-        })
-      ).unwrap();
 
-      console.log("Login Success:", response);
-      navigate("/dashboard");
-    } catch (error) {
-      const msg = error?.message || "Unable to login. Please try again.";
+      const device = navigator.userAgent || "Web";
+
+      const tryLogin = async (usertype) => {
+        return await dispatch(
+          login({
+            username: username.trim(),
+            password,
+            usertype,
+            device,
+            userlattitude: "0",
+            userlongitude: "0",
+          })
+        ).unwrap();
+      };
+
+      const userTypesToTry = ["A", "C"];
+      let finalError = "Invalid username or password.";
+
+      for (const type of userTypesToTry) {
+        try {
+          await tryLogin(type);
+          navigate("/dashboard");
+          return;
+        } catch (err) {
+          const msg = typeof err === "string" ? err : err?.message || "Unable to login.";
+          finalError = msg;
+        }
+      }
+
+      throw new Error(finalError);
+    } catch (err) {
+      const msg = typeof err === "string" ? err : err?.message || "Unable to login.";
       setErrorMessage(msg);
       alertify.alert("Error", msg);
     } finally {
@@ -88,10 +106,10 @@ function Login() {
               <div className="icon-input">
                 <span className="icon user-icon" aria-hidden="true" />
                 <input
-                  type="email"
+                  type="text"
                   placeholder="User Name"
                   value={username}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setUsername(e.target.value)}
                   autoComplete="username"
                 />
               </div>

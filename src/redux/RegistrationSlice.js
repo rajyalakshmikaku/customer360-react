@@ -19,7 +19,15 @@ const registrationSlice = createSlice({
     loading: false,
     registrationResult: null,
   },
-  reducers: {},
+  reducers: {
+    clearRegistrationResult: (state) => {
+      state.registrationResult = null;
+    },
+    resetRegistrationState: (state) => {
+      state.loading = false;
+      state.registrationResult = null;
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -40,4 +48,5 @@ const registrationSlice = createSlice({
   },
 });
 
+export const { clearRegistrationResult, resetRegistrationState } = registrationSlice.actions;
 export default registrationSlice.reducer;

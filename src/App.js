@@ -12,12 +12,16 @@ import Details from "./Pages/Dasboard/Details";
 import Registration from "./Pages/Registration/Registration";
 import CustomerDashboard from "./Pages/CustomerDashboard/CustomerDashboard";
 import OutstandingDetailsView from "./Pages/Dasboard/OutstandingDetailsView";
+import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./Pages/ForgotPassword/ResetPassword";
 function App() {
   return (
     <Routes>
       {/* Login without layout */}
       <Route path="/" element={<Login />} />
        <Route path="/register" element={<Registration />} />
+       <Route path="/forgot-password" element={<ForgotPassword />} />
+       <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Pages with layout */}
       <Route element={<MainLayout />}>

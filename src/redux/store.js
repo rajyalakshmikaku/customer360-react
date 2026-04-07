@@ -22,5 +22,6 @@ export const store = configureStore({
          registration: registrationReducer, 
              customerDashboard: customerDashboardReducer, // ✅ FIX
 
+           
   },
 });
