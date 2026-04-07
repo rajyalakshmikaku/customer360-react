@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLinkedAccounts } from "../../redux/AccountListSlice";
+import { fetchLinkedAccounts,fetchSaveAccountNumbers  } from "../../redux/AccountListSlice";
+import alertify from "alertifyjs";
+import "alertifyjs/build/css/alertify.css";
 
 const AccountViewModal = ({ show, onClose, selectedItem, mode }) => {
   const dispatch = useDispatch();
@@ -32,13 +34,41 @@ const handleCheckboxChange = (accountNo) => {
 
 const handleMapping = () => {
   const payload = {
-    userId: selectedItem.USERID,
-    accounts: selectedAccounts
+    UserID: selectedItem.USERID,
+    AccountNumbers: selectedAccounts
   };
 
   console.log("Mapping Payload:", payload);
 
-  
+  dispatch(fetchSaveAccountNumbers(payload))
+    .unwrap()
+    .then((res) => {
+      console.log("Saved:", res);
+
+      let message = "";
+
+      if (res.savedAccounts?.length > 0) {
+        message += `Saved Successfully:\n${res.savedAccounts.join(", ")}\n\n`;
+      }
+
+      if (res.existingAccounts?.length > 0) {
+        message += `Already Exists:\n${res.existingAccounts.join(", ")}`;
+      }
+
+      if (!message) {
+        message = "No accounts processed.";
+      }
+
+      // ✅ Alertify dialog (CENTER popup)
+      alertify.alert("Account Mapping Result", message);
+
+      setSelectedAccounts([]);
+    })
+    .catch((err) => {
+      console.error(err);
+
+      alertify.alert("Error", "Failed to save account numbers");
+    });
 };
 
   return (

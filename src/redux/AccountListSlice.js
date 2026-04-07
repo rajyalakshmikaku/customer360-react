@@ -2,7 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   GetStatuslist,
   PostApproveAccounts,
-  GetAccountlist
+  GetAccountlist,
+  SaveAccountNumbers
 } from "../services/AccountListApi";
 
 export const fetchAccountListInfo = createAsyncThunk(
@@ -43,7 +44,18 @@ export const fetchLinkedAccounts = createAsyncThunk(
     }
   }
 );
-
+export const fetchSaveAccountNumbers = createAsyncThunk(
+  "account/fetchSaveAccountNumbers",
+  async (payload, thunkAPI) => {
+    try {
+      return await SaveAccountNumbers(payload);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
 
 
 const AccountListSlice = createSlice({
@@ -58,7 +70,9 @@ const AccountListSlice = createSlice({
     error: null,
     activestatus: [],
     linkedAccounts: [],
-    linkedLoading: false
+    linkedLoading: false,
+    saveAccountsLoading: false,
+      saveAccountsResult: null
   },
 
   reducers: {},
@@ -110,7 +124,20 @@ extraReducers: (builder) => {
     .addCase(fetchLinkedAccounts.rejected, (state, action) => {
       state.linkedLoading = false;
       state.error = action.payload;
-    });
+    })
+    .addCase(fetchSaveAccountNumbers.pending, (state) => {
+  state.saveAccountsLoading = true;
+})
+
+.addCase(fetchSaveAccountNumbers.fulfilled, (state, action) => {
+  state.saveAccountsLoading = false;
+  state.saveAccountsResult = action.payload;
+})
+
+.addCase(fetchSaveAccountNumbers.rejected, (state, action) => {
+  state.saveAccountsLoading = false;
+  state.error = action.payload;
+})
 }
 });
 
