@@ -10,6 +10,8 @@ import AccountList from "./Pages/Account/Account-list";
 
 import Details from "./Pages/Dasboard/Details";
 import Registration from "./Pages/Registration/Registration";
+import CustomerDashboard from "./Pages/CustomerDashboard/CustomerDashboard";
+import OutstandingDetailsView from "./Pages/Dasboard/OutstandingDetailsView";
 function App() {
   return (
     <Routes>
@@ -25,13 +27,11 @@ function App() {
 
 
          {/* <Route path="/status-list" element={<StatusList />} /> */}
-          <Route path="/details/:wardNo/:type" element={<Details />} />
-         <Route path="/Account-list" element={<AccountList />} />
-          <Route path="/details/:wardNo/:type" element={<Details />} />
-
-
+          <Route path="/outstanding-details" element={<OutstandingDetailsView />} />
         <Route path="/details/:wardNo/:type" element={<Details />} />
         <Route path="/Account-list" element={<AccountList />} />
+        <Route path="/CustomerDashboard" element={<CustomerDashboard />} />
+
       </Route>
     </Routes>
   );

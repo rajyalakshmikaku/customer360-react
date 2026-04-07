@@ -92,7 +92,17 @@ const MainLayout = () => {
               </NavLink>
             </li>
 
-      
+       <li className="menu-item">
+              <NavLink
+                to="/CustomerDashboard"
+                className={({ isActive }) =>
+                  `menu-link ${isActive ? "active" : ""}`
+                }
+              >
+                <i className="menu-icon fa fa-th-large"></i>
+                <span className="menu-text"> Customer Dashboard</span>
+              </NavLink>
+            </li>
            
 
             {/* ADMIN MENU */}
