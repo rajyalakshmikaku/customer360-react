@@ -1,0 +1,221 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { fetchCustomerDashboardCounts } from "../../redux/customerDashboardSlice";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
+import { FaChartPie, FaChartBar } from "react-icons/fa";
+import "./DetailsView.css";
+
+function IndigentDetailsView() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const { counts, loading } = useSelector((state) => state.customerDashboard);
+  
+  const wardNo = location.state?.wardNo || 0;
+  const accountNo = location.state?.accountNo;
+  const [showChart, setShowChart] = useState("pie");
+
+  useEffect(() => {
+    if (wardNo && accountNo) {
+      dispatch(fetchCustomerDashboardCounts({ wardNo, accountNo }));
+    }
+  }, [dispatch, wardNo, accountNo]);
+
+  const indigentData = counts?.indigentData || [];
+  const totalIndigen = indigentData.length;
+
+  const formatNumber = (num) => {
+    if (!num) return "0";
+    return Number(num).toLocaleString();
+  };
+
+  const statusColors = {
+    Active: "#10b981",
+    Inactive: "#ef4444",
+    Processing: "#f59e0b",
+    Approved: "#3b82f6",
+  };
+
+  // Create chart data
+  const pieData = indigentData.slice(0, 10).map((item, index) => ({
+    name: item.name || `Case ${index + 1}`,
+    value: 1,
+  }));
+
+  if (loading) {
+    return (
+      <div className="details-view-container">
+        <div className="loader-container">
+          <div className="spinner"></div>
+          <p>Loading Indigent Support...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="details-view-container">
+      {/* Header */}
+      <div className="details-header">
+        <div className="header-content">
+          <button className="back-btn" onClick={() => navigate("/CustomerDashboard")}>
+            <i className="fa fa-arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </button>
+          <div className="header-title-section">
+            <h1 className="details-title">Indigent Support Management</h1>
+            <p className="details-subtitle">Ward {wardNo} - Account {accountNo}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="summary-section">
+        <div className="summary-card total-card">
+          <div className="summary-icon">
+            <i className="fa fa-heart"></i>
+          </div>
+          <div className="summary-content">
+            <span className="summary-label">Total Cases</span>
+            <h2 className="summary-value">{formatNumber(totalIndigen)}</h2>
+            <p className="summary-description">All indigent cases in this account</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Indigent Grid */}
+      <div className="items-section">
+        <h2 className="section-title">Indigent Support Cases</h2>
+        <p className="section-description">View all indigent support cases associated with this account</p>
+        
+        <div className="items-grid">
+          {indigentData.map((case_, index) => {
+            const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
+            const color = colors[index % colors.length];
+            
+            return (
+              <div className="grid-item" key={index} style={{ animationDelay: `${index * 0.05}s` }}>
+                <div className="item-card" style={{ borderLeftColor: color }}>
+                  <div className="item-icon-wrapper" style={{ background: `linear-gradient(135deg, ${color}, ${color}dd)` }}>
+                    <i className="fa fa-heart"></i>
+                  </div>
+                  <div className="item-content">
+                    <h3 className="item-name">{case_.name || `Case ${index + 1}`}</h3>
+                    <p className="item-address">{case_.category || "Category not available"}</p>
+                    <div className="item-details">
+                      {case_.status && <span className="item-status">{case_.status}</span>}
+                      {case_.date && <span className="item-date">{case_.date}</span>}
+                    </div>
+                  </div>
+                  <div className="card-accent" style={{ backgroundColor: color }}></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className="charts-section">
+        <div className="charts-header">
+          <h2 className="section-title">Visual Analysis</h2>
+          <div className="chart-toggle-buttons">
+            <button
+              className={`toggle-btn ${showChart === "pie" ? "active" : ""}`}
+              onClick={() => setShowChart("pie")}
+            >
+              <FaChartPie /> Pie Chart
+            </button>
+            <button
+              className={`toggle-btn ${showChart === "bar" ? "active" : ""}`}
+              onClick={() => setShowChart("bar")}
+            >
+              <FaChartBar /> Bar Chart
+            </button>
+          </div>
+        </div>
+
+        {pieData.length > 0 && (
+          <div className="chart-wrapper">
+            {showChart === "pie" ? (
+              <div className="pie-chart-container">
+                <ResponsiveContainer width="100%" height={400}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={130}
+                    >
+                      {pieData.map((entry, index) => {
+                        const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
+                        return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+                      })}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="bar-chart-container">
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={pieData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#4ECDC4" radius={[8, 8, 0, 0]}>
+                      {pieData.map((entry, index) => {
+                        const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
+                        return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+                      })}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Summary Table */}
+      <div className="summary-table-section">
+        <h2 className="section-title">Summary Table</h2>
+        <div className="table-wrapper">
+          <table className="summary-table">
+            <thead>
+              <tr>
+                <th>Case Name</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {indigentData.map((case_, index) => (
+                <tr key={index}>
+                  <td className="case-name">{case_.name || `Case ${index + 1}`}</td>
+                  <td>{case_.category || "N/A"}</td>
+                  <td>{case_.date || "N/A"}</td>
+                  <td>
+                    {case_.status && (
+                      <span className="status-badge" style={{ backgroundColor: statusColors[case_.status] || '#ccc' }}>
+                        {case_.status}
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default IndigentDetailsView;

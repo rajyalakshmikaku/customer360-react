@@ -29,15 +29,19 @@ function Dashboard() {
   };
 
   const handleNavigate = (type) => {
-    if (type === "Outstanding") {
-      navigate(`/outstanding-details`, { 
-        state: { accountNo: selectedAccountNo, wardNo: WardNo } 
-      });
-    } else {
-      navigate(`/details/${WardNo}/${type}`, { 
-        state: { accountNo: selectedAccountNo, wardNo: WardNo } 
-      });
-    }
+    const routeMap = {
+      Outstanding: "/outstanding-details",
+      Property: "/properties-details",
+      Customer: "/customers-details",
+      Meter: "/meters-details",
+      Interims: "/interims-details",
+      Indigent: "/indigent-details",
+    };
+
+    const route = routeMap[type] || `/details/${WardNo}/${type}`;
+    navigate(route, { 
+      state: { accountNo: selectedAccountNo, wardNo: WardNo } 
+    });
   };
 
   const formatNumber = (num) => {
