@@ -94,19 +94,39 @@ function ResetPassword() {
             {errorMessage && <p className="error-message">{errorMessage}</p>}
 
             <form onSubmit={handleSubmit}>
-              <div className="input-wrap">
-                <label>Email Address</label>
-                <div className="icon-input">
-                  <span className="icon email-icon" aria-hidden="true" />
-                  <input
-                    type="email"
-                    placeholder="Enter your registered email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="email"
-                  readOnly/>
-                </div>
-              </div>
+             <div className="input-wrap">
+  <label>Email Address</label>
+
+  <div
+    className="icon-input"
+    style={{
+      width: "100%",
+      backgroundColor: "#e9ecef",
+      border: "2px solid #7fa3e8"
+    }}
+  >
+    <span className="icon email-icon" aria-hidden="true" />
+
+    <input
+      type="email"
+      placeholder="Enter your registered email"
+      value={email}
+      readOnly
+      onFocus={(e) => e.target.blur()}
+      style={{
+        width: "100%",
+        backgroundColor: "transparent",
+        color: "#6c757d",
+        cursor: "not-allowed",
+        border: "none",
+        outline: "none",
+        boxShadow: "none",
+        padding: "14px 0",
+        borderRadius: "0"
+      }}
+    />
+  </div>
+</div>
 
               <div className="input-wrap">
                 <label>New Password</label>

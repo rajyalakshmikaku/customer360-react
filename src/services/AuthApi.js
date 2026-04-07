@@ -1,5 +1,6 @@
 import { AxiosInstance } from "./api";
 import { ResetURL } from "./api";
+import { baseURL } from "./api";
 
 const getApiErrorMessage = (error, fallback) => {
   const responseData = error?.response?.data;
@@ -43,24 +44,67 @@ const getApiErrorMessage = (error, fallback) => {
   return fallback;
 };
 
+const getHostCandidates = () =>
+  Array.from(
+    new Set([baseURL, ResetURL].filter((value) => typeof value === "string" && value.trim()))
+  );
+
+const postWithRouteFallback = async ({ endpoints, payload, fallbackMessage }) => {
+  let lastError = null;
+
+  for (const host of getHostCandidates()) {
+    for (const endpoint of endpoints) {
+      try {
+        const response = await AxiosInstance.post(`${host}${endpoint}`, payload);
+        const data = response?.data;
+        const isSuccess = data?.success ?? data?.Success;
+        const message = data?.message ?? data?.Message;
+
+        if (isSuccess === false) {
+          throw new Error(message || fallbackMessage);
+        }
+
+        return response.data;
+      } catch (error) {
+        lastError = error;
+
+        if (error?.response?.status !== 404) {
+          throw error;
+        }
+      }
+    }
+  }
+
+  if (lastError?.response?.status === 404) {
+    throw new Error(`${fallbackMessage} API endpoint not found (HTTP 404).`);
+  }
+
+  throw lastError || new Error(fallbackMessage);
+};
+
 export const forgotPassword = async (email) => {
   try {
-     const resetLink = `${ResetURL}/reset-password?email=${email}`;
+    const normalizedEmail = email.trim();
+    const appOrigin =
+      typeof window !== "undefined" && window.location?.origin
+        ? window.location.origin
+        : ResetURL;
+    const resetLink = `${appOrigin}/reset-password?email=${encodeURIComponent(normalizedEmail)}`;
 
-    const response = await AxiosInstance.post("/api/Auth/ForgotPassword", {
-      email,
-      resetLink, // 🔥 send to backend
+    return await postWithRouteFallback({
+      endpoints: [
+        "/api/Auth/ForgotPassword",
+        "/api/Auth/forgotpassword",
+        "/api/Auth/forgot-password",
+        "/Auth/ForgotPassword",
+        "/Auth/forgotpassword",
+      ],
+      payload: {
+        email: normalizedEmail,
+        resetLink,
+      },
+      fallbackMessage: "Failed to send reset link.",
     });
-
-    const data = response?.data;
-    const isSuccess = data?.success ?? data?.Success;
-    const message = data?.message ?? data?.Message;
-
-    if (isSuccess === false) {
-      throw new Error(message || "Failed to send reset link.");
-    }
-
-    return response.data;
   } catch (error) {
     throw new Error(getApiErrorMessage(error, "Failed to send reset link."));
   }
@@ -69,20 +113,20 @@ export const forgotPassword = async (email) => {
 // confirmPassword is validated on frontend only — backend only needs email + newPassword
 export const resetPassword = async ({ email, newPassword }) => {
   try {
-    const response = await AxiosInstance.post("/api/Auth/ResetPassword", {
-      email,
-      newPassword,
+    return await postWithRouteFallback({
+      endpoints: [
+        "/api/Auth/ResetPassword",
+        "/api/Auth/resetpassword",
+        "/api/Auth/reset-password",
+        "/Auth/ResetPassword",
+        "/Auth/resetpassword",
+      ],
+      payload: {
+        email: email.trim(),
+        newPassword,
+      },
+      fallbackMessage: "Failed to reset password.",
     });
-
-    const data = response?.data;
-    const isSuccess = data?.success ?? data?.Success;
-    const message = data?.message ?? data?.Message;
-
-    if (isSuccess === false) {
-      throw new Error(message || "Failed to reset password.");
-    }
-
-    return response.data;
   } catch (error) {
     throw new Error(getApiErrorMessage(error, "Failed to reset password."));
   }
