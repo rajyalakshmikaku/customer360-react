@@ -1,4 +1,5 @@
 import { AxiosInstance } from "./api";
+import { ResetURL } from "./api";
 
 const getApiErrorMessage = (error, fallback) => {
   const responseData = error?.response?.data;
@@ -44,8 +45,11 @@ const getApiErrorMessage = (error, fallback) => {
 
 export const forgotPassword = async (email) => {
   try {
+     const resetLink = `${ResetURL}/reset-password?email=${email}`;
+
     const response = await AxiosInstance.post("/api/Auth/ForgotPassword", {
       email,
+      resetLink, // 🔥 send to backend
     });
 
     const data = response?.data;
