@@ -2,13 +2,13 @@ import axios from "axios";
 import alertify from "alertifyjs";
 
 
-
+export const ResetURL = "http://localhost:5055"
   // export const baseURL = "http://localhost:5055";
 
-// export const baseURL = "http://102.130.114.194:1510";
+export const baseURL = "http://102.130.114.194:1510";
 
- //export const baseURL = "http://localhost:5055";
- export const baseURL = "http://102.130.114.194:1541";
+//  export const baseURL = "http://localhost:5055";
+ //export const baseURL = "http://102.130.114.194:1541";
 
 
  //export const baseURL = "http://102.130.114.194:1510";
@@ -17,6 +17,7 @@ import alertify from "alertifyjs";
 
 export const AxiosInstance = axios.create({
   baseURL,
+  ResetURL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -49,8 +50,11 @@ AxiosInstance.interceptors.request.use(
 AxiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Optional: redirect to login
+    const status = error.response?.status;
+    const requestUrl = error.config?.url || "";
+    const isAuthLoginRequest = requestUrl.includes("/api/Auth/Login");
+
+    if (status === 401 && !isAuthLoginRequest) {
       logout();
     }
     return Promise.reject(error);

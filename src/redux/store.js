@@ -6,7 +6,7 @@ import complaintsReducer from './complaintListSlice';
 import UserReducer from "./UserListSlice"; 
 import AccountReducer from "./AccountListSlice"; 
 import registrationReducer from "./RegistrationSlice"; 
-
+import customerDashboardReducer from "./customerDashboardSlice"; // ✅ FIX
 
   
 export const store = configureStore({
@@ -20,5 +20,8 @@ export const store = configureStore({
          User: UserReducer,
          Account: AccountReducer,
          registration: registrationReducer, 
+             customerDashboard: customerDashboardReducer, // ✅ FIX
+
+           
   },
 });

@@ -6,7 +6,6 @@ export const login = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const data = await loginUser(credentials);
-      console.log('Login API response:', data);
       return data;
     } catch (err) {
       return rejectWithValue(err.message || 'Login error');
@@ -16,21 +15,9 @@ export const login = createAsyncThunk(
 
 const initialState = {
   loading: false,
+  user: null,
   loginError: null,
   forgotError: null
-};
-const getDisplayUserType = (type) => {
-  debugger
-  switch (type) {
-    case "A":
-      return "Admin";
-    case "C":
-      return "Customer";
-    case "U":
-      return "User";
-    default:
-      return "Unknown";
-  }
 };
 
 
@@ -51,16 +38,22 @@ const loginSlice = createSlice({
         state.loginError = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        debugger
         state.loading = false;
         state.user = action.payload;
-        //const displayUserType = getDisplayUserType(action.payload.data.usertype);
 
-        sessionStorage.setItem('LoggeduserId', action.payload.data.userid);
-        sessionStorage.setItem('LoggedUserType', action.payload.data.usertype);
-        sessionStorage.setItem('LoggedWardId', action.payload.data.warD_NO);
-        sessionStorage.setItem('LoggedName', action.payload.data.name);
-        sessionStorage.setItem('LoggedUsername', action.payload.data.username);
+        const userData = action.payload?.data || action.payload?.Data || {};
+
+        const loggedUserId = userData.userid || userData.userId || userData.USERID || "";
+        const loggedUserType = userData.usertype || userData.userType || userData.USERTYPE || "";
+        const loggedWardId = userData.warD_NO || userData.wardNo || userData.WARD_NO || "";
+        const loggedName = userData.name || userData.NAME || "";
+        const loggedUsername = userData.username || userData.USERNAME || "";
+
+        sessionStorage.setItem('LoggeduserId', String(loggedUserId));
+        sessionStorage.setItem('LoggedUserType', String(loggedUserType));
+        sessionStorage.setItem('LoggedWardId', String(loggedWardId));
+        sessionStorage.setItem('LoggedName', String(loggedName));
+        sessionStorage.setItem('LoggedUsername', String(loggedUsername));
   
 
       })

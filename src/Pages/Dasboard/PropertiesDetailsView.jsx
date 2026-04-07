@@ -1,0 +1,222 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { fetchCustomerDashboardCounts } from "../../redux/customerDashboardSlice";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
+import { FaChartPie, FaChartBar } from "react-icons/fa";
+import "./DetailsView.css";
+
+function PropertiesDetailsView() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const { counts, loading } = useSelector((state) => state.customerDashboard);
+  
+  const wardNo = location.state?.wardNo || 0;
+  const accountNo = location.state?.accountNo;
+  const [showChart, setShowChart] = useState("pie");
+
+  useEffect(() => {
+    if (wardNo && accountNo) {
+      dispatch(fetchCustomerDashboardCounts({ wardNo, accountNo }));
+    }
+  }, [dispatch, wardNo, accountNo]);
+
+  const propertiesData = counts?.propertyData || [];
+  const totalProperties = propertiesData.length;
+
+  const formatNumber = (num) => {
+    if (!num) return "0";
+    return Number(num).toLocaleString();
+  };
+
+  const statusColors = {
+    Active: "#10b981",
+    Inactive: "#ef4444",
+    Pending: "#f59e0b",
+    Completed: "#3b82f6",
+  };
+
+  // Create chart data
+  const pieData = propertiesData.slice(0, 10).map((item, index) => ({
+    name: item.name || `Property ${index + 1}`,
+    value: 1,
+  }));
+
+  if (loading) {
+    return (
+      <div className="details-view-container">
+        <div className="loader-container">
+          <div className="spinner"></div>
+          <p>Loading Properties...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="details-view-container">
+      {/* Header */}
+      <div className="details-header">
+        <div className="header-content">
+          <button className="back-btn" onClick={() => navigate("/CustomerDashboard")}>
+            <i className="fa fa-arrow-left"></i>
+            <span>Back to Dashboard</span>
+          </button>
+          <div className="header-title-section">
+            <h1 className="details-title">Properties Management</h1>
+            <p className="details-subtitle">Ward {wardNo} - Account {accountNo}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="summary-section">
+        <div className="summary-card total-card">
+          <div className="summary-icon">
+            <i className="fa fa-building"></i>
+          </div>
+          <div className="summary-content">
+            <span className="summary-label">Total Properties</span>
+            <h2 className="summary-value">{formatNumber(totalProperties)}</h2>
+            <p className="summary-description">All properties in this account</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Properties Grid */}
+      <div className="items-section">
+        <h2 className="section-title">Properties List</h2>
+        <p className="section-description">View all properties associated with this account</p>
+        
+        <div className="items-grid">
+          {propertiesData.map((property, index) => {
+            const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
+            const color = colors[index % colors.length];
+            
+            return (
+              <div className="grid-item" key={index} style={{ animationDelay: `${index * 0.05}s` }}>
+                <div className="item-card" style={{ borderLeftColor: color }}>
+                  <div className="item-icon-wrapper" style={{ background: `linear-gradient(135deg, ${color}, ${color}dd)` }}>
+                    <i className="fa fa-building"></i>
+                  </div>
+                  <div className="item-content">
+                    <h3 className="item-name">{property.name || `Property ${index + 1}`}</h3>
+                    <p className="item-address">{property.address || "Address not available"}</p>
+                    <div className="item-details">
+                      {property.status && <span className="item-status">{property.status}</span>}
+                    </div>
+                  </div>
+                  <div className="card-accent" style={{ backgroundColor: color }}></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className="charts-section">
+        <div className="charts-header">
+          <h2 className="section-title">Visual Analysis</h2>
+          <div className="chart-toggle-buttons">
+            <button
+              className={`toggle-btn ${showChart === "pie" ? "active" : ""}`}
+              onClick={() => setShowChart("pie")}
+            >
+              <FaChartPie /> Pie Chart
+            </button>
+            <button
+              className={`toggle-btn ${showChart === "bar" ? "active" : ""}`}
+              onClick={() => setShowChart("bar")}
+            >
+              <FaChartBar /> Bar Chart
+            </button>
+          </div>
+        </div>
+
+        {pieData.length > 0 && (
+          <div className="chart-wrapper">
+            {showChart === "pie" ? (
+              <div className="pie-chart-container">
+                <ResponsiveContainer width="100%" height={400}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={130}
+                    >
+                      {pieData.map((entry, index) => {
+                        const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
+                        return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+                      })}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="bar-chart-container">
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={pieData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#4ECDC4" radius={[8, 8, 0, 0]}>
+                      {pieData.map((entry, index) => {
+                        const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
+                        return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+                      })}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Summary Table */}
+      <div className="summary-table-section">
+        <h2 className="section-title">Summary Table</h2>
+        <div className="table-wrapper">
+          <table className="summary-table">
+            <thead>
+              <tr>
+                <th>Property Name</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {propertiesData.map((property, index) => (
+                <tr key={index}>
+                  <td className="property-name">{property.name || `Property ${index + 1}`}</td>
+                  <td>{property.address || "N/A"}</td>
+                  <td>
+                    {property.status && (
+                      <span className="status-badge" style={{ backgroundColor: statusColors[property.status] || '#ccc' }}>
+                        {property.status}
+                      </span>
+                    )}
+                  </td>
+                  <td className="action-cell">
+                    <button className="detail-link">View More</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default PropertiesDetailsView;
