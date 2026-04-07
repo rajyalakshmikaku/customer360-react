@@ -44,6 +44,8 @@ export const fetchLinkedAccounts = createAsyncThunk(
   }
 );
 
+
+
 const AccountListSlice = createSlice({
   name: "account",
   initialState: {
@@ -61,56 +63,6 @@ const AccountListSlice = createSlice({
 
   reducers: {},
 
-//   extraReducers: (builder) => {
-//     builder
-    
-//       .addCase(fetchAccountListInfo.pending, (state) => {
-//         state.loading = true;
-//       })
-
-//       .addCase(fetchLinkedAccounts.fulfilled, (state, action) => {
-//   state.linkedLoading = false;
-//   console.log("LINKED API RESPONSE:", action.payload);
-
-//   state.linkedAccounts = action.payload?.list || action.payload || [];
-// })
-
-//       .addCase(fetchAccountListInfo.rejected, (state, action) => {
-//         state.loading = false;
-//         state.error = action.payload;
-//       })
-
-//       .addCase(fetchApproveAccountsInfo.pending, (state) => {
-//         state.approveLoading = true;
-//       })
-
-//       .addCase(fetchApproveAccountsInfo.fulfilled, (state, action) => {
-//         state.approveLoading = false;
-//         state.success = action.payload?.success;
-//         state.ApproveInfo = action.payload;
-//       })
-
-//       .addCase(fetchApproveAccountsInfo.rejected, (state, action) => {
-//         state.approveLoading = false;
-//         state.error = action.payload;
-//       })
-
-//       .addCase(fetchLinkedAccounts.pending, (state) => {
-//         state.linkedLoading = true;
-//       })
-
-//       .addCase(fetchLinkedAccounts.fulfilled, (state, action) => {
-//         state.linkedLoading = false;
-//         state.linkedAccounts = Array.isArray(action.payload)
-//           ? action.payload
-//           : action.payload?.list || [];
-//       })
-
-//       .addCase(fetchLinkedAccounts.rejected, (state, action) => {
-//         state.linkedLoading = false;
-//         state.error = action.payload;
-//       });
-//   }
 extraReducers: (builder) => {
   builder
     .addCase(fetchAccountListInfo.pending, (state) => {
@@ -149,16 +101,12 @@ extraReducers: (builder) => {
       state.linkedLoading = true;
     })
 
+   
     .addCase(fetchLinkedAccounts.fulfilled, (state, action) => {
-      state.linkedLoading = false;
-
-      console.log("LINKED API RESPONSE:", action.payload);
-
-      state.linkedAccounts = Array.isArray(action.payload)
-        ? action.payload
-        : action.payload?.list || [];
-    })
-
+  state.linkedAccounts = action.payload;
+  state.linkedLoading = false;
+})
+   
     .addCase(fetchLinkedAccounts.rejected, (state, action) => {
       state.linkedLoading = false;
       state.error = action.payload;
