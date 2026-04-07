@@ -499,23 +499,23 @@
 }
 
 .status-days30 {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  background-color: #10b981;
+  color: white;
 }
 
 .status-days60 {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
+  background-color:#3b82f6;
+  color: white;
 }
 
 .status-days90 {
-  background-color: rgba(245, 158, 11, 0.1);
-  color: #f59e0b;
+  background-color:#f59e0b;
+  color: white;
 }
 
 .status-days120plus {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  background-color:#ef4444;
+  color: white;
 }
 
 .total-row {
