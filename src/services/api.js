@@ -1,29 +1,18 @@
 import axios from "axios";
 import alertify from "alertifyjs";
 
-
-export const ResetURL = "http://localhost:5055"
-  // export const baseURL = "http://localhost:5055";
-
-export const baseURL = "http://102.130.114.194:1510";
-
-//  export const baseURL = "http://localhost:5055";
- //export const baseURL = "http://102.130.114.194:1541";
-
-
- //export const baseURL = "http://102.130.114.194:1510";
-
-
+export const ResetURL = "http://localhost:5055";
+export const baseURL = "http://localhost:5055";
+// export const baseURL = "http://102.130.114.194:1510";
 
 export const AxiosInstance = axios.create({
-  baseURL,
-  ResetURL,
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// =================== Logout helper (optional) ===================
+// =================== Logout helper ===================
 export const logout = () => {
   sessionStorage.clear();
   localStorage.clear();
@@ -40,7 +29,6 @@ export const logout = () => {
 // =================== Request interceptor ===================
 AxiosInstance.interceptors.request.use(
   (config) => {
-    // 🔹 No token handling at all
     return config;
   },
   (error) => Promise.reject(error)
@@ -57,6 +45,7 @@ AxiosInstance.interceptors.response.use(
     if (status === 401 && !isAuthLoginRequest) {
       logout();
     }
+
     return Promise.reject(error);
   }
 );
