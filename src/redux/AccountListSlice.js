@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { GetStatuslist, PostApproveAccounts } from "../services/AccountListApi";
+import {
+  GetStatuslist,
+  PostApproveAccounts,
+  GetAccountlist
+} from "../services/AccountListApi";
 
 export const fetchAccountListInfo = createAsyncThunk(
   "account/fetchAccountListInfo",
@@ -17,9 +21,21 @@ export const fetchAccountListInfo = createAsyncThunk(
 export const fetchApproveAccountsInfo = createAsyncThunk(
   "account/fetchApproveAccountsInfo",
   async (payload, thunkAPI) => {
-    debugger
     try {
       return await PostApproveAccounts(payload);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
+
+export const fetchLinkedAccounts = createAsyncThunk(
+  "account/fetchLinkedAccounts",
+  async (idNumber, thunkAPI) => {
+    try {
+      return await GetAccountlist(idNumber);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data || "Something went wrong"
@@ -38,11 +54,16 @@ const AccountListSlice = createSlice({
     ApproveInfo: null,
     success: false,
     error: null,
-    activestatus:[]
+    activestatus: [],
+    linkedAccounts: [],
+    linkedLoading: false
   },
+
   reducers: {},
+
   extraReducers: (builder) => {
     builder
+
       // LIST
       .addCase(fetchAccountListInfo.pending, (state) => {
         state.loading = true;
@@ -72,8 +93,21 @@ const AccountListSlice = createSlice({
       .addCase(fetchApproveAccountsInfo.rejected, (state, action) => {
         state.approveLoading = false;
         state.error = action.payload;
+      })
+
+      // LINKED ACCOUNTS
+      .addCase(fetchLinkedAccounts.pending, (state) => {
+        state.linkedLoading = true;
+      })
+      .addCase(fetchLinkedAccounts.fulfilled, (state, action) => {
+        state.linkedLoading = false;
+        state.linkedAccounts = action.payload?.list || [];
+      })
+      .addCase(fetchLinkedAccounts.rejected, (state, action) => {
+        state.linkedLoading = false;
+        state.error = action.payload;
       });
-  },
+  }
 });
 
 export default AccountListSlice.reducer;

@@ -52,3 +52,16 @@ export const PostApproveAccounts = async ({ USERID, Status }) => {
 //   console.log("API RAW RESPONSE:", response.data);
 //   return response.data;
 // };
+export const GetAccountlist = async (idNumber) => {
+  const response = await AxiosInstance.post(
+    "/api/Status/GetAccountlist",
+    idNumber,
+    {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+  );
+
+  return response.data;
+};
