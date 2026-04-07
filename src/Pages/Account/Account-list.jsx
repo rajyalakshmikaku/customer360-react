@@ -167,7 +167,8 @@ useEffect(() => {
               <th>Name</th>
               <th>Surname</th>
               <th>Email</th>
-              <th>ID No</th>
+              {/* <th>ID No</th> */}
+               <th>CELL NUMBER</th>
               <th>Created Date</th>
               <th>Status</th>
             </tr>
@@ -204,8 +205,8 @@ useEffect(() => {
         <td>{item.NAME}</td>
         <td>{item.SURNAME}</td>
         <td>{item.EMAIL}</td>
-        <td>{item.IDNUMBER}</td>
-        {/* <td>{item.PHONENUMBER || item.CELLNUMBER}</td> */}
+        {/* <td>{item.IDNUMBER}</td> */}
+        <td>{item.PHONENUMBER || item.CELLNUMBER}</td>
         <td>{item.CREATEDDATE}</td>
 
         <td>
