@@ -11,6 +11,22 @@ const getApiErrorMessage = (error, fallback) => {
   }
 
   if (responseData && typeof responseData === "object") {
+    if (Array.isArray(responseData.errors) && responseData.errors.length > 0) {
+      return String(responseData.errors[0]);
+    }
+
+    const validationBag = responseData.errors || responseData.Errors || responseData.ModelState;
+    if (validationBag && typeof validationBag === "object") {
+      const validationMessages = Object.values(validationBag)
+        .flat()
+        .map((entry) => (typeof entry === "string" ? entry : String(entry)))
+        .filter((entry) => entry.trim());
+
+      if (validationMessages.length > 0) {
+        return validationMessages.join(" ");
+      }
+    }
+
     // Supports both camelCase and PascalCase API contracts.
     const directMessage =
       responseData.message ||
@@ -22,10 +38,6 @@ const getApiErrorMessage = (error, fallback) => {
 
     if (typeof directMessage === "string" && directMessage.trim()) {
       return directMessage;
-    }
-
-    if (Array.isArray(responseData.errors) && responseData.errors.length > 0) {
-      return String(responseData.errors[0]);
     }
   }
 
@@ -89,7 +101,9 @@ export const forgotPassword = async (email) => {
       typeof window !== "undefined" && window.location?.origin
         ? window.location.origin
         : ResetURL;
-    const resetLink = `${appOrigin}/reset-password?email=${encodeURIComponent(normalizedEmail)}`;
+    const resetLink = `${appOrigin}/reset-password?email=${encodeURIComponent(
+      normalizedEmail
+    )}&resetCode={resetCode}`;
 
     return await postWithRouteFallback({
       endpoints: [
@@ -110,9 +124,16 @@ export const forgotPassword = async (email) => {
   }
 };
 
-// confirmPassword is validated on frontend only — backend only needs email + newPassword
-export const resetPassword = async ({ email, newPassword }) => {
+export const resetPassword = async ({ email, newPassword, confirmPassword, token, resetCode }) => {
   try {
+    const normalizedEmail = email.trim();
+    const confirmedPassword = confirmPassword ?? newPassword;
+    const normalizedToken = typeof token === "string" ? token.trim() : "";
+    const normalizedResetCode =
+      typeof resetCode === "string" && resetCode.trim()
+        ? resetCode.trim()
+        : normalizedToken;
+
     return await postWithRouteFallback({
       endpoints: [
         "/api/Auth/ResetPassword",
@@ -122,8 +143,21 @@ export const resetPassword = async ({ email, newPassword }) => {
         "/Auth/resetpassword",
       ],
       payload: {
-        email: email.trim(),
+        // Send common DTO variants to match different backend contracts.
+        email: normalizedEmail,
+        Email: normalizedEmail,
         newPassword,
+        NewPassword: newPassword,
+        confirmPassword: confirmedPassword,
+        ConfirmPassword: confirmedPassword,
+        password: newPassword,
+        Password: newPassword,
+        token: normalizedToken,
+        Token: normalizedToken,
+        code: normalizedToken,
+        Code: normalizedToken,
+        resetCode: normalizedResetCode,
+        ResetCode: normalizedResetCode,
       },
       fallbackMessage: "Failed to reset password.",
     });

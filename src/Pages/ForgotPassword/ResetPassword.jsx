@@ -11,6 +11,16 @@ function ResetPassword() {
 
   // email comes from the reset link query string: /reset-password?email=...
   const initialEmail = useMemo(() => searchParams.get("email") || "", [searchParams]);
+  const rawResetToken = useMemo(
+    () =>
+      searchParams.get("resetCode") ||
+      searchParams.get("token") ||
+      searchParams.get("code") ||
+      searchParams.get("resetToken") ||
+      "",
+    [searchParams]
+  );
+  const resetToken = useMemo(() => rawResetToken.replace(/ /g, "+").trim(), [rawResetToken]);
 
   const [email, setEmail] = useState(initialEmail);
   const [newPassword, setNewPassword] = useState("");
@@ -41,6 +51,11 @@ function ResetPassword() {
       return false;
     }
 
+    if (!resetToken) {
+      setErrorMessage("Reset code is missing. Please use the latest reset link from your email.");
+      return false;
+    }
+
     if (newPassword !== confirmPassword) {
       setErrorMessage("Passwords do not match");
       return false;
@@ -59,10 +74,13 @@ function ResetPassword() {
 
     try {
       setIsLoading(true);
-      // Send only what backend expects: email + newPassword
+      // Send compatibility payload via service including confirm + token/code.
       await resetPassword({
         email: email.trim(),
         newPassword,
+        confirmPassword,
+        token: resetToken,
+        resetCode: resetToken,
       });
 
       alertify.alert("Success", "Password updated successfully.", () => {
@@ -127,7 +145,6 @@ function ResetPassword() {
     />
   </div>
 </div>
-
               <div className="input-wrap">
                 <label>New Password</label>
                 <div className="icon-input">
