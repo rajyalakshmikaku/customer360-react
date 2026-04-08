@@ -89,3 +89,14 @@ export const GetAccountlist = async (idNumber) => {
 
   return response.data;
 };
+export const SaveAccountNumbers = async ({ UserID, AccountNumbers }) => {
+  const response = await AxiosInstance.post(
+    "/api/Status/SaveAccountNumbers",
+    {
+      UserID,
+      AccountNumbers
+    }
+  );
+
+  return response.data;
+};

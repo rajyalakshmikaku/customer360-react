@@ -16,10 +16,9 @@ const AccountList = ({ category }) => {
 
 // const accountState = useSelector((state) => state.Account);
 const accountState = useSelector((state) => state.Account);
-
+const { linkedAccounts = [], linkedLoading = false } =
+  useSelector((state) => state.Account) || {};
 const {
-  linkedAccounts,
-  linkedLoading,
   loading,
   totalCount,
   AccountsListInfo = [],
@@ -29,15 +28,8 @@ const {
 
 // console.log("Redux State:", accountState);
 // console.log("AccountsListInfo:", AccountsListInfo);
-console.log("Linked Accounts:", linkedAccounts);
+//console.log("Linked Accounts:", linkedAccounts);
 
-const LinkedAccounts = async (idNumber, mode) => {
-  if (mode !== "link") return;
-
-  const result = await dispatch(fetchLinkedAccounts(idNumber));
-
-  console.log("Redux API Result:", result);
-};
 
   const [modalMode, setModalMode] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -52,7 +44,12 @@ const LinkedAccounts = async (idNumber, mode) => {
   const [search] = useState("");
   const [sorting] = useState("USERID");
   
- 
+useEffect(() => {
+  if (modalMode === "link" && selectedItem?.IDNUMBER) {
+    dispatch(fetchLinkedAccounts(selectedItem.IDNUMBER));
+  }
+}, [modalMode, selectedItem, dispatch]);
+
 
   useEffect(() => {
     dispatch(
@@ -170,7 +167,8 @@ const LinkedAccounts = async (idNumber, mode) => {
               <th>Name</th>
               <th>Surname</th>
               <th>Email</th>
-              <th>ID No</th>
+              {/* <th>ID No</th> */}
+               <th>CELL NUMBER</th>
               <th>Created Date</th>
               <th>Status</th>
             </tr>
@@ -199,7 +197,7 @@ const LinkedAccounts = async (idNumber, mode) => {
             <i
               className="fa fa-link"
               style={{ cursor: "pointer", color: "purple" }}
-              onClick={() => LinkedAccounts(item.IDNUMBER, "link")}
+              onClick={() => handleView(item, "link")}
             ></i>
           )}
         </td>
@@ -207,8 +205,8 @@ const LinkedAccounts = async (idNumber, mode) => {
         <td>{item.NAME}</td>
         <td>{item.SURNAME}</td>
         <td>{item.EMAIL}</td>
-        <td>{item.IDNUMBER}</td>
-        {/* <td>{item.PHONENUMBER || item.CELLNUMBER}</td> */}
+        {/* <td>{item.IDNUMBER}</td> */}
+        <td>{item.PHONENUMBER || item.CELLNUMBER}</td>
         <td>{item.CREATEDDATE}</td>
 
         <td>
