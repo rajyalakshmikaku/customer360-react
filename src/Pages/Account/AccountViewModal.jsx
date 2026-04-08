@@ -82,55 +82,50 @@ const handleMapping = () => {
           </div>
 
           <div className="modal-body">
-           {mode === "link" && (
+         {mode === "link" && (
   <>
     <label>Linked Accounts</label>
 
     {linkedLoading ? (
       <p>Loading...</p>
-    ) : linkedAccounts.length === 0 ? (
+    ) : linkedAccounts?.success === false ? (
+      <p style={{ color: "red" }}>{linkedAccounts.errorMessage}</p>
+    ) : !Array.isArray(linkedAccounts?.list) || linkedAccounts.list.length === 0 ? (
       <p>No linked accounts found</p>
     ) : (
-     <div style={{ maxHeight: "300px", overflowY: "auto" }}>
-  <table className="table table-bordered">  
-        <thead style={{ position: "sticky", top: 0, zIndex: 1 }}>
-          <tr style={{backgroundColor : "#346ba2",color:"white"}}>
-            <th>Select</th>
-            <th>Account Number</th>
-          </tr>
-        </thead>
-       <tbody>
-  {Array.isArray(linkedAccounts.list) && linkedAccounts.list.length > 0 ? (
-    linkedAccounts.list.map((item, index) => (
-      <tr key={index}>
-        <td>
-          <input
-            type="checkbox"
-            checked={selectedAccounts.includes(item.accountNo)}
-            onChange={() =>
-              handleCheckboxChange(item.accountNo)
-            }
-          />
-        </td>
-        <td>{item.accountNo}</td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="2">No data found</td>
-    </tr>
-  )}
-</tbody>
-      </table>
-      <button
-  className="btn btn-success mt-2"
-  onClick={() => handleMapping()}
-  disabled={selectedAccounts.length === 0}
->
-  Map Selected Accounts
-</button>
-       
-</div>
+      <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+        <table className="table table-bordered">
+          <thead style={{ position: "sticky", top: 0, zIndex: 1 }}>
+            <tr style={{ backgroundColor: "#346ba2", color: "white" }}>
+              <th>Select</th>
+              <th>Account Number</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {linkedAccounts.list.map((item, index) => (
+              <tr key={index}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedAccounts.includes(item.accountNo)}
+                    onChange={() => handleCheckboxChange(item.accountNo)}
+                  />
+                </td>
+                <td>{item.accountNo}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <button
+          className="btn btn-success mt-2"
+          onClick={handleMapping}
+          disabled={selectedAccounts.length === 0}
+        >
+          Map Selected Accounts
+        </button>
+      </div>
     )}
   </>
 )}
