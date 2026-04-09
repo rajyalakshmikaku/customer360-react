@@ -6,6 +6,7 @@ import "alertifyjs/build/css/alertify.css";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import CryptoJS from "crypto-js";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -30,12 +31,13 @@ function Login() {
       setIsLoading(true);
 
       const device = navigator.userAgent || "Web";
+      const encryptedPassword = CryptoJS.SHA256(password).toString();
 
       const tryLogin = async (usertype) => {
         return await dispatch(
           login({
             username: username.trim(),
-            password,
+            password: encryptedPassword,
             usertype,
             device,
             userlattitude: "0",

@@ -432,7 +432,7 @@ const Registration = () => {
   className={`btn-register ${isSubmitting ? "loading" : ""}`}
   type="submit"
   disabled={isSubmitting} >
-  {isSubmitting && <span className="spinner"></span>}
+  {isSubmitting && <span className="register-spinner"></span>}
   {isSubmitting ? "Registering..." : "Register"}
 </button>
           <button
