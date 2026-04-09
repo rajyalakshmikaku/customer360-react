@@ -6,7 +6,6 @@ import "alertifyjs/build/css/alertify.css";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import CryptoJS from "crypto-js";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -20,10 +19,18 @@ function Login() {
   const handleLogin = async () => {
     setErrorMessage("");
 
-    if (!username.trim() || !password) {
-      const msg = "Please enter both username and password";
+    // Validation
+    if (!username.trim()) {
+      const msg = "Username is required";
       setErrorMessage(msg);
-      alertify.alert("Validation", msg);
+      alertify.alert("Validation Error", msg);
+      return;
+    }
+
+    if (!password) {
+      const msg = "Password is required";
+      setErrorMessage(msg);
+      alertify.alert("Validation Error", msg);
       return;
     }
 
@@ -31,13 +38,12 @@ function Login() {
       setIsLoading(true);
 
       const device = navigator.userAgent || "Web";
-      const encryptedPassword = CryptoJS.SHA256(password).toString();
 
       const tryLogin = async (usertype) => {
         return await dispatch(
           login({
             username: username.trim(),
-            password: encryptedPassword,
+            password: password,
             usertype,
             device,
             userlattitude: "0",
@@ -46,7 +52,8 @@ function Login() {
         ).unwrap();
       };
 
-      const userTypesToTry = ["A", "C"];
+      // Try all user types to support admin, customer, and pending logins
+      const userTypesToTry = ["C", "A", "P"];
       let finalError = "Invalid username or password.";
 
       for (const type of userTypesToTry) {
@@ -64,7 +71,7 @@ function Login() {
     } catch (err) {
       const msg = typeof err === "string" ? err : err?.message || "Unable to login.";
       setErrorMessage(msg);
-      alertify.alert("Error", msg);
+      alertify.alert("Login Failed", msg);
     } finally {
       setIsLoading(false);
     }
