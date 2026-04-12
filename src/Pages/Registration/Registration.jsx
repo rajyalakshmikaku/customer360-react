@@ -25,6 +25,9 @@ const Registration = () => {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const strongPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{12,}$/;
+
   const [form, setForm] = useState({
     title: "",
     firstname: "",
@@ -135,12 +138,21 @@ const Registration = () => {
         errorMessage = "ID must be 13 digits";
     }
 
+    // if (name === "password") {
+    //   if (!value) errorMessage = "Password is required";
+    //   else if (value.length < 12)
+    //     errorMessage =
+    //       "Password must be at least 12 characters";
+    // }
+
     if (name === "password") {
-      if (!value) errorMessage = "Password is required";
-      else if (value.length < 12)
-        errorMessage =
-          "Password must be at least 12 characters";
-    }
+  if (!value) {
+    errorMessage = "Password is required";
+  } else if (!strongPasswordRegex.test(value)) {
+    errorMessage =
+      "Password must be 12+ chars, include uppercase, lowercase, number & special character";
+  }
+}
 
     if (name === "confirmPassword") {
       if (!value)
@@ -212,11 +224,18 @@ const Registration = () => {
     if (!form.ward.trim())
       newErrors.ward = "Ward number is required";
 
-    if (!form.password)
-      newErrors.password = "Password is required";
-    else if (form.password.length < 12)
-      newErrors.password =
-        "Password must be at least 12 characters";
+    // if (!form.password)
+    //   newErrors.password = "Password is required";
+    // else if (form.password.length < 12)
+    //   newErrors.password =
+    //     "Password must be at least 12 characters";
+
+    if (!form.password) {
+  newErrors.password = "Password is required";
+} else if (!strongPasswordRegex.test(form.password)) {
+  newErrors.password =
+    "Password must be 12+ chars, include uppercase, lowercase, number & special character";
+}
 
     if (!form.confirmPassword)
       newErrors.confirmPassword =
