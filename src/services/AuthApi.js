@@ -1,5 +1,5 @@
-import { AxiosInstance } from "./api";
-import { ResetURL } from "./api";
+import { AxiosInstance ,ResetURL} from "./api";
+
 
 /* ---------------- ERROR HANDLER ---------------- */
 const getApiErrorMessage = (error, fallback) => {
@@ -79,20 +79,23 @@ export const forgotPassword = async (email) => {
   try {
     const normalizedEmail = email.trim();
 
-    const appOrigin =
-      typeof window !== "undefined" && window.location?.origin
-        ? window.location.origin
-        : ResetURL;
+    // const appOrigin =
+    //   typeof window !== "undefined" && window.location?.origin
+    //     ? window.location.origin
+    //     : ResetURL;
 
-    const resetLink = `${appOrigin}/reset-password?email=${encodeURIComponent(
-      normalizedEmail
-    )}`;
+    // const resetLink = `${appOrigin}/reset-password?email=${encodeURIComponent(
+    //   normalizedEmail
+    // )}`;
+
+
+//const ResetURL = "http://localhost:3000";
 
     const response = await AxiosInstance.post(
       "/api/Auth/ForgotPassword",
       {
         email: normalizedEmail,
-        resetLink,
+       ResetLink:ResetURL,
       }
     );
 
