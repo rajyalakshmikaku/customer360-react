@@ -2,8 +2,18 @@ import axios from "axios";
 import alertify from "alertifyjs";
 
 export const ResetURL = "http://localhost:5055";
+<<<<<<< HEAD
 export const baseURL = "http://localhost:5055";
 // export const baseURL = "http://102.130.114.194:1510";
+=======
+//export const baseURL = "http://localhost:5055";
+//export const baseURL = "http://102.130.114.194:1510";
+
+export const baseURL = "http://102.130.114.194:1541";
+//export const baseURL = "http://102.130.114.194:1510";
+
+
+>>>>>>> 5478ebe6d71d11e394865bfe5051ae5355989e13
 
 export const AxiosInstance = axios.create({
   baseURL: baseURL,
