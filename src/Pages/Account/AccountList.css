@@ -227,3 +227,7 @@
     box-shadow: none;
     color: black;
 }
+.modal-body {
+  max-height: 500px;
+  overflow-y: auto;
+}

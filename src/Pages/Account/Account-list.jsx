@@ -181,8 +181,8 @@ useEffect(() => {
         <td>
           <i
             className="fa fa-eye me-2"
-            style={{ cursor: "pointer" }}
-            onClick={() => handleView(item, "View")}
+            style={{ cursor: "pointer", color: "#346ba2" }}
+            onClick={() => handleView(item, "view")}
           ></i>
 
           {item.ACTIVESTATUS !== "Y" && (
@@ -205,22 +205,36 @@ useEffect(() => {
         <td>{item.NAME}</td>
         <td>{item.SURNAME}</td>
         <td>{item.EMAIL}</td>
-        {/* <td>{item.IDNUMBER}</td> */}
         <td>{item.PHONENUMBER || item.CELLNUMBER}</td>
         <td>{item.CREATEDDATE}</td>
 
         <td>
-          {item.ACTIVESTATUS === "Y"
-            ? "Completed"
-            : item.ACTIVESTATUS === "P"
-            ? "Pending"
-            : "Inactive"}
+          {{
+            Y: "Completed",
+            P: "Pending",
+            N: "Inactive",
+          }[item.ACTIVESTATUS] || "-"}
         </td>
       </tr>
     ))
+  ) : loading ? (
+    <tr>
+      <td colSpan="7" className="text-center py-4">
+        <div
+          className="spinner-border text-primary"
+          role="status"
+          style={{ width: "2rem", height: "2rem" }}
+        >
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2 mb-0">Loading...</p>
+      </td>
+    </tr>
   ) : (
     <tr>
-      <td colSpan="7">{loading ? "Loading..." : "No Account Found"}</td>
+      <td colSpan="7" className="text-center">
+        No Account Found
+      </td>
     </tr>
   )}
 </tbody>

@@ -19,14 +19,34 @@ export const fetchAccountListInfo = createAsyncThunk(
   }
 );
 
+// export const fetchApproveAccountsInfo = createAsyncThunk(
+//   "account/fetchApproveAccountsInfo",
+//   async (payload, thunkAPI) => {
+//     debugger
+//     try {
+//       return await PostApproveAccounts(payload);
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(
+//         error.response?.data || "Something went wrong"
+//       );
+//     }
+//   }
+// );
 export const fetchApproveAccountsInfo = createAsyncThunk(
   "account/fetchApproveAccountsInfo",
   async (payload, thunkAPI) => {
     try {
-      return await PostApproveAccounts(payload);
+      console.log("API CALL PAYLOAD:", payload);
+
+      const res = await PostApproveAccounts(payload);
+
+      console.log("API RESPONSE:", res);
+
+      return res;
     } catch (error) {
+      console.log("API ERROR FULL:", error);
       return thunkAPI.rejectWithValue(
-        error.response?.data || "Something went wrong"
+        error?.response?.data || error.message
       );
     }
   }

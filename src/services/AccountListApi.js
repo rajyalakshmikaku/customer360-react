@@ -1,5 +1,5 @@
 import { AxiosInstance } from "./api";
-
+import axios from 'axios';
 
 // export const GetStatuslist = async ({
 //   pageIndex,
@@ -53,16 +53,11 @@ export const GetStatuslist = async ({
 
   return response.data;
 };
-export const PostApproveAccounts = async ({ USERID, Status }) => {
-  debugger
+export const PostApproveAccounts = async (payload) => {
   const response = await AxiosInstance.post(
     "/api/Status/PostApproveAccounts",
-    null,
-    {
-      params: { USERID, Status }
-    }
+    payload
   );
-
   return response.data;
 };
 
@@ -90,6 +85,7 @@ export const GetAccountlist = async (idNumber) => {
   return response.data;
 };
 export const SaveAccountNumbers = async ({ UserID, AccountNumbers }) => {
+  debugger
   const response = await AxiosInstance.post(
     "/api/Status/SaveAccountNumbers",
     {
