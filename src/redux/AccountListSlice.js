@@ -2,7 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   GetStatuslist,
   PostApproveAccounts,
-  GetAccountlist
+  GetAccountlist,
+  SaveAccountNumbers
 } from "../services/AccountListApi";
 
 export const fetchAccountListInfo = createAsyncThunk(
@@ -18,14 +19,34 @@ export const fetchAccountListInfo = createAsyncThunk(
   }
 );
 
+// export const fetchApproveAccountsInfo = createAsyncThunk(
+//   "account/fetchApproveAccountsInfo",
+//   async (payload, thunkAPI) => {
+//     debugger
+//     try {
+//       return await PostApproveAccounts(payload);
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(
+//         error.response?.data || "Something went wrong"
+//       );
+//     }
+//   }
+// );
 export const fetchApproveAccountsInfo = createAsyncThunk(
   "account/fetchApproveAccountsInfo",
   async (payload, thunkAPI) => {
     try {
-      return await PostApproveAccounts(payload);
+      console.log("API CALL PAYLOAD:", payload);
+
+      const res = await PostApproveAccounts(payload);
+
+      console.log("API RESPONSE:", res);
+
+      return res;
     } catch (error) {
+      console.log("API ERROR FULL:", error);
       return thunkAPI.rejectWithValue(
-        error.response?.data || "Something went wrong"
+        error?.response?.data || error.message
       );
     }
   }
@@ -43,6 +64,19 @@ export const fetchLinkedAccounts = createAsyncThunk(
     }
   }
 );
+export const fetchSaveAccountNumbers = createAsyncThunk(
+  "account/fetchSaveAccountNumbers",
+  async (payload, thunkAPI) => {
+    try {
+      return await SaveAccountNumbers(payload);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Something went wrong"
+      );
+    }
+  }
+);
+
 
 const AccountListSlice = createSlice({
   name: "account",
@@ -56,58 +90,75 @@ const AccountListSlice = createSlice({
     error: null,
     activestatus: [],
     linkedAccounts: [],
-    linkedLoading: false
+    linkedLoading: false,
+    saveAccountsLoading: false,
+      saveAccountsResult: null
   },
 
   reducers: {},
 
-  extraReducers: (builder) => {
-    builder
+extraReducers: (builder) => {
+  builder
+    .addCase(fetchAccountListInfo.pending, (state) => {
+      state.loading = true;
+    })
 
-      // LIST
-      .addCase(fetchAccountListInfo.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAccountListInfo.fulfilled, (state, action) => {
-        state.loading = false;
-        const response = action.payload;
-        state.AccountsListInfo = response?.list || [];
-        state.totalCount = response?.totalCount || 0;
-        state.activestatus = response?.activeStatus || [];
-      })
-      .addCase(fetchAccountListInfo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+    .addCase(fetchAccountListInfo.fulfilled, (state, action) => {
+      state.loading = false;
 
-      // APPROVE
-      .addCase(fetchApproveAccountsInfo.pending, (state) => {
-        state.approveLoading = true;
-      })
-      .addCase(fetchApproveAccountsInfo.fulfilled, (state, action) => {
-        state.approveLoading = false;
-        const response = action.payload;
-        state.success = response?.success;
-        state.ApproveInfo = response;
-      })
-      .addCase(fetchApproveAccountsInfo.rejected, (state, action) => {
-        state.approveLoading = false;
-        state.error = action.payload;
-      })
+      state.AccountsListInfo = action.payload?.list || [];
+      state.totalCount = action.payload?.totalCount || 0;
+      state.activestatus = action.payload?.activeStatus || [];
+    })
 
-      // LINKED ACCOUNTS
-      .addCase(fetchLinkedAccounts.pending, (state) => {
-        state.linkedLoading = true;
-      })
-      .addCase(fetchLinkedAccounts.fulfilled, (state, action) => {
-        state.linkedLoading = false;
-        state.linkedAccounts = action.payload?.list || [];
-      })
-      .addCase(fetchLinkedAccounts.rejected, (state, action) => {
-        state.linkedLoading = false;
-        state.error = action.payload;
-      });
-  }
+    .addCase(fetchAccountListInfo.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+
+    .addCase(fetchApproveAccountsInfo.pending, (state) => {
+      state.approveLoading = true;
+    })
+
+    .addCase(fetchApproveAccountsInfo.fulfilled, (state, action) => {
+      state.approveLoading = false;
+      state.success = action.payload?.success;
+      state.ApproveInfo = action.payload;
+    })
+
+    .addCase(fetchApproveAccountsInfo.rejected, (state, action) => {
+      state.approveLoading = false;
+      state.error = action.payload;
+    })
+
+    .addCase(fetchLinkedAccounts.pending, (state) => {
+      state.linkedLoading = true;
+    })
+
+   
+    .addCase(fetchLinkedAccounts.fulfilled, (state, action) => {
+  state.linkedAccounts = action.payload;
+  state.linkedLoading = false;
+})
+   
+    .addCase(fetchLinkedAccounts.rejected, (state, action) => {
+      state.linkedLoading = false;
+      state.error = action.payload;
+    })
+    .addCase(fetchSaveAccountNumbers.pending, (state) => {
+  state.saveAccountsLoading = true;
+})
+
+.addCase(fetchSaveAccountNumbers.fulfilled, (state, action) => {
+  state.saveAccountsLoading = false;
+  state.saveAccountsResult = action.payload;
+})
+
+.addCase(fetchSaveAccountNumbers.rejected, (state, action) => {
+  state.saveAccountsLoading = false;
+  state.error = action.payload;
+})
+}
 });
 
 export default AccountListSlice.reducer;

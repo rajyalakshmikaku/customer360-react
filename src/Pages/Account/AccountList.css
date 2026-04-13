@@ -223,3 +223,11 @@
   letter-spacing: 0.5px;
   color: white;
 }
+.btn-success.disabled, .btn-success:disabled {
+    box-shadow: none;
+    color: black;
+}
+.modal-body {
+  max-height: 500px;
+  overflow-y: auto;
+}

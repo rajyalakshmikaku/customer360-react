@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
@@ -11,72 +11,133 @@ function ResetPassword() {
 
   // email comes from the reset link query string: /reset-password?email=...
   const initialEmail = useMemo(() => searchParams.get("email") || "", [searchParams]);
+  const resetCode = useMemo(
+    () =>
+      searchParams.get("resetCode") ||
+      searchParams.get("token") ||
+      searchParams.get("code") ||
+      searchParams.get("resetToken") ||
+      "",
+    [searchParams]
+  );
 
-  const [email, setEmail] = useState(initialEmail);
+  const [email] = useState(initialEmail);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{12,}$/;
 
   const validate = () => {
+    const nextErrors = {};
+
     if (!email.trim()) {
-      setErrorMessage("Email is required");
-      return false;
+      nextErrors.email = "Email is required";
     }
 
     if (!newPassword.trim()) {
-      setErrorMessage("Please enter a new password");
-      return false;
-    }
-
-    if (newPassword.length < 6) {
-      setErrorMessage("Password must be at least 6 characters");
-      return false;
+      nextErrors.newPassword = "New password is required";
+    } else if (!strongPasswordRegex.test(newPassword)) {
+      nextErrors.newPassword =
+        "Password must be 12+ chars with uppercase, lowercase, number & special character";
     }
 
     if (!confirmPassword.trim()) {
-      setErrorMessage("Please confirm your password");
-      return false;
+      nextErrors.confirmPassword = "Confirm password is required";
     }
 
     if (newPassword !== confirmPassword) {
-      setErrorMessage("Passwords do not match");
-      return false;
+      nextErrors.confirmPassword = "Passwords do not match";
     }
 
-    return true;
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrorMessage("");
+  useEffect(() => {
+    setErrors((prev) => {
+      const nextErrors = { ...prev };
 
-    if (!validate()) {
-      return;
-    }
+      if (newPassword && !strongPasswordRegex.test(newPassword)) {
+        nextErrors.newPassword =
+          "Password must be 12+ chars with uppercase, lowercase, number & special character";
+      } else {
+        delete nextErrors.newPassword;
+      }
 
-    try {
-      setIsLoading(true);
-      // Send only what backend expects: email + newPassword
-      await resetPassword({
-        email: email.trim(),
-        newPassword,
-      });
+      if (confirmPassword && newPassword !== confirmPassword) {
+        nextErrors.confirmPassword = "Passwords do not match";
+      } else {
+        delete nextErrors.confirmPassword;
+      }
 
-      alertify.alert("Success", "Password updated successfully.", () => {
-        navigate("/");
-      });
-    } catch (error) {
-      const msg = error?.message || "Failed to reset password.";
-      setErrorMessage(msg);
-      alertify.alert("Error", msg);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return nextErrors;
+    });
+  }, [newPassword, confirmPassword]);
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setErrorMessage("");
+
+  //   if (!validate()) {
+  //     return;
+  //   }
+
+  //   try {
+  //     setIsLoading(true);
+  //     // Send compatibility payload via service including confirm + token/code.
+  //     await resetPassword({
+  //       email: email.trim(),
+  //       newPassword,
+  //       confirmPassword,
+  //       token: resetToken,
+  //       resetCode: resetToken,
+  //     });
+
+  //     alertify.alert("Success", "Password updated successfully.", () => {
+  //       navigate("/");
+  //     });
+  //   } catch (error) {
+  //     const msg = error?.message || "Failed to reset password.";
+  //     setErrorMessage(msg);
+  //     alertify.alert("Error", msg);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setErrorMessage("");
+
+  if (!validate()) return;
+
+  try {
+    setIsLoading(true);
+
+    await resetPassword({
+      email: email.trim(),
+      newPassword,
+      confirmPassword,
+      resetCode,
+    });
+
+    alertify.alert("Success", "Password updated successfully.", () => {
+      navigate("/");
+    });
+
+  } catch (error) {
+    const msg = error?.message || "Failed to reset password.";
+    setErrorMessage(msg);
+    alertify.alert("Error", msg);
+  } finally {
+    setIsLoading(false);
+  }
+};
   return (
     <div className="reset-page">
       <div className="reset-card">
@@ -94,21 +155,40 @@ function ResetPassword() {
             {errorMessage && <p className="error-message">{errorMessage}</p>}
 
             <form onSubmit={handleSubmit}>
-              <div className="input-wrap">
-                <label>Email Address</label>
-                <div className="icon-input">
-                  <span className="icon email-icon" aria-hidden="true" />
-                  <input
-                    type="email"
-                    placeholder="Enter your registered email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="email"
-                  readOnly/>
-                </div>
-              </div>
+             <div className="input-wrap">
+  <label>Email Address</label>
 
-              <div className="input-wrap">
+  <div
+    className="icon-input"
+    style={{
+      width: "100%",
+      backgroundColor: "#e9ecef",
+      border: "2px solid #7fa3e8"
+    }}
+  >
+    <span className="icon email-icon" aria-hidden="true" />
+
+    <input
+      type="email"
+      placeholder="Enter your registered email"
+      value={email}
+      readOnly
+      onFocus={(e) => e.target.blur()}
+      style={{
+        width: "100%",
+        backgroundColor: "transparent",
+        color: "#6c757d",
+        cursor: "not-allowed",
+        border: "none",
+        outline: "none",
+        boxShadow: "none",
+        padding: "14px 0",
+        borderRadius: "0"
+      }}
+    />
+  </div>
+</div>
+              <div className={`input-wrap ${errors.newPassword ? "field-error" : ""}`}>
                 <label>New Password</label>
                 <div className="icon-input">
                   <span className="icon lock-icon" aria-hidden="true" />
@@ -128,9 +208,12 @@ function ResetPassword() {
                     <i className={`fa ${showNewPassword ? "fa-eye-slash" : "fa-eye"}`} aria-hidden="true" />
                   </button>
                 </div>
+                {errors.newPassword && (
+                  <div className="error-message">{errors.newPassword}</div>
+                )}
               </div>
 
-              <div className="input-wrap">
+              <div className={`input-wrap ${errors.confirmPassword ? "field-error" : ""}`}>
                 <label>Confirm Password</label>
                 <div className="icon-input">
                   <span className="icon lock-icon" aria-hidden="true" />
@@ -150,6 +233,9 @@ function ResetPassword() {
                     <i className={`fa ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"}`} aria-hidden="true" />
                   </button>
                 </div>
+                {errors.confirmPassword && (
+                  <div className="error-message">{errors.confirmPassword}</div>
+                )}
               </div>
 
               <button className="btn-send" type="submit" disabled={isLoading}>

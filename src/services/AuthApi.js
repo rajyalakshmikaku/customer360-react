@@ -1,6 +1,7 @@
 import { AxiosInstance } from "./api";
 import { ResetURL } from "./api";
 
+/* ---------------- ERROR HANDLER ---------------- */
 const getApiErrorMessage = (error, fallback) => {
   const responseData = error?.response?.data;
   const status = error?.response?.status;
@@ -10,84 +11,100 @@ const getApiErrorMessage = (error, fallback) => {
   }
 
   if (responseData && typeof responseData === "object") {
-    // Supports both camelCase and PascalCase API contracts.
+    const validationErrors = responseData.errors || responseData.Errors;
+    if (validationErrors && typeof validationErrors === "object") {
+      const messages = Object.values(validationErrors)
+        .flatMap((value) => (Array.isArray(value) ? value : [value]))
+        .filter((value) => typeof value === "string" && value.trim());
+
+      if (messages.length > 0) return messages[0];
+    }
+
     const directMessage =
       responseData.message ||
       responseData.Message ||
-      responseData.error ||
-      responseData.Error ||
       responseData.title ||
-      responseData.Title;
+      responseData.detail ||
+      responseData.error ||
+      responseData.Error;
 
-    if (typeof directMessage === "string" && directMessage.trim()) {
-      return directMessage;
-    }
-
-    if (Array.isArray(responseData.errors) && responseData.errors.length > 0) {
-      return String(responseData.errors[0]);
-    }
+    if (directMessage) return directMessage;
   }
 
-  if (!error?.response && (error?.code === "ERR_NETWORK" || error?.request)) {
-    return "Unable to reach server. Please check API URL and CORS settings.";
+  if (!error?.response) {
+    return "Server not reachable";
   }
 
-  if (typeof error?.message === "string" && error.message.trim()) {
-    return error.message;
-  }
-
-  if (status) {
-    return `${fallback} (HTTP ${status})`;
-  }
-
-  return fallback;
+  return `${fallback} (HTTP ${status})`;
 };
 
+/* ---------------- RESET PASSWORD (FIXED) ---------------- */
+export const resetPassword = async ({ email, newPassword, confirmPassword, resetCode }) => {
+  try {
+    const normalizedEmail = (email || "").trim().toLowerCase();
+    const normalizedResetCode = (resetCode || "").trim();
+
+    const response = await AxiosInstance.post(
+      "/api/Auth/ResetPassword",
+      {
+        Email: normalizedEmail,
+        NewPassword: newPassword,
+        ConfirmPassword: confirmPassword,
+        ResetCode: normalizedResetCode,
+        email: normalizedEmail,
+        newPassword,
+        confirmPassword,
+        resetCode: normalizedResetCode,
+      }
+    );
+
+    const apiData = response?.data;
+    if (apiData && typeof apiData === "object") {
+      const successFlag = apiData.success ?? apiData.Success;
+      if (successFlag === false) {
+        throw new Error(apiData.message || apiData.Message || "Failed to reset password.");
+      }
+    }
+
+    return apiData;
+  } catch (error) {
+    throw new Error(
+      getApiErrorMessage(error, "Failed to reset password.")
+    );
+  }
+};
+
+/* ---------------- FORGOT PASSWORD (FIXED) ---------------- */
 export const forgotPassword = async (email) => {
   try {
-     const resetLink = `${ResetURL}/reset-password?email=${email}`;
+    const normalizedEmail = email.trim();
 
-    const response = await AxiosInstance.post("/api/Auth/ForgotPassword", {
-      email,
-      resetLink, // 🔥 send to backend
-    });
+    const appOrigin =
+      typeof window !== "undefined" && window.location?.origin
+        ? window.location.origin
+        : ResetURL;
 
-    const data = response?.data;
-    const isSuccess = data?.success ?? data?.Success;
-    const message = data?.message ?? data?.Message;
+    const resetLink = `${appOrigin}/reset-password?email=${encodeURIComponent(
+      normalizedEmail
+    )}`;
 
-    if (isSuccess === false) {
-      throw new Error(message || "Failed to send reset link.");
-    }
-
-    return response.data;
-  } catch (error) {
-    throw new Error(getApiErrorMessage(error, "Failed to send reset link."));
-  }
-};
-
-// confirmPassword is validated on frontend only — backend only needs email + newPassword
-export const resetPassword = async ({ email, newPassword }) => {
-  try {
-    const response = await AxiosInstance.post("/api/Auth/ResetPassword", {
-      email,
-      newPassword,
-    });
-
-    const data = response?.data;
-    const isSuccess = data?.success ?? data?.Success;
-    const message = data?.message ?? data?.Message;
-
-    if (isSuccess === false) {
-      throw new Error(message || "Failed to reset password.");
-    }
+    const response = await AxiosInstance.post(
+      "/api/Auth/ForgotPassword",
+      {
+        email: normalizedEmail,
+        resetLink,
+      }
+    );
 
     return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "Failed to reset password."));
+    throw new Error(
+      getApiErrorMessage(error, "Failed to send reset link.")
+    );
   }
 };
 
+/* ---------------- CHANGE PASSWORD ---------------- */
 export const changePassword = async ({ userId, oldPassword, newPassword }) => {
   try {
     const response = await AxiosInstance.post(
@@ -95,23 +112,17 @@ export const changePassword = async ({ userId, oldPassword, newPassword }) => {
       null,
       {
         params: {
-          UserId: userId,
+          userId,
           oldpassword: oldPassword,
           newpassword: newPassword,
         },
       }
     );
 
-    const data = response?.data;
-    const isSuccess = data?.success ?? data?.Success;
-    const message = data?.message ?? data?.Message;
-
-    if (isSuccess === false) {
-      throw new Error(message || "Failed to change password.");
-    }
-
-    return data;
+    return response.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, "Failed to change password."));
+    throw new Error(
+      getApiErrorMessage(error, "Failed to change password.")
+    );
   }
 };
