@@ -121,15 +121,7 @@ function Dashboard() {
             </div>
             
             <div className="header-stats-wrapper">
-              <div className="stat-card ward-card">
-                <div className="stat-icon">
-                  <i className="fa fa-map-marker"></i>
-                </div>
-                <div className="stat-content">
-                  <span className="stat-label">Ward Number</span>
-                  <span className="stat-value">{WardNo || 'N/A'}</span>
-                </div>
-              </div>
+             
               
               <div className="stat-card items-card">
                 <div className="stat-icon">
