@@ -387,6 +387,25 @@ const handleUpdate = async () => {
             )}
           </td>
         </tr>
+         {/* <tr>
+          <td><b>Account No</b></td>
+          {mode === "view" && <td>:</td>}
+          <td>
+            {mode === "edit" ? (
+              <input
+                type="text"
+                className="form-control"
+                value={formData.accountNo || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, accountNo: e.target.value })
+                }
+              />
+            ) : (
+              formData.accountNo
+            )}
+          </td>
+        </tr> */}
+
 
       </tbody>
     </table>
