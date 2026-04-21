@@ -82,7 +82,37 @@ const MainLayout = () => {
           <ul className="menu-inner py-1">
 
            
+  {type === "C" && (
+              <>
+ {/* DASHBOARD */}
+            <li className="menu-item">
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  `menu-link ${isActive ? "active" : ""}`
+                }
+              >
+                <i className="menu-icon fa fa-th-large"></i>
+                <span className="menu-text">Dashboard</span>
+              </NavLink>
+            </li>
+                
 
+                {/* <li className="menu-item">
+                  <NavLink
+                    to="/users-list"
+                    className={({ isActive }) =>
+                      `menu-link ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <i className="menu-icon fa fa-users"></i>
+                    <span className="menu-text">Users</span>
+                  </NavLink>
+                </li> */}
+
+               
+              </>
+            )}
            
 
             {/* ADMIN MENU */}
@@ -176,17 +206,7 @@ const MainLayout = () => {
                   </NavLink>
                 </li> */}
 
-                <li className="menu-item">
-                  <NavLink
-                    to="/Account-list"
-                    className={({ isActive }) =>
-                      `menu-link ${isActive ? "active" : ""}`
-                    }
-                  >
-                    <i className="menu-icon fa fa-list-ul"></i>
-                    <span className="menu-text">Accounts</span>
-                  </NavLink>
-                </li>
+               
               </>
             )}
 
