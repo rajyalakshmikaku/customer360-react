@@ -40,7 +40,15 @@ const AccountViewModal = ({ show, onClose, selectedItem, mode}) => {
       ? linkedAccounts
       : [];
 
+useEffect(() => {
+  if (accountList && accountList.length > 0) {
+    const mappedAccounts = accountList
+      .filter(item => item.isMapped === 1)
+      .map(item => item.accountNo);
 
+    setSelectedAccounts(mappedAccounts);
+  }
+}, [accountList]);
   useEffect(() => {
     if (selectedItem) {
       setFormData({
@@ -110,6 +118,7 @@ const AccountViewModal = ({ show, onClose, selectedItem, mode}) => {
 
   const handleUpdate = async () => {
     try {
+      
       console.log("Updating:", formData);
 
       const result = await dispatch(
@@ -449,6 +458,7 @@ const AccountViewModal = ({ show, onClose, selectedItem, mode}) => {
                                             <td>
                                               <input
                                                 type="checkbox"
+                                                 disabled={mode === "view"} 
                                                 checked={selectedAccounts.includes(item.accountNo)}
                                                 onChange={(e) => {
                                                   const checked = e.target.checked;
@@ -478,6 +488,7 @@ const AccountViewModal = ({ show, onClose, selectedItem, mode}) => {
                               <div className="modal-footer">
                                 <button
                                   className="btn btn-primary"
+                                  disabled={mode === "view"} 
                                   onClick={() => {
                                     setFormData((prev) => ({
                                       ...prev,
