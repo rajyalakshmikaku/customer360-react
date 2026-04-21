@@ -3,7 +3,7 @@ import ViewModal from "./ViewModal";
 
 
 
-const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch, onStatusChange, approveSuccess,loading }) => {
+const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListInfo, WardType, totalCount, onSearch, onStatusChange, approveSuccess,loading ,userType}) => {
   const [ward, setWard] = useState("");
   const [user, setUser] = useState("");
   const [modalMode, setModalMode] = useState("");
@@ -11,6 +11,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
   const handleSearch = () => {
     onSearch(ward, user);
   };
+  
 
 
   const handleClear = () => {
@@ -71,6 +72,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Filters Section */}
       <div className="complaints-filters">
+        {userType?.toUpperCase() === "A" && (
         <div className="filter-group">
           <label>🏢 Ward</label>
           <select
@@ -85,6 +87,7 @@ const ComplaintsTable = ({ category, status, wardInfo, UserInfo, ComplaintsListI
             ))}
           </select>
         </div>
+        )}
 
         <div className="filter-group">
           <label>👤 Users</label>
