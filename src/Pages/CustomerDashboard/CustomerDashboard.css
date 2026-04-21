@@ -8,6 +8,7 @@
   border-radius: 8px;
   margin-bottom: 30px;
   border-left: 4px solid #007bff;
+  flex-wrap: wrap;
 }
 
 .filter-label {
@@ -44,6 +45,21 @@
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Account Info Badge */
+.account-info-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #e7f3ff;
+  color: #0056b3;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: auto;
+  border: 1px solid #b3d9ff;
 }
 
 /* Card Loaders */
