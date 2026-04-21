@@ -22,7 +22,25 @@ const ComplaintsList = () => {
   const { counts, loading, wardInfo,UserInfo,ComplaintsListInfo,WardType,totalCount,onSearch,ApproveInfo} = useSelector((state) => state.complaints);
   
   console.log('ComplaintsListInfo',ComplaintsListInfo);
-  const userType = sessionStorage.getItem("LoggedUserType");
+  //const userType = sessionStorage.getItem("LoggedUserType");
+  const user = useSelector((state) => state.auth.user);
+
+  const userData = user?.data || user?.Data || {};
+
+  const userType = userData.usertype || userData.userType || userData.USERTYPE;
+  const wardNo = userData.wardNo || userData.WARD_NO || userData.warD_NO;
+
+  console.log("userType:", userType);
+  console.log("wardNo:", wardNo);
+
+  const getWardFilter = () => {
+    if (!userType) return "";
+
+    return userType?.toUpperCase() === "CUS"
+      ? (wardNo || "")
+      : "";
+  };
+  
   // THIS gets called from menu
   const handleView = (category, status) => {
     debugger
@@ -38,13 +56,13 @@ const ComplaintsList = () => {
       type: category,
       status: status,
       role: userType,
-      wardId: "",
+      wardId: getWardFilter(),
       userId: ""
     }))
 
   };
 
-  const handleSearch = (ward, user) => {
+  const handleSearch = (ward, selectedUser) => {
   setPageIndex(1);
 
   dispatch(fetchComplaintsListInfo({
@@ -54,7 +72,7 @@ const ComplaintsList = () => {
     type: category,
     status: status,
     role: userType,
-    wardId: ward || "",
+    wardId: userType?.toUpperCase() === "CUS" ? wardNo : (ward || ""), 
     userId: user || ""
   }));
 };
@@ -72,7 +90,7 @@ const ComplaintsList = () => {
     type: category,
     status: status,
     role: userType,
-    wardId: "",
+    wardId: getWardFilter(),
     userId: ""
   }));
 };
@@ -106,10 +124,18 @@ useEffect(() => {
 
 
 
-  const wardNo = 0;
-  useEffect(() => {
-    dispatch(fetchComplaintsCounts(wardNo));
-  }, [dispatch, wardNo]);
+  // const wardNo = 0;
+useEffect(() => {
+  if (!userType) return;
+
+  const finalWardNo =
+    userType?.toUpperCase() === "CUS" ? wardNo : 0;
+
+  if (finalWardNo != null) {
+    dispatch(fetchComplaintsCounts(finalWardNo));
+  }
+
+}, [dispatch, userType, wardNo]);
 
   const handleStatusChange = (userId, status, screen, comments = "") => {
     return dispatch(
@@ -187,7 +213,7 @@ const getIconForType = (name) => {
           </div>
 
           <div style={{ flex: 1, overflow: 'auto' }}>
-            <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch} onStatusChange={handleStatusChange} approveSuccess={ApproveInfo?.success} loading={loading}/>
+            <ComplaintsTable category={category} status={status} wardInfo={wardInfo} UserInfo={UserInfo} ComplaintsListInfo={ComplaintsListInfo} WardType={WardType} totalCount={totalCount} onSearch={handleSearch} onStatusChange={handleStatusChange} approveSuccess={ApproveInfo?.success} loading={loading} userType ={userType}/>
 
             <Pagination pageIndex={pageIndex} pageSize={pageSize} totalCount={totalCount} onPageChange={handlePageChange}/>
           </div>

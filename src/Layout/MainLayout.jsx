@@ -37,6 +37,8 @@ const MainLayout = () => {
         return "Customer";
       case "U":
         return "User";
+      case "CUS":
+        return "CUS";
       default:
         return "Unknown";
     }
@@ -79,7 +81,10 @@ const MainLayout = () => {
 
           <ul className="menu-inner py-1">
 
-            {/* DASHBOARD */}
+           
+  {type === "C" && (
+              <>
+ {/* DASHBOARD */}
             <li className="menu-item">
               <NavLink
                 to="/dashboard"
@@ -91,24 +96,40 @@ const MainLayout = () => {
                 <span className="menu-text">Dashboard</span>
               </NavLink>
             </li>
+                
 
-       <li className="menu-item">
-              <NavLink
-                to="/CustomerDashboard"
-                className={({ isActive }) =>
-                  `menu-link ${isActive ? "active" : ""}`
-                }
-              >
-                <i className="menu-icon fa fa-th-large"></i>
-                <span className="menu-text"> Customer Dashboard</span>
-              </NavLink>
-            </li>
+                {/* <li className="menu-item">
+                  <NavLink
+                    to="/users-list"
+                    className={({ isActive }) =>
+                      `menu-link ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <i className="menu-icon fa fa-users"></i>
+                    <span className="menu-text">Users</span>
+                  </NavLink>
+                </li> */}
+
+               
+              </>
+            )}
            
 
             {/* ADMIN MENU */}
             {type === "A" && (
               <>
-                
+ {/* DASHBOARD */}
+            <li className="menu-item">
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  `menu-link ${isActive ? "active" : ""}`
+                }
+              >
+                <i className="menu-icon fa fa-th-large"></i>
+                <span className="menu-text">Dashboard</span>
+              </NavLink>
+            </li>
                 <li className="menu-item">
                   <NavLink
                     to="/coplaintsList"
@@ -144,6 +165,48 @@ const MainLayout = () => {
                     <span className="menu-text">Accounts</span>
                   </NavLink>
                 </li>
+              </>
+            )}
+            {/* ADMIN MENU */}
+            {type === "CUS" && (
+              <>
+ <li className="menu-item">
+              <NavLink
+                to="/CustomerDashboard"
+                className={({ isActive }) =>
+                  `menu-link ${isActive ? "active" : ""}`
+                }
+              >
+                <i className="menu-icon fa fa-th-large"></i>
+                <span className="menu-text"> Customer Dashboard</span>
+              </NavLink>
+            </li>
+
+                <li className="menu-item">
+                  <NavLink
+                    to="/coplaintsList"
+                    className={({ isActive }) =>
+                      `menu-link ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <i className="menu-icon fa fa-list-ul"></i>
+                    <span className="menu-text">Complaints</span>
+                  </NavLink>
+                </li>
+
+                {/* <li className="menu-item">
+                  <NavLink
+                    to="/users-list"
+                    className={({ isActive }) =>
+                      `menu-link ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <i className="menu-icon fa fa-users"></i>
+                    <span className="menu-text">Users</span>
+                  </NavLink>
+                </li> */}
+
+               
               </>
             )}
 
@@ -205,8 +268,8 @@ const MainLayout = () => {
 
                   {/* LOGOUT */}
                   <li>
-                    <button 
-                      className="dropdown-item" 
+                    <button
+                      className="dropdown-item"
                       onClick={handleLogout}
                       title="Click to logout"
                     >
