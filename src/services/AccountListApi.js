@@ -96,3 +96,17 @@ export const SaveAccountNumbers = async ({ UserID, AccountNumbers }) => {
 
   return response.data;
 };
+
+// Fetch account mappings for a specific user
+export const GetAccountMappingByUserId = async (userId) => {
+  try {
+    const response = await AxiosInstance.get(
+      `/api/User/get-by-user/${userId}`
+    );
+    console.log("Account Mapping API RESPONSE:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching account mappings:", error);
+    throw error;
+  }
+};

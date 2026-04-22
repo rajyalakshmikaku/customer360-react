@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomerDashboardCounts } from "../../redux/customerDashboardSlice";
+import { fetchAccountMappings } from "../../redux/accountMappingSlice";
 import { useNavigate } from "react-router-dom";
 import "./CustomerDashboard.css";
 
@@ -8,21 +9,57 @@ function Dashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { counts, loading } = useSelector((state) => state.customerDashboard);
+  const { accounts, loading: accountsLoading } = useSelector((state) => state.accountMapping);
+  const { user } = useSelector((state) => state.auth);
   
   const WardNo = 0;
-  // Hardcoded account numbers for dropdown
-  const linkedAccounts = [
-    { accountNo: 2105186169, name: "Account 1" },
-    { accountNo: 2105186170, name: "Account 2" },
-    { accountNo: 2105186171, name: "Account 3" }
-  ];
-  
-  const [selectedAccountNo, setSelectedAccountNo] = useState(linkedAccounts[0].accountNo);
+  const [selectedAccountNo, setSelectedAccountNo] = useState(0); // Start with "All Accounts"
+  const [accountOptions, setAccountOptions] = useState([]);
+  const userId = sessionStorage.getItem("LoggeduserId");
+
+  // Fetch account mappings when component mounts
+  useEffect(() => {
+    // Try to get userId from different possible property names
+    console.log("Detected userId:", userId);
+    if (userId) {
+      dispatch(fetchAccountMappings(userId));
+    }
+  }, [dispatch, user]);
+
+  // Transform API response to dropdown options and include "Select All"
+  useEffect(() => {
+    if (accounts && accounts.length > 0) {
+      const options = [
+        { accountNo: 0, name: "All Accounts", isAll: true, uniqueId: "all-accounts" },
+        ...accounts.map((acc) => ({
+          accountNo: acc.accountNumber,
+          name: `Account ${acc.accountNumber}`,
+          id: acc.id,
+          uniqueId: `account-${acc.id}`
+        }))
+      ];
+      console.log("Transformed account options:", options);
+      setAccountOptions(options);
+      // Reset selected account to "All Accounts" when new accounts are fetched
+      setSelectedAccountNo(0);
+    } else {
+      // Fallback to default options if no accounts are returned
+      setAccountOptions([
+        { accountNo: 0, name: "All Accounts", isAll: true, uniqueId: "all-accounts" }
+      ]);
+    }
+  }, [accounts]);
 
   // Fetch account data when selected account changes
   useEffect(() => {
-    dispatch(fetchCustomerDashboardCounts({ wardNo: WardNo, accountNo: selectedAccountNo }));
-  }, [dispatch, selectedAccountNo]);
+    // When "Select All" is chosen, pass all accounts for aggregation
+    const payload = {
+      wardNo: WardNo,
+      accountNo: selectedAccountNo,
+      accountsList: selectedAccountNo === 0 ? accounts : []
+    };
+    dispatch(fetchCustomerDashboardCounts(payload));
+  }, [dispatch, selectedAccountNo, accounts]);
 
   const handleAccountChange = (e) => {
     setSelectedAccountNo(Number(e.target.value));
@@ -40,7 +77,11 @@ function Dashboard() {
 
     const route = routeMap[type] || `/details/${WardNo}/${type}`;
     navigate(route, { 
-      state: { accountNo: selectedAccountNo, wardNo: WardNo } 
+      state: { 
+        accountNo: selectedAccountNo, 
+        wardNo: WardNo,
+        accountsList: selectedAccountNo === 0 ? accounts : []
+      } 
     });
   };
 
@@ -129,7 +170,9 @@ function Dashboard() {
                 </div>
                 <div className="stat-content">
                   <span className="stat-label">Selected Account</span>
-                  <span className="stat-value">{selectedAccountNo}</span>
+                  <span className="stat-value">
+                    {selectedAccountNo === 0 ? "All Accounts" : selectedAccountNo}
+                  </span>
                 </div>
               </div>
 
@@ -156,32 +199,48 @@ function Dashboard() {
             className="account-dropdown"
             value={selectedAccountNo}
             onChange={handleAccountChange}
+            disabled={accountsLoading}
           >
-            {linkedAccounts.map((account) => (
-              <option key={account.accountNo} value={account.accountNo}>
-                {account.name} - {account.accountNo}
-              </option>
-            ))}
+            {accountsLoading ? (
+              <option value="">Loading accounts...</option>
+            ) : (
+              accountOptions.map((account) => (
+                <option key={account.uniqueId} value={account.accountNo}>
+                  {account.isAll ? "Select All Accounts (Summary)" : `${account.accountNo}`}
+                </option>
+              ))
+            )}
           </select>
+          {accountsLoading && (
+            <span className="account-info-badge loading">
+              <i className="fa fa-spinner fa-spin"></i> Fetching your accounts...
+            </span>
+          )}
+          {selectedAccountNo === 0 && !accountsLoading && accountOptions.length > 1 && (
+            <span className="account-info-badge">
+              <i className="fa fa-info-circle"></i> Showing summarized data for all accounts
+            </span>
+          )}
         </div>
 
         {/* Main Content */}
         <div className="dashboard-main">
-          {/* Outstanding Section */}
+        
+          {/* Operations Section */}
           <div className="dashboard-section">
             <div className="section-header">
               <div className="section-header-left">
-                <div className="section-icon-wrapper">
-                  <i className="fa fa-money"></i>
+                <div className="section-icon-wrapper operations">
+                  <i className="fa fa-building"></i>
                 </div>
                 <div>
-                  <h2 className="section-title">Outstanding Debt</h2>
-                  <p className="section-subtitle">Amount overdue by number of days</p>
+                  <h2 className="section-title">Operations</h2>
+                  <p className="section-subtitle">Properties, customers, and utilities management</p>
                 </div>
               </div>
             </div>
             <div className="cards-grid">
-              <DashboardCard
+               <DashboardCard
                 icon="fa-money"
                 title="Total Outstanding"
                 value={formatNumber(totalOutstanding)}
@@ -197,23 +256,6 @@ function Dashboard() {
                 onClick={() => handleNavigate("Interims")}
                 isLoading={loading}
               />
-            </div>
-          </div>
-
-          {/* Operations Section */}
-          <div className="dashboard-section">
-            <div className="section-header">
-              <div className="section-header-left">
-                <div className="section-icon-wrapper operations">
-                  <i className="fa fa-building"></i>
-                </div>
-                <div>
-                  <h2 className="section-title">Operations</h2>
-                  <p className="section-subtitle">Properties, customers, and utilities management</p>
-                </div>
-              </div>
-            </div>
-            <div className="cards-grid">
               <DashboardCard
                 icon="fa-building"
                 title="Properties"

@@ -3,9 +3,9 @@ import { getCustomerDashboardCounts } from '../services/customerDashboardApi';
 
 export const fetchCustomerDashboardCounts = createAsyncThunk(
   "customerDashboard/fetchCounts",
-  async ({ wardNo, accountNo }, thunkAPI) => {
+  async ({ wardNo, accountNo, accountsList = [] }, thunkAPI) => {
     try {
-      return await getCustomerDashboardCounts(wardNo, accountNo);
+      return await getCustomerDashboardCounts(wardNo, accountNo, accountsList);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data || "Something went wrong"

@@ -7,6 +7,7 @@ import UserReducer from "./UserListSlice";
 import AccountReducer from "./AccountListSlice"; 
 import registrationReducer from "./RegistrationSlice"; 
 import customerDashboardReducer from "./customerDashboardSlice"; // ✅ FIX
+import accountMappingReducer from "./accountMappingSlice";
 
   
 export const store = configureStore({
@@ -21,6 +22,7 @@ export const store = configureStore({
          Account: AccountReducer,
          registration: registrationReducer, 
              customerDashboard: customerDashboardReducer, // ✅ FIX
+         accountMapping: accountMappingReducer,
 
            
   },
