@@ -195,7 +195,7 @@ useEffect(() => {
                   <tbody>
 
                     {/* User ID */}
-                    <tr>
+                    {/* <tr>
                       <td style={{ width: "300px" }}><b>User ID</b></td>
                       {mode === "view" && <td style={{ width: "20px" }}>:</td>}
                       <td>
@@ -212,12 +212,12 @@ useEffect(() => {
                           formData.USERID
                         )}
                       </td>
-                    </tr>
+                    </tr> */}
 
                     {/* ID Number */}
                     <tr>
-                      <td><b>ID Number</b></td>
-                      {mode === "view" && <td>:</td>}
+                      <td style={{ width: "300px" }}><b>ID Number</b></td>
+                      {mode === "view" && <td style={{ width: "20px" }}>:</td>}
                       <td>
                         {mode === "edit" ? (
                           <input
@@ -440,7 +440,11 @@ useEffect(() => {
                               </div>
 
                               {linkedLoading ? (
-                                <p>Loading...</p>
+                                <div className="d-flex justify-content-center align-items-center py-3">
+  <div className="spinner-border text-primary" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </div>
+</div>
                               ) : (
                                 <div style={{ maxHeight: "200px", overflowY: "auto" }}>
                                   <table className="table table-bordered mt-2">
@@ -449,7 +453,9 @@ useEffect(() => {
                                         <th>Select</th>
                                         <th>Account Number</th>
                                       </tr>
+                                      
                                     </thead>
+                                    
 
                                     <tbody>
                                       {accountList.length > 0 ? (
@@ -458,7 +464,7 @@ useEffect(() => {
                                             <td>
                                               <input
                                                 type="checkbox"
-                                                 disabled={mode === "view"} 
+                                                //  disabled={mode === "view"} 
                                                 checked={selectedAccounts.includes(item.accountNo)}
                                                 onChange={(e) => {
                                                   const checked = e.target.checked;
