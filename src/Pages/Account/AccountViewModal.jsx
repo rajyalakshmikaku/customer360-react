@@ -158,7 +158,7 @@ const handleUpdate = async () => {
       <div className="modal-dialog modal-xl modal-dialog-centered">
         <div className="modal-content">
 
-          <div className="modal-header bg-light">
+          <div className="amodal-header bg-light">
             <h5 className="modal-title text-capitalize">
               {mode} Account Details
             </h5>
@@ -176,6 +176,7 @@ const handleUpdate = async () => {
             {/* Show details only for view/edit */}
             {(mode === "view" || mode === "edit") && (
               <div style={{ maxHeight: "450px", overflowY: "auto", padding: "10px 20px" }}>
+                <div className="account-form-wrapper">
                 <table className="table table-borderless align-middle">
                   <tbody>
 
@@ -502,6 +503,7 @@ const handleUpdate = async () => {
 
                   </tbody>
                 </table>
+                </div>
 
                 {mode === "edit" && (
                   <div className="d-flex justify-content-center gap-2 mt-3">
