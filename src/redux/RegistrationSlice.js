@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Registration } from "../services/RegistrationApi";
+import { Registration ,GetGISData} from "../services/RegistrationApi";
+
+
 
 export const registerUser = createAsyncThunk(
   "registration/registerUser",
@@ -13,11 +15,29 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const fetchGISData = createAsyncThunk(
+  "registration/fetchGISData",
+  async (params, { rejectWithValue }) => {
+    try {
+      const { wardNo, page, pageSize } = params;
+
+      const response = await GetGISData(wardNo, page, pageSize);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 const registrationSlice = createSlice({
   name: "registration",
   initialState: {
     loading: false,
     registrationResult: null,
+
+      gisLoading: false,
+     gisData: [],
+     totalCount: 0 
   },
   reducers: {
     clearRegistrationResult: (state) => {
@@ -29,21 +49,34 @@ const registrationSlice = createSlice({
     },
   },
 
-  extraReducers: (builder) => {
+   extraReducers: (builder) => {
     builder
 
+      // ---------------- REGISTER ----------------
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
       })
-
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
         state.registrationResult = action.payload;
       })
-
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.registrationResult = action.payload;
+      })
+
+      // ---------------- GIS ----------------
+      .addCase(fetchGISData.pending, (state) => {
+        state.gisLoading = true;
+      })
+ .addCase(fetchGISData.fulfilled, (state, action) => {
+  state.gisLoading = false;
+  state.gisData = action.payload?.data || [];
+  state.totalCount = action.payload?.totalCount || 0;
+})
+      .addCase(fetchGISData.rejected, (state, action) => {
+        state.gisLoading = false;
+        state.gisData = [];
       });
   },
 });

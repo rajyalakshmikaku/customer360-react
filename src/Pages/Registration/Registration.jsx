@@ -8,7 +8,9 @@ import {
   clearRegistrationResult,
   registerUser,
   resetRegistrationState,
+  fetchGISData
 } from "../../redux/RegistrationSlice";
+import Pagination from "../../Components/Pagination";
 import CryptoJS from "crypto-js";
 
 
@@ -23,6 +25,18 @@ const Registration = () => {
   const { registrationResult } = useSelector(
     (state) => state.registration || {}
   );
+
+
+const gisData = useSelector(
+  (state) => state.registration?.gisData || []
+);
+const gisLoading = useSelector(
+  (state) => state.registration?.gisLoading || false
+);
+
+const totalCount = useSelector(
+  (state) => state.registration?.totalCount || 0
+);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const strongPasswordRegex =
@@ -45,6 +59,12 @@ const Registration = () => {
 
   const [errors, setErrors] = useState({});
 
+const [showGISModal, setShowGISModal] = useState(false);
+const [gisSearch, setGISSearch] = useState("");
+const [pageIndex, setPageIndex] = useState(1);
+const pageSize = 10;
+
+
   // Auto username from email (only if username empty)
   useEffect(() => {
     if (form.emaail && !form.username) {
@@ -55,6 +75,17 @@ const Registration = () => {
   useEffect(() => {
     dispatch(resetRegistrationState());
   }, [dispatch]);
+
+  
+
+const handlePageChange = (newPage) => {
+  setPageIndex(newPage);
+  dispatch(fetchGISData({
+    wardNo: gisSearch,
+    page: newPage,
+    pageSize: 10
+  }));
+};
 
   // useEffect(() => {
   //   if (registrationResult?.success === true) {
@@ -315,11 +346,11 @@ const Registration = () => {
             className="backclose-button"
             onClick={backonClose}
             aria-label="Close registration"
+          style={{ color: "red" }}
           >
             ✕
           </button>
         </div>
-
         <div className="form-grid">
 
           {/* TITLE */}
@@ -405,26 +436,76 @@ const Registration = () => {
             {errors.gender && <div className="error-message">{errors.gender}</div>}
           </div>
 
-          {/* ADDRESS */}
          {/* ADDRESS */}
-          <div className={`form-field ${errors.address ? "field-error" : ""}`}>
+          {/* <div className={`form-field ${errors.address ? "field-error" : ""}`}>
             <div className="field-control">
               <span className="icon-box"><i className="fas fa-home"></i></span>
               <input name="address" value={form.address} onChange={handleChange} placeholder="Address" />
             </div>
             {errors.address && <div className="error-message">{errors.address}</div>}
-          </div>
-
-        
+          </div> */}
 
           {/* WARD */}
-          <div className={`form-field ${errors.ward ? "field-error" : ""}`}>
+          {/* <div className={`form-field ${errors.ward ? "field-error" : ""}`}>
             <div className="field-control">
               <span className="icon-box"><i className="fas fa-map-marker-alt"></i></span>
               <input name="ward" value={form.ward} onChange={handleChange} placeholder="Ward Number" />
             </div>
             {errors.ward && <div className="error-message">{errors.ward}</div>}
-          </div>
+          </div> */}
+
+ <div className="form-field">
+  <div className="field-control">
+    <span className="icon-box">
+      <i className="fas fa-home"></i>
+    </span>
+    <input
+      name="address"
+      value={form.address}
+      placeholder="Address"
+      readOnly
+      style={{
+        backgroundColor: "#f2f2f2",
+        color: "#4f4d4d",
+        cursor: "not-allowed"
+      }}
+    />
+    <button
+      type="button"
+      className="gis-search-trigger"
+      aria-label="Search property"
+      onClick={() => {
+        setShowGISModal(true);
+        dispatch(fetchGISData({
+          wardNo: "",
+          page: 1,
+          pageSize: 10
+        }));
+      }}
+    >
+      <i className="fa fa-search" />
+    </button>
+  </div>
+</div>
+
+<div className="form-field">
+  <div className="field-control">
+    <span className="icon-box">
+      <i className="fas fa-map-marker-alt"></i>
+    </span>
+    <input
+      name="ward"
+      value={form.ward}
+      placeholder="Ward No"
+      readOnly
+      style={{
+        backgroundColor: "#f2f2f2",
+        color: "#4f4d4d",
+        cursor: "not-allowed"
+      }}
+    />
+  </div>
+</div>
 
           {/* PASSWORD */}
           <div className={`form-field ${errors.password ? "field-error" : ""}`}>
@@ -465,6 +546,97 @@ const Registration = () => {
         </div>
 
       </form>
+
+{showGISModal && (
+  <div className="gis-overlay">
+    <div className="gis-modal">
+      
+      {/* Header */}
+      <div className="modal-header">
+        <h3>Customer Details</h3>
+    <button
+  className="close-btn"
+  onClick={() => setShowGISModal(false)}
+>
+  ✕
+</button>
+      </div>
+
+      {/* Search */}
+      <input
+        type="text"
+        placeholder="Search"
+        value={gisSearch}
+        onChange={(e) => {
+          setGISSearch(e.target.value);
+          setPageIndex(1); // reset page
+
+dispatch(fetchGISData({
+  wardNo: e.target.value,
+  page: 1,
+  pageSize: 10
+}));
+        }}
+        className="modal-search"
+      />
+
+      {/* Table */}
+      <div className="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Ward Number</th>
+              <th>Address</th>
+             
+            </tr>
+          </thead>
+
+         <tbody>
+  {gisLoading ? (
+    <tr>
+      <td colSpan="2" className="gis-loading-cell">
+        <div className="gis-loading-wrap">
+          <span className="gis-loading-spinner" aria-hidden="true" />
+        </div>
+      </td>
+    </tr>
+  ) : gisData?.length > 0 ? (
+    gisData.map((item) => (
+      <tr
+        key={item.id}
+        onClick={() => {
+          setForm((prev) => ({
+            ...prev,
+            ward: item.wardNo,
+            address: item.address,
+          }));
+          setShowGISModal(false);
+        }}
+      >
+        <td>{item.wardNo}</td>
+        <td>{item.address}</td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="2" style={{ textAlign: "center" }}>
+        No Data Found
+      </td>
+    </tr>
+  )}
+</tbody>
+        </table>
+       <Pagination
+  pageIndex={pageIndex}
+  pageSize={pageSize}
+  totalCount={totalCount}
+  onPageChange={handlePageChange}
+/>
+      </div>
+
+    </div>
+  </div>
+)}
     </div>
   );
 };
