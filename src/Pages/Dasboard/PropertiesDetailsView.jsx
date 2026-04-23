@@ -11,7 +11,7 @@ function PropertiesDetailsView() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { counts, loading } = useSelector((state) => state.customerDashboard);
-  
+
   const wardNo = location.state?.wardNo || 0;
   const accountNo = location.state?.accountNo;
   const [showChart, setShowChart] = useState("pie");
@@ -88,12 +88,12 @@ function PropertiesDetailsView() {
       <div className="items-section">
         <h2 className="section-title">Properties List</h2>
         <p className="section-description">View all properties associated with this account</p>
-        
+
         <div className="items-grid">
           {propertiesData.map((property, index) => {
             const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
             const color = colors[index % colors.length];
-            
+
             return (
               <div className="grid-item" key={index} style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="item-card" style={{ borderLeftColor: color }}>
@@ -101,11 +101,18 @@ function PropertiesDetailsView() {
                     <i className="fa fa-building"></i>
                   </div>
                   <div className="item-content">
-                    <h3 className="item-name">{property.name || `Property ${index + 1}`}</h3>
-                    <p className="item-address">{property.address || "Address not available"}</p>
+                    <h3 className="item-name">{property
+                      .accountname
+                      || `Property ${index + 1}`}</h3>
+                  
                     <div className="item-details">
-                      {property.status && <span className="item-status">{property.status}</span>}
+                      {property.cellphonenumber
+                        && <span className="item-status">{property.cellphonenumber
+                        }</span>}
                     </div>
+                      <p className="item-address">{property
+                      .
+                      addressdetails || "Address not available"}</p>
                   </div>
                   <div className="card-accent" style={{ backgroundColor: color }}></div>
                 </div>
@@ -197,12 +204,12 @@ function PropertiesDetailsView() {
             <tbody>
               {propertiesData.map((property, index) => (
                 <tr key={index}>
-                  <td className="property-name">{property.name || `Property ${index + 1}`}</td>
-                  <td>{property.address || "N/A"}</td>
+                  <td className="property-accountname">{property.accountname || `Property ${index + 1}`}</td>
+                  <td>{property.addressdetails || "N/A"}</td>
                   <td>
-                    {property.status && (
-                      <span className="status-badge" style={{ backgroundColor: statusColors[property.status] || '#ccc' }}>
-                        {property.status}
+                    {property.cellphonenumber && (
+                      <span className="status-badge" style={{ backgroundColor: statusColors[property.cellphonenumber] || '#ccc' }}>
+                        {property.cellphonenumber}
                       </span>
                     )}
                   </td>

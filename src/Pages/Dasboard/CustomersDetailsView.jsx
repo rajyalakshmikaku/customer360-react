@@ -11,7 +11,7 @@ function CustomersDetailsView() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { counts, loading } = useSelector((state) => state.customerDashboard);
-  
+
   const wardNo = location.state?.wardNo || 0;
   const accountNo = location.state?.accountNo;
   const [showChart, setShowChart] = useState("pie");
@@ -88,12 +88,12 @@ function CustomersDetailsView() {
       <div className="items-section">
         <h2 className="section-title">Customers List</h2>
         <p className="section-description">View all customers associated with this account</p>
-        
+
         <div className="items-grid">
           {customersData.map((customer, index) => {
             const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6'];
             const color = colors[index % colors.length];
-            
+
             return (
               <div className="grid-item" key={index} style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="item-card" style={{ borderLeftColor: color }}>
@@ -101,11 +101,34 @@ function CustomersDetailsView() {
                     <i className="fa fa-user"></i>
                   </div>
                   <div className="item-content">
-                    <h3 className="item-name">{customer.name || `Customer ${index + 1}`}</h3>
-                    <p className="item-address">{customer.email || "Email not available"}</p>
+                   
                     <div className="item-details">
-                      {customer.status && <span className="item-status">{customer.status}</span>}
-                      {customer.phone && <span className="item-phone">{customer.phone}</span>}
+                      Name :
+                       {customer.firstname
+                        && <span className="item-status">{customer.firstname
+                        }</span>}
+                        <br />
+                      Category: 
+                      {customer.category
+                        && <span className="item-status">{customer.category
+                        }</span>}
+                         <br />
+                        Phone Number :
+                      {customer.cellphonenumber
+                        && <span className="item-phone">{customer.cellphonenumber}</span>}
+                        <br />
+                        Owner Tenant :
+                         {customer.
+ownertenant
+
+                        && <span className="item-phone">{customer.
+ownertenant
+}</span>}
+ <br />
+ Address:
+                    <p className="item-address">{customer.
+                      address
+                      || "Address not available"}</p>
                     </div>
                   </div>
                   <div className="card-accent" style={{ backgroundColor: color }}></div>

@@ -38,6 +38,7 @@ const loginSlice = createSlice({
         state.loginError = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        debugger
         state.loading = false;
         state.user = action.payload;
 
