@@ -116,56 +116,41 @@ useEffect(() => {
       });
   };
 
-  const handleUpdate = async () => {
-    try {
-      
-      console.log("Updating:", formData);
+const handleUpdate = async () => {
+  try {
+    const mappedAccounts = accountList.map((item) => ({
+      AccountNumber: item.accountNo,
+      IsActive: selectedAccounts.includes(item.accountNo) ? "Yes" : "No",
+    }));
 
-      const result = await dispatch(
-        fetchApproveAccountsInfo(formData)
-      ).unwrap();
+    const payload = {
+      ...formData,
+      AccountNumbers: mappedAccounts,
+    };
 
-      console.log("API Result:", result);
+    console.log("FINAL PAYLOAD:", payload);
 
-      if (result?.success) {
-        alertify.success(result.message || "Updated successfully ✅");
-        onClose();
-      } else {
-        alertify.error(result?.message || "Update failed ❌");
-      }
-
-    } catch (error) {
-      console.error("FULL ERROR:", error);
-
-      let errorMessage = "Something went wrong ❌";
-
-      if (error?.response) {
-        // Handle HTML response (like 404 page)
-        if (typeof error.response.data === "string") {
-          if (error.response.data.includes("Cannot POST")) {
-            errorMessage = "API endpoint not found ❌ (Check URL)";
-          } else {
-            errorMessage = error.response.data;
-          }
-        }
-        // Handle normal API JSON response
-        else if (error.response.data?.message) {
-          errorMessage = error.response.data.message;
-        }
-        // Handle ModelState errors
-        else {
-          errorMessage = Object.values(error.response.data)
-            .flat()
-            .join(", ");
-        }
-      }
-      else if (error?.message) {
-        errorMessage = error.message;
-      }
-
-      alertify.error(errorMessage);
+    const result = await dispatch(fetchApproveAccountsInfo(payload)).unwrap();
+    if (result?.success) {
+  alertify.alert("Success", result.Message || "Updated successfully ");
+      onClose();
+    } 
+    else {
+  alertify.alert("Error", result?.Message || "Update failed ");
     }
-  };
+
+  } catch (error) {
+    console.error("FULL ERROR:", error);
+
+    let errorMessage = "Something went wrong ❌";
+
+    if (error?.message) {
+      errorMessage = error.message;
+    }
+
+    alertify.error(errorMessage);
+  }
+};
 
 
   return (
@@ -173,7 +158,7 @@ useEffect(() => {
       <div className="modal-dialog modal-xl modal-dialog-centered">
         <div className="modal-content">
 
-          <div className="modal-header bg-light">
+          <div className="amodal-header bg-light">
             <h5 className="modal-title text-capitalize">
               {mode} Account Details
             </h5>
@@ -191,6 +176,7 @@ useEffect(() => {
             {/* Show details only for view/edit */}
             {(mode === "view" || mode === "edit") && (
               <div style={{ maxHeight: "450px", overflowY: "auto", padding: "10px 20px" }}>
+                <div className="account-form-wrapper">
                 <table className="table table-borderless align-middle">
                   <tbody>
 
@@ -517,6 +503,7 @@ useEffect(() => {
 
                   </tbody>
                 </table>
+                </div>
 
                 {mode === "edit" && (
                   <div className="d-flex justify-content-center gap-2 mt-3">
