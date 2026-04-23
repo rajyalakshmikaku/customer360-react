@@ -346,11 +346,11 @@ const handlePageChange = (newPage) => {
             className="backclose-button"
             onClick={backonClose}
             aria-label="Close registration"
+          style={{ color: "red" }}
           >
             ✕
           </button>
         </div>
-
         <div className="form-grid">
 
           {/* TITLE */}
