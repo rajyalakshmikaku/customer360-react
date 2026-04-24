@@ -11,3 +11,16 @@ export const Registration = async (data) => {
 
   return response.data;
 };
+
+
+export const GetGISData = async (wardNo, page = 1, pageSize = 10) => {
+  const response = await AxiosInstance.get("/api/User/GetGISData", {
+    params: {
+      wardNo: wardNo || "",
+      page,
+      pageSize
+    }
+  });
+
+  return response.data;
+};
