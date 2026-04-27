@@ -454,7 +454,7 @@ const handlePageChange = (newPage) => {
             {errors.ward && <div className="error-message">{errors.ward}</div>}
           </div> */}
 
- <div className="form-field">
+<div className={`form-field ${errors.address ? "field-error" : ""}`}>
   <div className="field-control">
     <span className="icon-box">
       <i className="fas fa-home"></i>
@@ -473,7 +473,6 @@ const handlePageChange = (newPage) => {
     <button
       type="button"
       className="gis-search-trigger"
-      aria-label="Search property"
       onClick={() => {
         setShowGISModal(true);
         dispatch(fetchGISData({
@@ -486,9 +485,13 @@ const handlePageChange = (newPage) => {
       <i className="fa fa-search" />
     </button>
   </div>
+
+  {errors.address && (
+    <div className="error-message">{errors.address}</div>
+  )}
 </div>
 
-<div className="form-field">
+<div className={`form-field ${errors.ward ? "field-error" : ""}`}>
   <div className="field-control">
     <span className="icon-box">
       <i className="fas fa-map-marker-alt"></i>
@@ -505,6 +508,10 @@ const handlePageChange = (newPage) => {
       }}
     />
   </div>
+
+  {errors.ward && (
+    <div className="error-message">{errors.ward}</div>
+  )}
 </div>
 
           {/* PASSWORD */}
