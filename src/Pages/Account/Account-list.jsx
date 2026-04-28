@@ -145,9 +145,9 @@ useEffect(() => {
         <div className="filter-group">
           <label>&nbsp;</label>
           <div className="filter-buttons">
-            <button className="btn-search" onClick={handleSearch}>
+            {/* <button className="btn-search" onClick={handleSearch}>
               Search
-            </button>
+            </button> */}
             <button
               className="btn-clear"
               onClick={handleClear}
@@ -164,10 +164,11 @@ useEffect(() => {
           <thead>
             <tr>
               <th>Activity</th>
+              <th>ID No</th>
               <th>Name</th>
-              <th>Surname</th>
+              {/* <th>Surname</th> */}
               <th>Email</th>
-              {/* <th>ID No</th> */}
+              <th>Ward No</th>
                <th>CELL NUMBER</th>
               <th>Created Date</th>
               <th>Status</th>
@@ -201,20 +202,24 @@ useEffect(() => {
             ></i>
           )}
         </td>
-
-        <td>{item.NAME}</td>
-        <td>{item.SURNAME}</td>
+        <td>{item.IDNUMBER}</td>
+        {/* <td>{item.NAME}</td>
+        <td>{item.SURNAME}</td> */}
+        <td>{[item.NAME, item.SURNAME].filter(Boolean).join(" ") || "-"}</td>
         <td>{item.EMAIL}</td>
+        <td>{item.WARD_NO}</td>
         <td>{item.PHONENUMBER || item.CELLNUMBER}</td>
         <td>{item.CREATEDDATE}</td>
 
+       
+
         <td>
-          {{
-            Y: "Completed",
-            P: "Pending",
-            N: "Inactive",
-          }[item.ACTIVESTATUS] || "-"}
-        </td>
+  {{
+    Y: <span className="badge badge-success">Completed</span>,
+    P: <span className="badge badge-warning">Pending</span>,
+    N: <span className="badge badge-secondary">Inactive</span>,
+  }[item.ACTIVESTATUS] || <span className="badge badge-light">-</span>}
+</td>
       </tr>
     ))
   ) : loading ? (

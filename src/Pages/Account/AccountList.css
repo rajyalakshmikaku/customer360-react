@@ -161,6 +161,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
 .Account-table {
   width: 100%;
   border-collapse: collapse;   /* Important for single border */
@@ -268,4 +269,50 @@
 
 .account-form-wrapper tr {
   border: none !important;
+}
+.badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+  color: black;
+}
+
+.badge-secondary {
+  background-color: red;
+  color: white;
+}
+
+.badge-light {
+  background-color: #e2e6ea;
+  color: #333;
+}
+/* 🔥 FORCE popup table borders only */
+.account-section table,
+.account-section th,
+.account-section td {
+  border: 1px solid #d1d5db !important;
+}
+
+/* clean grid look */
+.account-section table {
+  border-collapse: collapse !important;
+}
+
+/* keep header sticky */
+.account-section thead th {
+  position: sticky;
+  top: 0;
+  background: #346ba2;
+  color: #fff;
+  z-index: 2;
 }

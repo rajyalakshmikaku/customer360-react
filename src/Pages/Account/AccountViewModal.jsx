@@ -9,17 +9,19 @@ import {
 import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
 
-const AccountViewModal = ({ show, onClose, selectedItem, mode}) => {
+const AccountViewModal = ({ show, onClose, selectedItem, mode }) => {
   const dispatch = useDispatch();
 
   const [selectedAccounts, setSelectedAccounts] = useState([]);
   const [showAccountsTable, setShowAccountsTable] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isMapping, setIsMapping] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
 
   const { linkedAccounts = {}, linkedLoading = false } =
     useSelector((state) => state.Account) || {};
-   
+
 
 
   const [formData, setFormData] = useState({
@@ -40,15 +42,35 @@ const AccountViewModal = ({ show, onClose, selectedItem, mode}) => {
       ? linkedAccounts
       : [];
 
-useEffect(() => {
-  if (accountList && accountList.length > 0) {
-    const mappedAccounts = accountList
-      .filter(item => item.isMapped === 1)
-      .map(item => item.accountNo);
+  useEffect(() => {
+    if (!accountList || accountList.length === 0) return;
 
-    setSelectedAccounts(mappedAccounts);
-  }
-}, [accountList]);
+    if (mode === "edit" || mode === "view") {
+      const mappedAccounts = accountList
+        .filter(item => item.isMapped === 1 || item.isMapped === "1")
+        .map(item => item.accountNo);
+
+      setSelectedAccounts(mappedAccounts);
+    } else {
+      setSelectedAccounts([]);
+    }
+  }, [accountList, mode]);
+  //  useEffect(() => {
+  //   if (!show || !selectedItem?.IDNUMBER) return;
+
+  //   if (mode === "edit" || mode === "view") {
+  //     dispatch(fetchApproveAccountsInfo(selectedItem.IDNUMBER));
+  //   } else if (mode === "link") {
+  //     dispatch(fetchLinkedAccounts(selectedItem.IDNUMBER));
+  //   }
+  // }, [show, mode, selectedItem?.IDNUMBER, dispatch]);
+  useEffect(() => {
+    if (!show || !selectedItem?.IDNUMBER) return;
+
+    // ✅ ALWAYS fetch linked accounts (for table)
+    dispatch(fetchLinkedAccounts(selectedItem.IDNUMBER));
+
+  }, [show, selectedItem?.IDNUMBER, dispatch]);
   useEffect(() => {
     if (selectedItem) {
       setFormData({
@@ -70,7 +92,11 @@ useEffect(() => {
       });
     }
 
-    if (mode === "link" && selectedItem?.IDNUMBER) {
+    if (!selectedItem?.IDNUMBER) return;
+
+    if (mode === "edit" || mode === "view") {
+      dispatch(fetchApproveAccountsInfo(selectedItem.IDNUMBER));
+    } else if (mode === "link") {
       dispatch(fetchLinkedAccounts(selectedItem.IDNUMBER));
     }
   }, [mode, selectedItem, dispatch]);
@@ -84,12 +110,13 @@ useEffect(() => {
         : [...prev, accountNo]
     );
   };
-
   const handleMapping = () => {
     const payload = {
       UserID: selectedItem.USERID,
       AccountNumbers: selectedAccounts,
     };
+
+    setIsMapping(true); // 🔥 start spinner
 
     dispatch(fetchSaveAccountNumbers(payload))
       .unwrap()
@@ -113,44 +140,77 @@ useEffect(() => {
       })
       .catch(() => {
         alertify.alert("Error", "Failed to save account numbers");
+      })
+      .finally(() => {
+        setIsMapping(false); // 🔥 stop spinner
       });
   };
+  // const handleMapping = () => {
+  //   const payload = {
+  //     UserID: selectedItem.USERID,
+  //     AccountNumbers: selectedAccounts,
+  //   };
 
-const handleUpdate = async () => {
-  try {
-    const mappedAccounts = accountList.map((item) => ({
-      AccountNumber: item.accountNo,
-      IsActive: selectedAccounts.includes(item.accountNo) ? "Yes" : "No",
-    }));
+  //   dispatch(fetchSaveAccountNumbers(payload))
+  //     .unwrap()
+  //     .then((res) => {
+  //       let message = "";
 
-    const payload = {
-      ...formData,
-      AccountNumbers: mappedAccounts,
-    };
+  //       if (res.savedAccounts?.length > 0) {
+  //         message += `Saved Successfully:\n${res.savedAccounts.join(", ")}\n\n`;
+  //       }
 
-    console.log("FINAL PAYLOAD:", payload);
+  //       if (res.existingAccounts?.length > 0) {
+  //         message += `Already Exists:\n${res.existingAccounts.join(", ")}`;
+  //       }
 
-    const result = await dispatch(fetchApproveAccountsInfo(payload)).unwrap();
-    if (result?.success) {
-  alertify.alert("Success", result.Message || "Updated successfully ");
-      onClose();
-    } 
-    else {
-  alertify.alert("Error", result?.Message || "Update failed ");
+  //       alertify.alert(
+  //         "Account Mapping Result",
+  //         message || "No accounts processed."
+  //       );
+
+  //       setSelectedAccounts([]);
+  //     })
+  //     .catch(() => {
+  //       alertify.alert("Error", "Failed to save account numbers");
+  //     });
+  // };
+
+  const handleUpdate = async () => {
+    try {
+      const mappedAccounts = accountList.map((item) => ({
+        AccountNumber: item.accountNo,
+        IsActive: selectedAccounts.includes(item.accountNo) ? "Yes" : "No",
+      }));
+
+      const payload = {
+        ...formData,
+        AccountNumbers: mappedAccounts,
+      };
+
+      console.log("FINAL PAYLOAD:", payload);
+
+      const result = await dispatch(fetchApproveAccountsInfo(payload)).unwrap();
+      if (result?.success) {
+        alertify.alert("Success", result.Message || "Updated successfully ");
+        onClose();
+      }
+      else {
+        alertify.alert("Error", result?.Message || "Update failed ");
+      }
+
+    } catch (error) {
+      console.error("FULL ERROR:", error);
+
+      let errorMessage = "Something went wrong ❌";
+
+      if (error?.message) {
+        errorMessage = error.message;
+      }
+
+      alertify.error(errorMessage);
     }
-
-  } catch (error) {
-    console.error("FULL ERROR:", error);
-
-    let errorMessage = "Something went wrong ❌";
-
-    if (error?.message) {
-      errorMessage = error.message;
-    }
-
-    alertify.error(errorMessage);
-  }
-};
+  };
 
 
   return (
@@ -177,11 +237,11 @@ const handleUpdate = async () => {
             {(mode === "view" || mode === "edit") && (
               <div style={{ maxHeight: "450px", overflowY: "auto", padding: "10px 20px" }}>
                 <div className="account-form-wrapper">
-                <table className="table table-borderless align-middle">
-                  <tbody>
+                  <table className="table table-borderless align-middle">
+                    <tbody>
 
-                    {/* User ID */}
-                    {/* <tr>
+                      {/* User ID */}
+                      {/* <tr>
                       <td style={{ width: "300px" }}><b>User ID</b></td>
                       {mode === "view" && <td style={{ width: "20px" }}>:</td>}
                       <td>
@@ -200,117 +260,142 @@ const handleUpdate = async () => {
                       </td>
                     </tr> */}
 
-                    {/* ID Number */}
-                    <tr>
-                      <td style={{ width: "300px" }}><b>ID Number</b></td>
-                      {mode === "view" && <td style={{ width: "20px" }}>:</td>}
-                      <td>
-                        {mode === "edit" ? (
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={formData.IDNUMBER || ""}
-                            onChange={(e) =>
-                              setFormData({ ...formData, IDNUMBER: e.target.value })
-                            }
-                          />
-                        ) : (
-                          formData.IDNUMBER
-                        )}
-                      </td>
-                    </tr>
+                      {/* ID Number */}
+                      <tr>
+                        <td style={{ width: "300px" }}><b>ID Number</b></td>
+                        {mode === "view" && <td style={{ width: "20px" }}>:</td>}
+                        <td>
+                          {mode === "edit" ? (
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={formData.IDNUMBER || ""}
+                              onChange={(e) =>
+                                setFormData({ ...formData, IDNUMBER: e.target.value })
+                              }
+                            />
+                          ) : (
+                            formData.IDNUMBER
+                          )}
+                        </td>
+                      </tr>
 
-                    {/* Name */}
-                    <tr>
-                      <td><b>Name</b></td>
-                      {mode === "view" && <td>:</td>}
-                      <td>
-                        {mode === "edit" ? (
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={formData.NAME || ""}
-                            onChange={(e) =>
-                              setFormData({ ...formData, NAME: e.target.value })
-                            }
-                          />
-                        ) : (
-                          formData.NAME
-                        )}
-                      </td>
-                    </tr>
+                      {/* Name */}
+                      <tr>
+                        <td><b>Name</b></td>
+                        {mode === "view" && <td>:</td>}
+                        <td>
+                          {mode === "edit" ? (
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={formData.NAME || ""}
+                              onChange={(e) =>
+                                setFormData({ ...formData, NAME: e.target.value })
+                              }
+                            />
+                          ) : (
+                            formData.NAME
+                          )}
+                        </td>
+                      </tr>
 
-                    {/* Surname */}
-                    <tr>
-                      <td><b>Surname</b></td>
-                      {mode === "view" && <td>:</td>}
-                      <td>
-                        {mode === "edit" ? (
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={formData.SURNAME || ""}
-                            onChange={(e) =>
-                              setFormData({ ...formData, SURNAME: e.target.value })
-                            }
-                          />
-                        ) : (
-                          formData.SURNAME
-                        )}
-                      </td>
-                    </tr>
+                      {/* Surname */}
+                      <tr>
+                        <td><b>Surname</b></td>
+                        {mode === "view" && <td>:</td>}
+                        <td>
+                          {mode === "edit" ? (
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={formData.SURNAME || ""}
+                              onChange={(e) =>
+                                setFormData({ ...formData, SURNAME: e.target.value })
+                              }
+                            />
+                          ) : (
+                            formData.SURNAME
+                          )}
+                        </td>
+                      </tr>
 
-                    {/* Email */}
-                    <tr>
-                      <td><b>Email</b></td>
-                      {mode === "view" && <td>:</td>}
-                      <td>
-                        {mode === "edit" ? (
-                          <input
-                            type="email"
-                            className="form-control"
-                            value={formData.EMAIL || ""}
-                            onChange={(e) =>
-                              setFormData({ ...formData, EMAIL: e.target.value })
-                            }
-                          />
-                        ) : (
-                          formData.EMAIL
-                        )}
-                      </td>
-                    </tr>
+                      {/* Email */}
+                      <tr>
+                        <td><b>Email</b></td>
+                        {mode === "view" && <td>:</td>}
+                        <td>
+                          {mode === "edit" ? (
+                            <input
+                              type="email"
+                              className="form-control"
+                              value={formData.EMAIL || ""}
+                              onChange={(e) =>
+                                setFormData({ ...formData, EMAIL: e.target.value })
+                              }
+                            />
+                          ) : (
+                            formData.EMAIL
+                          )}
+                        </td>
+                      </tr>
 
-                    {/* Cell Number */}
-                    <tr>
-                      <td><b>Cell Number</b></td>
-                      {mode === "view" && <td>:</td>}
-                      <td>
-                        {mode === "edit" ? (
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={formData.PHONENUMBER || formData.CELLNUMBER || ""}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                PHONENUMBER: e.target.value,
-                              })
-                            }
-                          />
-                        ) : (
-                          formData.PHONENUMBER || formData.CELLNUMBER
-                        )}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><b>Address</b></td>
-                      {mode === "view" && <td>:</td>}
-                      <td>
-                        {mode === "edit" ? (
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={[
+                      {/* Cell Number */}
+                      <tr>
+                        <td><b>Cell Number</b></td>
+                        {mode === "view" && <td>:</td>}
+                        <td>
+                          {mode === "edit" ? (
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={formData.PHONENUMBER || formData.CELLNUMBER || ""}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  PHONENUMBER: e.target.value,
+                                })
+                              }
+                            />
+                          ) : (
+                            formData.PHONENUMBER || formData.CELLNUMBER
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><b>Address</b></td>
+                        {mode === "view" && <td>:</td>}
+                        <td>
+                          {mode === "edit" ? (
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={[
+                                formData.ADDRESS,
+                                formData.ADDRESS1,
+                                formData.ADDRESS2,
+                                formData.CITY,
+                                formData.DISTRICT_NAME,
+                                formData.PROVINCE,
+                              ]
+                                .filter(Boolean)
+                                .join(", ")} // show concatenated in input
+                              onChange={(e) => {
+                                const parts = e.target.value.split(",").map(p => p.trim());
+                                setFormData({
+                                  ...formData,
+                                  ADDRESS: parts[0] || "",
+                                  ADDRESS1: parts[1] || "",
+                                  ADDRESS2: parts[2] || "",
+                                  CITY: parts[3] || "",
+                                  DISTRICT_NAME: parts[4] || "",
+                                  PROVINCE: parts[5] || "",
+                                });
+                              }}
+                            />
+                          ) : (
+                            // view mode: just show concatenated
+                            [
                               formData.ADDRESS,
                               formData.ADDRESS1,
                               formData.ADDRESS2,
@@ -319,190 +404,153 @@ const handleUpdate = async () => {
                               formData.PROVINCE,
                             ]
                               .filter(Boolean)
-                              .join(", ")} // show concatenated in input
-                            onChange={(e) => {
-                              const parts = e.target.value.split(",").map(p => p.trim());
-                              setFormData({
-                                ...formData,
-                                ADDRESS: parts[0] || "",
-                                ADDRESS1: parts[1] || "",
-                                ADDRESS2: parts[2] || "",
-                                CITY: parts[3] || "",
-                                DISTRICT_NAME: parts[4] || "",
-                                PROVINCE: parts[5] || "",
-                              });
-                            }}
-                          />
-                        ) : (
-                          // view mode: just show concatenated
-                          [
-                            formData.ADDRESS,
-                            formData.ADDRESS1,
-                            formData.ADDRESS2,
-                            formData.CITY,
-                            formData.DISTRICT_NAME,
-                            formData.PROVINCE,
-                          ]
-                            .filter(Boolean)
-                            .join(", ")
-                        )}
-                      </td>
-                    </tr>
+                              .join(", ")
+                          )}
+                        </td>
+                      </tr>
 
 
-                    {/* Status */}
-                    <tr>
-                      <td><b>Status</b></td>
-                      {mode === "view" && <td>:</td>}
-                      <td>
-                        {mode === "edit" ? (
-                          <select
-                            className="form-control"
-                            value={formData.ACTIVESTATUS || ""}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                ACTIVESTATUS: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="Y">Completed</option>
-                            <option value="P">Pending</option>
-                            <option value="N">Inactive</option>
-                          </select>
-                        ) : (
-                          <span
-                            className="badge"
-                            style={{
-                              backgroundColor:
-                                formData.ACTIVESTATUS === "Y"
-                                  ? "green"
-                                  : formData.ACTIVESTATUS === "P"
-                                    ? "orange"
-                                    : "red",
-                              color: "white",
-                              padding: "6px 12px",
-                              borderRadius: "12px",
-                            }}
-                          >
-                            {{
-                              Y: "Completed",
-                              P: "Pending",
-                              N: "Inactive",
-                            }[formData.ACTIVESTATUS] || "-"}
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><b>Account No</b></td>
-                      {mode === "view" && <td>:</td>}
-                      <td>
-                        <input
-                          type="text" placeholder="Select Account Number"
-                          className="form-control"
-                          value={formData.accountNo}
-                          readOnly
-                          onClick={() => {
-                            setShowModal(true);
+                      {/* Status */}
+                      <tr>
+                        <td><b>Status</b></td>
+                        {mode === "view" && <td>:</td>}
+                        <td>
+                          {mode === "edit" ? (
+                            <select
+                              className="form-control"
+                              value={formData.ACTIVESTATUS || ""}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  ACTIVESTATUS: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="Y">Completed</option>
+                              <option value="P">Pending</option>
+                              <option value="N">Inactive</option>
+                            </select>
+                          ) : (
+                            <span
+                              className="badge"
+                              style={{
+                                backgroundColor:
+                                  formData.ACTIVESTATUS === "Y"
+                                    ? "green"
+                                    : formData.ACTIVESTATUS === "P"
+                                      ? "orange"
+                                      : "red",
+                                color: "white",
+                                padding: "6px 12px",
+                                borderRadius: "12px",
+                              }}
+                            >
+                              {{
+                                Y: "Completed",
+                                P: "Pending",
+                                N: "Inactive",
+                              }[formData.ACTIVESTATUS] || "-"}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><b>Linked Accounts</b></td>
+                        {mode === "view" && <td></td>}
+                        <td>
 
-                            if (selectedItem?.IDNUMBER) {
-                              dispatch(fetchLinkedAccounts(selectedItem.IDNUMBER));
-                            }
-                          }}
-                        />
-                        {showModal && (
-                          <div className="modal-overlay">
-                            <div className="modal-box">
-                              <div className="modal-header">
-                                <b>Linked Accounts</b>
-                                {/* <button onClick={() => setShowModal(false)}>X</button> */}
-            <button
-  className="btn btn-outline-danger btn-sm"
-  onClick={() => setShowModal(false)}
->
-  X
-</button>
-                              </div>
+                          <div className="account-section">
 
-                              {linkedLoading ? (
-                                <div className="d-flex justify-content-center align-items-center py-3">
-  <div className="spinner-border text-primary" role="status">
-    <span className="visually-hidden">Loading...</span>
-  </div>
-</div>
-                              ) : (
-                                <div style={{ maxHeight: "200px", overflowY: "auto" }}>
-                                  <table className="table table-bordered mt-2">
-                                    <thead>
-                                      <tr style={{ background: "#346ba2", color: "#fff" }}>
-                                        <th>Select</th>
-                                        <th>Account Number</th>
-                                      </tr>
-                                      
-                                    </thead>
-                                    
-
-                                    <tbody>
-                                      {accountList.length > 0 ? (
-                                        accountList.map((item, i) => (
-                                          <tr key={i}>
-                                            <td>
-                                              <input
-                                                type="checkbox"
-                                                //  disabled={mode === "view"} 
-                                                checked={selectedAccounts.includes(item.accountNo)}
-                                                onChange={(e) => {
-                                                  const checked = e.target.checked;
-
-                                                  setSelectedAccounts((prev) =>
-                                                    checked
-                                                      ? [...prev, item.accountNo]
-                                                      : prev.filter((acc) => acc !== item.accountNo)
-                                                  );
-                                                }}
-                                              />
-                                            </td>
-
-                                            <td>{item.accountNo}</td>
-                                          </tr>
-                                        ))
-                                      ) : (
-                                        <tr>
-                                          <td colSpan="2">No data found</td>
-                                        </tr>
-                                      )}
-                                    </tbody>
-                                  </table>
+                            {linkedLoading ? (
+                              <div className="d-flex justify-content-center align-items-center py-3">
+                                <div className="spinner-border text-primary" role="status">
+                                  {/* <span className="visually-hidden">Loading...</span> */}
                                 </div>
-                              )}
+                              </div>
+                            ) : (
+                              <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+                                <table className="table table-bordered">
+                                  <thead>
+                                    <tr style={{ background: "#346ba2", color: "#fff" }}>
+                                      <th>Select</th>
+                                      <th>Account Number</th>
+                                    </tr>
+                                  </thead>
 
+                                  <tbody>
+                                    {accountList.length > 0 ? (
+                                      accountList.map((item, i) => (
+                                        <tr key={i}>
+                                          <td>
+                                            <input
+                                              type="checkbox"
+                                              checked={selectedAccounts.includes(item.accountNo)}
+                                              disabled={mode === "view"}   // 👈 disable in view mode
+                                              onChange={(e) => {
+                                                const checked = e.target.checked;
+
+                                                setSelectedAccounts((prev) =>
+                                                  checked
+                                                    ? [...prev, item.accountNo]
+                                                    : prev.filter((acc) => acc !== item.accountNo)
+                                                );
+                                              }}
+                                            />
+                                          </td>
+
+                                          <td>{item.accountNo}</td>
+                                        </tr>
+                                      ))
+                                    ) : (
+                                      <tr>
+                                        <td colSpan="2">No data found</td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </table>
+                              </div>
+                            )}
+
+                            {mode !== "view" && (
                               <div className="modal-footer">
                                 <button
                                   className="btn btn-primary"
-                                  disabled={mode === "view"} 
                                   onClick={() => {
                                     setFormData((prev) => ({
                                       ...prev,
                                       accountNo: selectedAccounts.join(", "),
                                     }));
-                                    setShowModal(false);
                                   }}
                                 >
                                   OK
                                 </button>
                               </div>
-                            </div>
+                            )}
                           </div>
-                        )}
+                          {mode !== "view" && (
+                            <input
+                              type="text"
+                              placeholder="Select Account Number"
+                              className="form-control"
+                              value={formData.accountNo}
+                              readOnly
+                              onClick={() => {
+                                if (mode === "edit" && selectedItem?.IDNUMBER) {
+                                  setShowModal(true);
+                                  dispatch(fetchApproveAccountsInfo(selectedItem.IDNUMBER));
+                                }
+                              }}
+                            />
+                          )}
 
 
-                      </td>
-                    </tr>
+
+                        </td>
+                      </tr>
 
 
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
                 </div>
 
                 {mode === "edit" && (
@@ -529,7 +577,7 @@ const handleUpdate = async () => {
             {/* Link mode only linked accounts */}
             {mode === "link" && (
               <>
-                <label><b>Linked Accounts</b></label>
+
 
                 {linkedLoading ? (
                   <div className="text-center py-4">
@@ -540,7 +588,7 @@ const handleUpdate = async () => {
                     >
                       <span className="visually-hidden">Loading...</span>
                     </div>
-                    <p className="mt-2">Loading linked accounts...</p>
+                    {/* <p className="mt-2">Loading linked accounts...</p> */}
                   </div>
                 ) : (
                   <div style={{ maxHeight: "300px", overflowY: "auto" }}>
@@ -555,20 +603,28 @@ const handleUpdate = async () => {
                       <tbody>
                         {Array.isArray(linkedAccounts.list) &&
                           linkedAccounts.list.length > 0 ? (
-                          linkedAccounts.list.map((item, index) => (
-                            <tr key={index}>
-                              <td>
-                                <input
-                                  type="checkbox"
-                                  checked={selectedAccounts.includes(item.accountNo)}
-                                  onChange={() =>
-                                    handleCheckboxChange(item.accountNo)
-                                  }
-                                />
-                              </td>
-                              <td>{item.accountNo}</td>
-                            </tr>
-                          ))
+                          linkedAccounts.list.map((item, index) => {
+                            const isMapped =
+                              item.isMapped === 1 || item.isMapped === "1";
+
+                            return (
+                              <tr key={index}>
+                                <td>
+                                  <input
+                                    type="checkbox"
+                                    checked={
+                                      selectedAccounts.includes(item.accountNo) || isMapped
+                                    }
+                                    disabled={isMapped} // optional: prevent unchecking mapped accounts
+                                    onChange={() =>
+                                      handleCheckboxChange(item.accountNo)
+                                    }
+                                  />
+                                </td>
+                                <td>{item.accountNo}</td>
+                              </tr>
+                            );
+                          })
                         ) : (
                           <tr>
                             <td colSpan="2">No data found</td>
@@ -577,12 +633,26 @@ const handleUpdate = async () => {
                       </tbody>
                     </table>
 
-                    <button
+                    {/* <button
                       className="btn btn-success mt-2"
                       onClick={handleMapping}
                       disabled={selectedAccounts.length === 0}
                     >
-                      Map Selected Accounts
+                      Map Accounts
+                    </button> */}
+                    <button
+                      className="btn btn-success mt-2 d-flex align-items-center justify-content-center"
+                      onClick={handleMapping}
+                      disabled={selectedAccounts.length === 0 || isMapping}
+                    >
+                      {isMapping ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2"></span>
+                          Map Accounts
+                        </>
+                      ) : (
+                        "Map Accounts"
+                      )}
                     </button>
                   </div>
                 )}
